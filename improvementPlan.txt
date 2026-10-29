@@ -1,0 +1,221 @@
+================================================================================
+                         MEJORA DE CALIDAD — ESTILA TU TEXTO
+================================================================================
+Fecha:     2026-10-28
+Autor:     Revisión automática (agente)
+Estado:    PENDIENTE DE REVISIÓN
+
+--------------------------------------------------------------------------------
+1. EVALUACIÓN ACTUAL: 5 / 10
+--------------------------------------------------------------------------------
+
+Justificación del 5 (proyecto funcional pero con deuda visible):
+
+  +  Compila y arma sin errores (vite build OK, 194 kB / 61 kB gzip).
+  +  Estructura de componentes razonable para su tamaño (StyleEditor desglosado
+     en InputColor / InputNumber / InputSelect).
+  +  Estado global con Context separado de la UI.
+  +  Commits convencionales y en español, historial ordenado.
+  +  README con narrativa de proyecto (qué hace, motivation, lecciones).
+
+  -  `npm run lint` FALLA (1 error): react-refresh/only-export-components en
+     src/context/estilosContext.jsx → no se puede usar como gate de CI.
+  -  Código muerto: src/useEstilos.jsx duplica el hook con claves en español
+     (Color, Fondo, Fuente...) y NADIE lo importa.
+  -  0 pruebas, 0 CI, 0 pre-commit.
+  -  Accesibilidad casi inexistente (labels sin htmlFor, sin landmarks, sin
+     aria-live, sin foco visible).
+  -  README con datos falsos (npm start, Vercel, placeholder de URL, markdown
+     roto, promesas exageradas).
+  -  Inconsistencia controlado/no controlado en los inputs.
+  -  El código generado no escapa HTML del usuario y se lee del DOM en vez de
+     derivarse del estado (doble fuente de verdad).
+
+Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
+
+--------------------------------------------------------------------------------
+2. PROBLEMAS DETALLADOS (por prioridad)
+--------------------------------------------------------------------------------
+
+==========================
+ P0 — CORRECTIDAD / BLOQUEANTES  (deben resolverse primero)
+==========================
+
+[P0-1] Lint roto: no hay gate de calidad confiable
+  Archivo: src/context/estilosContext.jsx:3
+  Problema: el archivo exporta tanto el Context como el Provider; la regla
+            react-refresh/only-export-components lo marca como error.
+  Impacto: `npm run lint` sale con código 1 → cualquier CI fallaría.
+  Acción:  separar en src/context/EstilosContext.js (createContext) y
+           src/context/EstilosProvider.jsx (componente), o excluir el archivo
+           de la regla de forma explícita y documentada.
+  Criterio: `npm run lint` → 0 errores, 0 warnings.
+
+[P0-2] Código muerto engañoso
+  Archivo: src/useEstilos.jsx (20 líneas)
+  Problema: hook duplicado, con nombres de clave distintos (Color vs color),
+            importado por NADIE. Es una bomba de confusión para el siguiente
+            que toque el proyecto.
+  Acción:  eliminarlo. Si se quiere conservar la idea, moverlo a
+           src/hooks/useEstilos.js implementándolo encima del Context.
+  Criterio: `grep -r useEstilos src/` → 0 resultados huérfanos.
+
+[P0-3] Inputs no sincronizados (mezcla controlled / uncontrolled)
+  Archivos: src/components/style_editor/InputNumber.jsx, InputSelect.jsx
+  Problema: usan `defaultValue` (no controlados) mientras InputColor usa
+            `value` (controlado). Si el estado cambia por código (reset,
+            presets, URL, undo), los number/select NO se actualizan.
+  Riesgo:  además, un número vacío produce `font-size: ""em` → estilo roto.
+  Acción:  pasar todo a controlado (`value` + onChange) y validar/clamp del
+           valor (min/max/step) antes de escribirlo al contexto; manejar el
+           caso de entrada vacía (mantener último valor válido).
+  Criterio: limpiar un number input y desenfocarlo no rompe el preview ni el
+            código generado; cambiar el estado desde un preset actualiza todos
+            los inputs.
+
+[P0-4] Doble fuente de verdad en el código generado + sin escape de HTML
+  Archivo: src/components/Salida.jsx
+  Problema a: el string HTML+CSS se construye a mano con template literal
+              duplicando los estilos reales del preview → si cambia un estilo
+              y se olvida actualizar la plantilla, preview y salida divergen.
+  Problema b: se copia leyendo `document.getElementById('codigo').textContent`
+              (DOM como fuente de verdad) en vez de generar el string desde el
+              estado.
+  Problema c: el texto del usuario se inyecta SIN escapar. Un texto con `<`,
+              `>` o `&` rompe (o inyecta marcado en) el snippet copiado.
+  Acción:   crear src/lib/generateCode.js con una única función
+            `generateCode(texto, estilos) -> string`, que:
+              - derive el CSS de las MISMAS variables que usa el preview,
+              - escapen `& < > " '` en el texto,
+              - sea usada TANTO para el <pre> como para clipboard.writeText.
+  Criterio: escribir `<script>alert(1)</script>` en el preview genera snippet
+            escapado; no existe ningún valor de estilo duplicado en plantilla.
+
+[P0-5] Timer sin limpieza (setState tras unmount)
+  Archivo: src/components/Salida.jsx (setTimeout de 3000 ms en copiarCodigo)
+  Problema: no hay clearTimeout ni guard de montaje → warning de React y posible
+            fuga si se desmonta el componente.
+  Acción:  guardar el id en useRef, limpiar en useEffect cleanup.
+
+==========================
+ P1 — CALIDAD / ACCESIBILIDAD / TESTS
+==========================
+
+[P1-6] Faltan claves en listas (warnings de runtime)
+  Archivo: src/components/style_editor/InputSelect.jsx (map sin `key`)
+  Acción:  añadir `key={opcion.contenido}` (y revisar listas equivalentes).
+
+[P1-7] Accesibilidad (hoy ~0)
+  - <label> envuelve <p> en vez de usar texto real + htmlFor/id.
+  - Inputs sin nombre accesible claro (el color picker es una caja muda).
+  - Sin landmarks: falta <main>, header sin <h1> jerárquico correcto en
+    relación con los <h2> de secciones (revisar orden de encabezados).
+  - Estado del botón Copiar solo visible vía emoji → añadir aria-live="polite"
+    con texto ("Copiado", "Error al copiar").
+  - Preview contentEditable sin role/aria-label instrucciones.
+  - :focus-visible en estilos; `.visualizador *:focus { outline: none }`
+    elimina TODO el foco → inaccesible por teclado.
+  - `target="_blank"` sin `rel="noreferrer"` (App.jsx footer).
+  Criterio: pasar un recorrido de teclado completo con sentido y que
+            `npx axe` (o revisión manual) no marque críticos.
+
+[P1-8] Sin pruebas
+  Acción:  incorporar Vitest + React Testing Library con casos mínimos:
+              - generateCode(): escaping, valores por defecto, snapshot.
+              - Cambiar un input actualiza el preview Y el snippet.
+              - Copiar: éxito y ruteo de error (mock navigator.clipboard).
+              - contentEditable dispara actualizarTexto con el texto correcto.
+  Criterio: `npm test` verde y cobertura de la lógica pura (lib) al 100%.
+
+[P1-9] Sin CI
+  Acción:  .github/workflows/ci.yml → npm ci, lint, test, build en push/PR.
+  Criterio: badge verde en README.
+
+[P1-10] README con información falsa / rota
+  - `[[Demo en Vivo](...)]` → markdown mal formateado (corchetes dobles).
+  - "Vercel para despliegue" pero el enlace es de Netlify → unificar.
+  - Instrucciones: `npm start` NO existe (el script es `npm run dev`).
+  - `git clone TU_LINK_REPO_AQUÍ` → URL real del repo.
+  - "Todas las propiedades CSS de texto que necesitas" → exagerado
+    (faltan text-transform, decoration, shadow, direction...).
+  - package.json `"name": "component_builder"` vs repo `estila-tu-texto`.
+  - Dependencias huérfanas: `gh-pages` sin script de deploy; `@types/react*`
+    sin TypeScript → eliminar o justificar.
+
+[P1-11] Fragilidad del preview contentEditable
+  Archivo: src/components/Visualizador.jsx
+  Problema: renderiza {textoInicial.X} (estado inicial congelado) en vez de
+            {texto.X}; funciona "por accidente" porque React no reconcilia el
+            texto, pero rompe cualquier edición externa (reset, presets) y es
+            difícil de razonar. Además 5 bloques casi idénticos → duplicación.
+  Acción:  extraer un componente <EditableText value onChange>, decidir el
+            modelo (descontrolado con ref, o controlado con defaultValue
+            gestionado) y documentarlo; evaluar fallback para
+            `plaintext-only` (no soportado en todos los navegadores).
+  Criterio: añadir un botón "Restablecer texto" que funcione de verdad.
+
+==========================
+ P2 — UX / PRODUCTO / ARQUITECTURA
+==========================
+
+[P2-12] CSS con deuda explícita
+  - Comentario en el código: "/* ARREGLAR AQUI ESTOS ESTILOS ... LA BARRA ESTA
+    FEA / SE ASOMA POR ABAJO */" → resolver el scrollbar del <pre>.
+  - Selector global `select, input` fuera de `.inputs-configuracion` → afecta
+    a cualquier input futuro; acotarlo.
+  - Hack de tamaño (`box-sizing: content-box; height: 1.5em; padding`) →
+    usar box-sizing: border-box.
+  - Sin media queries: `.inputs-configuracion` con flex + gap 2em se desborda
+    en móvil → responsive (wrap o grid).
+  - Sin variables CSS: los colores están hardcodeados (rgb(17,17,17),
+    aliceblue, rgb(29,29,29) repetidos) → :root { --bg: ...; --fg: ... }.
+
+[P2-13] Lógica de negocio dispersa
+  - Valores por defecto de estilos en el Context; rangos (min/max/step) en
+    InputsParams.js; unidades ("em") repetidas en Visualizador y Salida.
+  Acción: crear src/lib/typography.js (defaults, rangos, unidades) y que
+          tanto el preview como el generador lean de ahí.
+
+[P2-14] UX faltante (hoja de ruta ya escrita en el README)
+  - Reset / presets de estilos.
+  - text-transform, text-decoration (prometidos en README).
+  - Copiar solo CSS y solo HTML por separado.
+  - Persistencia (localStorage) de la última configuración.
+  - index.html: sin meta description ni Open Graph → compartir mal el link.
+
+[P2-15] TypeScript o al menos PropTypes
+  - Sin tipos: `estilos[campo]` es any por composición; errores silenciosos.
+  - Decisión: migración incremental con `// @ts-check` + JSDoc, o TS real.
+
+[P2-16] DX
+  - Sin Prettier ni hooks de formato → formato inconsistente (comillas mezcla
+    de " y ', sangrías de 4 vs 2 espacios, `function` con/sin espacio).
+  - Sin .editorconfig.
+  - Faltan scripts: `test`, `format`, `typecheck`.
+
+--------------------------------------------------------------------------------
+3. ORDEN DE EJECUCIÓN PROPUESTO
+--------------------------------------------------------------------------------
+  Fase 1 (deja el repo "limpio"):    P0-1, P0-2, P1-6, P1-5, P0-3
+  Fase 2 (seguridad y coherencia):   P0-4, P1-11
+  Fase 3 (confianza):                P1-8, P1-9, P1-10
+  Fase 4 (pulido):                   P1-7, P2-12, P2-14
+
+  Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
+  verificando antes de commitear:
+      npm run lint && npm test && npm run build
+
+--------------------------------------------------------------------------------
+4. DEFINICIÓN DE ÉXITO (meta 8/10)
+--------------------------------------------------------------------------------
+  [ ] npm run lint → 0 errores
+  [ ] npm test → verde, con casos de generateCode y de los inputs
+  [ ] npm run build → verde (se mantiene)
+  [ ] CI en GitHub Actions corriendo lint+test+build
+  [ ] Sin código muerto (useEstilos.jsx eliminado)
+  [ ] Inputs 100% controlados y con validación de rangos
+  [ ] Snippet generado desde una única función, con escape de HTML
+  [ ] Recorrido completo por teclado + aria-live en el botón copiar
+  [ ] README con datos reales (scripts, hosting, URL del repo)
+  [ ] Responsive en móvil y scrollbar del <pre> arreglado
+================================================================================
