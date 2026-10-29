@@ -46,7 +46,7 @@ export const InputNumber = ({ elemento }) => {
 
   return (
     <label>
-      <p>{label}</p>
+      <span>{label}</span>
       <input
         type="number"
         value={draft}

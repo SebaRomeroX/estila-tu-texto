@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import axe from 'axe-core'
 import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
 
@@ -106,6 +107,24 @@ describe('botón copiar', () => {
     fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
 
     await screen.findByText('❗')
+  })
+})
+
+describe('accesibilidad', () => {
+  it('no tiene NINGUNA violación de axe-core', async () => {
+    const { violations } = await axe.run(container, {
+      resultTypes: ['violations'],
+      rules: {
+        // el contraste de color necesita render real de un browser;
+        // en jsdom no es fiable → queda para revisión manual/visual
+        'color-contrast': { enabled: false },
+      },
+    })
+
+    // aserción estricta: cero violaciones de cualquier impacto
+    expect(
+      violations.map(violacion => `${violacion.impact}:${violacion.id}`)
+    ).toEqual([])
   })
 })
 

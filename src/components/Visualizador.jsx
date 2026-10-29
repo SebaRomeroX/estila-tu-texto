@@ -3,13 +3,14 @@ import { EstilosContext } from "../context/estilosContext.js"
 import { estilosToStyleObject } from "../lib/estilos.js"
 import { EditableText } from "./EditableText.jsx"
 
-// estructura del preview: qué campo edita y con qué etiqueta HTML
+// estructura del preview: qué campo edita, con qué etiqueta HTML y cómo
+// nombra ese campo para lectores de pantalla
 const CAMPOS = [
-  { campo: 'titulo', etiqueta: 'h2' },
-  { campo: 'parrafo1', etiqueta: 'p' },
-  { campo: 'parrafo2', etiqueta: 'p' },
-  { campo: 'subtitulo', etiqueta: 'h3' },
-  { campo: 'parrafo3', etiqueta: 'p' },
+  { campo: 'titulo', etiqueta: 'h2', nombre: 'Título' },
+  { campo: 'parrafo1', etiqueta: 'p', nombre: 'Párrafo 1' },
+  { campo: 'parrafo2', etiqueta: 'p', nombre: 'Párrafo 2' },
+  { campo: 'subtitulo', etiqueta: 'h3', nombre: 'Subtítulo' },
+  { campo: 'parrafo3', etiqueta: 'p', nombre: 'Párrafo 3' },
 ]
 
 export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
@@ -19,6 +20,7 @@ export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
     <section style={{ background: estilos.background }}>
       <div className='seccion'>
         <div className='visualizador-header'>
+          <h2 className='titulo'>Vista previa</h2>
           <button type='button' onClick={restablecerTexto}>
             Restablecer texto ↺
           </button>
@@ -29,10 +31,11 @@ export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
           spellCheck='false'
           style={estilosToStyleObject(estilos)}
         >
-          {CAMPOS.map(({ campo, etiqueta }) => (
+          {CAMPOS.map(({ campo, etiqueta, nombre }) => (
             <EditableText
               key={campo}
               etiqueta={etiqueta}
+              nombre={nombre}
               valor={texto[campo]}
               onCambio={(valor) => actualizarTexto(campo, valor)}
             />

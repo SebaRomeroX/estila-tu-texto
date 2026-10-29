@@ -9,7 +9,7 @@ export const InputSelect = ({ elemento }) => {
   
   return (
     <label>
-      <p>{label}</p>
+      <span>{label}</span>
       <select
         onChange={(e) => actualizarEstilos(campo, e.target.value)}
         value={valorObtenido}

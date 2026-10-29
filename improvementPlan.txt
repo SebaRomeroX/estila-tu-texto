@@ -134,7 +134,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Verificado: único `.map(` del codebase (grep) → corregido con
   key={opcion.contenido}; eslint 0/0; build OK.
 
-[P1-7] Accesibilidad (hoy ~0)
+[x] P1-7 Accesibilidad (hoy ~0)  ✔ RESUELTO 2026-10-28
   - <label> envuelve <p> en vez de usar texto real + htmlFor/id.
   - Inputs sin nombre accesible claro (el color picker es una caja muda).
   - Sin landmarks: falta <main>, header sin <h1> jerárquico correcto en
@@ -147,6 +147,30 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   - `target="_blank"` sin `rel="noreferrer"` (App.jsx footer).
   Criterio: pasar un recorrido de teclado completo con sentido y que
             `npx axe` (o revisión manual) no marque críticos.
+  Verificado (2026-10-28):
+    - Labels: <p> → <span> (HTML válido; asociación envolvente intacta,
+      cubierta por getByLabelText en tests).
+    - Color: hex visible bajo cada picker (`.valor-color`, aria-hidden para
+      no ensuciar el nombre accesible) → el estado no depende solo del color.
+    - Landmarks: raíz <section> → <div> + <main> envolviendo las 3 secciones,
+      footer fuera de main; <section> internas sin heading → <div>.
+    - Jerarquía: nuevo <h2> "Vista previa" visible en el header del preview
+      (al lado del botón reset, space-between).
+    - Copiar: estado en ESTADOS_COPIA (espera/ok/error) → emoji aria-hidden +
+      <span class="sr-only" role="status" aria-live="polite"> con texto real
+      ("Código copiado al portapapeles" / "Error al copiar el código").
+    - Foco: outline:none solo en foco de mouse (feedbacka el caret) + anillo
+      :focus-visible de 2px rgb(140,185,255) para teclado.
+    - contentEditable: prop nombre → aria-label ("Título", "Párrafo 1"...)
+      en los 5 campos vía EditableText.
+    - rel="noreferrer" en el footer; type="button" en ambos botones.
+    - Tests: nuevo test axe-core en App.test.jsx → ASERCIÓN ESTRICTA
+      (0 violaciones de cualquier impacto) con color-contrast deshabilitado
+      (jsdom no renderiza: queda para revisión visual en browser real).
+    - Resultado: 25/25 tests · lint 0/0 · coverage lib 100% · build OK ·
+      dev HTTP 200.
+    - Pendiente humano (no automatizable acá): walkthrough visual por teclado
+      en browser real + contraste de color.
 
 [x] P1-8 Sin pruebas  ✔ RESUELTO 2026-10-28
   Acción:  incorporar Vitest + React Testing Library con casos mínimos:
@@ -296,7 +320,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 2 COMPLETA 2026-10-28
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
-  Fase 4 (pulido):                   P1-7, P2-12, P2-14
+  Fase 4 (pulido):                   P1-7 ✔, P2-12, P2-14
 
   Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
   verificando antes de commitear:
@@ -312,7 +336,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [x] Sin código muerto (useEstilos.jsx eliminado)  ✔ 2026-10-28
   [x] Inputs 100% controlados y con validación de rangos  ✔ 2026-10-28
   [x] Snippet generado desde una única función, con escape de HTML  ✔ 2026-10-28
-  [ ] Recorrido completo por teclado + aria-live en el botón copiar
+  [x] Recorrido completo por teclado + aria-live en el botón copiar  ✔ 2026-10-28
+      (axe: 0 violaciones automatizado; walkthrough visual + contraste de
+      color quedan para revisión humana en browser real)
   [x] README con datos reales (scripts, hosting, URL del repo)  ✔ 2026-10-28
   [ ] Responsive en móvil y scrollbar del <pre> arreglado
 
@@ -445,5 +471,18 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       -45 pkgs); @types/* conservados y justificados (IntelliSense JSX).
     - Verificación: npm ci OK · lint 0/0 · test 24/24 · build OK.
 
-  Pendiente: Fase 4 → P1-7 (accesibilidad), P2-12 (CSS), P2-14 (UX).
+2026-10-28 · Fase 4 · P1-7 COMPLETADO — "feat(a11y): landmarks, aria-live,
+  foco visible y labels validos"
+    - Landmarks/jerarquía (div+main, h2 "Vista previa"), labels HTML válido,
+      hex visible en color pickers, aria-live con texto real en copiar,
+      anillo :focus-visible (caret para mouse), aria-label en los 5 campos
+      editables, rel=noreferrer, type=button.
+    - Test axe-core con aserción estricta: 0 violaciones (color-contrast
+      deshabilitado por jsdom → revisión visual pendiente en browser real).
+    - Resultado: 25/25 · lint 0/0 · coverage lib 100% · build OK · dev 200.
+    - Nota de proceso: un `git checkout -- <archivo>` de emergencia revirtió
+      los edits de axe sin commitear (hay que re-aplicarlos); no usar checkout
+      sobre trabajo en curso sin confirmar.
+
+  Pendiente: P2-12 (CSS), P2-14 (UX); después P2-15 (tipos) y P2-16 (DX).
 ================================================================================

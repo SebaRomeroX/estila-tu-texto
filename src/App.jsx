@@ -24,21 +24,23 @@ const App = () => {
   }
 
   return (
-    <section>
+    <div>
       <header className='header'>
         <h1 className='titulo seccion'>Estila tu Texto</h1>
       </header>
-      <StyleEditor />
-      <Visualizador
-        actualizarTexto={actualizarTexto}
-        texto={texto}
-        restablecerTexto={restablecerTexto}
-      />
-      <SalidaCodigo texto={texto} />
+      <main>
+        <StyleEditor />
+        <Visualizador
+          actualizarTexto={actualizarTexto}
+          texto={texto}
+          restablecerTexto={restablecerTexto}
+        />
+        <SalidaCodigo texto={texto} />
+      </main>
       <footer className='footer'>
-        <p>Hecho con ❤ por <a target="_blank" href="https://sebaromerox.github.io/portafolios/">Seba Romero</a></p>
+        <p>Hecho con ❤ por <a target="_blank" rel="noreferrer" href="https://sebaromerox.github.io/portafolios/">Seba Romero</a></p>
       </footer>
-    </section>
+    </div>
   )
 }
 

@@ -8,13 +8,17 @@ export const InputColor = ({ elemento }) => {
   const valorObtenido = estilos[campo]
 
   return (
-    <label>
-      <p>{label}</p>
-      <input
-        type='color'
-        onChange={(e) => actualizarEstilos(campo, e.target.value)}
-        value={valorObtenido}
-      />
-    </label>
+    <div className='campo-color'>
+      <label>
+        <span>{label}</span>
+        <input
+          type='color'
+          onChange={(e) => actualizarEstilos(campo, e.target.value)}
+          value={valorObtenido}
+        />
+      </label>
+      {/* valor visible: el estado no depende solo del color (WCAG 1.4.1) */}
+      <span className='valor-color' aria-hidden='true'>{valorObtenido}</span>
+    </div>
   )
 }

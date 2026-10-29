@@ -6,6 +6,19 @@
   padding: 0;
 }
 
+/* visible solo para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   background-color: rgb(17, 17, 17);
   color: aliceblue;
@@ -38,10 +51,17 @@ body {
   opacity: .9;
 }
 
-.inputs-configuracion label {
+.inputs-configuracion label,
+.campo-color {
   display: flex;
   flex-direction: column;
   gap: .4em;
+}
+
+.valor-color {
+  font-size: .8em;
+  opacity: .7;
+  font-family: monospace;
 }
 
 .inputs-configuracion select, input {
@@ -62,7 +82,8 @@ body {
 
 .visualizador-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   padding-bottom: 1em;
 }
 
@@ -89,8 +110,16 @@ body {
   flex-direction: column;
 }
 
+/* el foco de mouse ya se feedbacka con el caret del texto,
+   pero la navegación por teclado SIEMPRE debe mostrar anillo */
 .visualizador *:focus {
   outline: none;
+}
+
+.visualizador *:focus-visible {
+  outline: 2px solid rgb(140, 185, 255);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 

@@ -14,7 +14,7 @@ const soportaPlaintextOnly = (() => {
 // el vdom (sin children). El efecto solo escribe cuando el estado externo
 // difiere del DOM (ej. "Restablecer texto") → mientras se tipea nunca escribe
 // y por lo tanto el caret no salta.
-export const EditableText = ({ etiqueta = 'p', valor, onCambio }) => {
+export const EditableText = ({ etiqueta = 'p', nombre, valor, onCambio }) => {
   const ref = useRef(null)
   const Tag = etiqueta
 
@@ -43,6 +43,9 @@ export const EditableText = ({ etiqueta = 'p', valor, onCambio }) => {
   return (
     <Tag
       ref={ref}
+      // el nombre accesible de un campo editable no debe ser su contenido:
+      // así el lector de pantalla annuncia qué campo es antes de leerlo
+      aria-label={nombre}
       contentEditable={soportaPlaintextOnly ? 'plaintext-only' : 'true'}
       onInput={manejarInput}
       onPaste={manejarPaste}
