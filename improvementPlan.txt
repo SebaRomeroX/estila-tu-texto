@@ -3,7 +3,7 @@
 ================================================================================
 Fecha:     2026-10-28
 Autor:     Revisión automática (agente)
-Estado:    PENDIENTE DE REVISIÓN
+Estado:    EN CURSO — ver sección 5 (registro de avances)
 
 --------------------------------------------------------------------------------
 1. EVALUACIÓN ACTUAL: 5 / 10
@@ -41,7 +41,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
  P0 — CORRECTIDAD / BLOQUEANTES  (deben resolverse primero)
 ==========================
 
-[P0-1] Lint roto: no hay gate de calidad confiable
+[x] P0-1 Lint roto: no hay gate de calidad confiable  ✔ RESUELTO 2026-10-28
   Archivo: src/context/estilosContext.jsx:3
   Problema: el archivo exporta tanto el Context como el Provider; la regla
             react-refresh/only-export-components lo marca como error.
@@ -50,6 +50,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
            src/context/EstilosProvider.jsx (componente), o excluir el archivo
            de la regla de forma explícita y documentada.
   Criterio: `npm run lint` → 0 errores, 0 warnings.
+  Verificado: eslint 0/0, vite build OK, dev server HTTP 200.
 
 [P0-2] Código muerto engañoso
   Archivo: src/useEstilos.jsx (20 líneas)
@@ -208,7 +209,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
 --------------------------------------------------------------------------------
 4. DEFINICIÓN DE ÉXITO (meta 8/10)
 --------------------------------------------------------------------------------
-  [ ] npm run lint → 0 errores
+  [x] npm run lint → 0 errores  (logrado 2026-10-28, mantenerlo en cada fase)
   [ ] npm test → verde, con casos de generateCode y de los inputs
   [ ] npm run build → verde (se mantiene)
   [ ] CI en GitHub Actions corriendo lint+test+build
@@ -218,4 +219,21 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [ ] Recorrido completo por teclado + aria-live en el botón copiar
   [ ] README con datos reales (scripts, hosting, URL del repo)
   [ ] Responsive en móvil y scrollbar del <pre> arreglado
+
+--------------------------------------------------------------------------------
+5. REGISTRO DE AVANCES
+--------------------------------------------------------------------------------
+2026-10-28 · Fase 1 · P0-1 COMPLETADO — "fix(context): separar contexto y
+  provider para pasar lint"
+    - Nuevo src/context/estilosContext.js → solo createContext.
+    - Nuevo src/context/EstilosProvider.jsx → solo el componente provider.
+    - Imports actualizados en main.jsx, Salida.jsx, Visualizador.jsx,
+      InputColor.jsx, InputNumber.jsx, InputSelect.jsx.
+    - Eliminado src/context/estilosContext.jsx (archivo viejo).
+    - Verificación: eslint 0 errores/0 warnings · vite build OK ·
+      dev server responde HTTP 200.
+    - Beneficio extra: HMR rápido al editar el context (antes full reload).
+    - Nota: se mantuvo la lógica y defaults del provider sin cambios.
+
+  Pendiente: P0-2 (código muerto useEstilos.jsx), P0-3, P0-4, P0-5...
 ================================================================================
