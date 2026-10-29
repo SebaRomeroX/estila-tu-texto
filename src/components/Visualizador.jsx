@@ -1,51 +1,44 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { EstilosContext } from "../context/estilosContext.js"
 import { estilosToStyleObject } from "../lib/estilos.js"
+import { EditableText } from "./EditableText.jsx"
 
-export const Visualizador = ({ texto, actualizarTexto }) => {
+// estructura del preview: qué campo edita y con qué etiqueta HTML
+const CAMPOS = [
+  { campo: 'titulo', etiqueta: 'h2' },
+  { campo: 'parrafo1', etiqueta: 'p' },
+  { campo: 'parrafo2', etiqueta: 'p' },
+  { campo: 'subtitulo', etiqueta: 'h3' },
+  { campo: 'parrafo3', etiqueta: 'p' },
+]
+
+export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
   const { estilos } = useContext(EstilosContext)
-  const [textoInicial] = useState(texto)
 
   return (
     <section style={{ background: estilos.background }}>
-      <article
-        className='visualizador seccion'
-        spellCheck='false'
-        style={estilosToStyleObject(estilos)}
-      >
-        {/* contentEditable esta en CADA elemento para que no se elimine
-          si se borrara su contenido, queda el elemento vacio */}
-        <h2
-          contentEditable="plaintext-only"
-          onInput={(e) => actualizarTexto('titulo', e.target.textContent)}
+      <div className='seccion'>
+        <div className='visualizador-header'>
+          <button type='button' onClick={restablecerTexto}>
+            Restablecer texto ↺
+          </button>
+        </div>
+
+        <article
+          className='visualizador'
+          spellCheck='false'
+          style={estilosToStyleObject(estilos)}
         >
-          {textoInicial.titulo}
-        </h2>
-        <p
-          contentEditable="plaintext-only"
-          onInput={(e) => actualizarTexto('parrafo1', e.target.textContent)}
-        >
-          {textoInicial.parrafo1}
-        </p>
-        <p
-          contentEditable="plaintext-only"
-          onInput={(e) => actualizarTexto('parrafo2', e.target.textContent)}
-        >
-          {textoInicial.parrafo2}
-        </p>
-        <h3
-          contentEditable="plaintext-only"
-          onInput={(e) => actualizarTexto('subtitulo', e.target.textContent)}
-        >
-          {textoInicial.subtitulo}
-        </h3>
-        <p
-          contentEditable="plaintext-only"
-          onInput={(e) => actualizarTexto('parrafo3', e.target.textContent)}
-        >
-          {textoInicial.parrafo3}
-        </p>
-      </article>
+          {CAMPOS.map(({ campo, etiqueta }) => (
+            <EditableText
+              key={campo}
+              etiqueta={etiqueta}
+              valor={texto[campo]}
+              onCambio={(valor) => actualizarTexto(campo, valor)}
+            />
+          ))}
+        </article>
+      </div>
     </section>
   )
 }

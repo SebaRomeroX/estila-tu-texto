@@ -171,7 +171,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   - Dependencias huérfanas: `gh-pages` sin script de deploy; `@types/react*`
     sin TypeScript → eliminar o justificar.
 
-[P1-11] Fragilidad del preview contentEditable
+[x] P1-11 Fragilidad del preview contentEditable  ✔ RESUELTO 2026-10-28
   Archivo: src/components/Visualizador.jsx
   Problema: renderiza {textoInicial.X} (estado inicial congelado) en vez de
             {texto.X}; funciona "por accidente" porque React no reconcilia el
@@ -182,6 +182,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
             gestionado) y documentarlo; evaluar fallback para
             `plaintext-only` (no soportado en todos los navegadores).
   Criterio: añadir un botón "Restablecer texto" que funcione de verdad.
+  Verificado (2026-10-28):
+    - Nuevo src/components/EditableText.jsx. Modelo documentado: React NUNCA
+      toca el texto tras el mount (elemento sin children); un useLayoutEffect
+      escribe textContent SOLO si difiere del DOM → tipear no escribe (el
+      caret no salta) y cambios externos sí se reflejan (antes del paint, sin
+      frame en blanco).
+    - Fallback plaintext-only: detección de soporte (setAttribute + leer
+      contentEditable); sin soporte → 'true' + onPaste que fuerza text/plain.
+    - Visualizador: eliminado useState(textoInicial); los 5 bloques → array
+      CAMPOS + map con key; botón "Restablecer texto ↺" fuera del article.
+    - App: TEXTO_INICIAL como constante de módulo + restablecerTexto()
+      (copia, no referencia compartida).
+    - App.css: .visualizador-header + botón (espejo de .salida-codigo button);
+      beneficio: el botón queda fuera de `.visualizador *:focus {outline:none}`
+      → conserva anillo de foco.
+    - eslint 0/0 · build OK · dev HTTP 200 · grep sin estado congelado.
+    - Pendiente para P1-8 (tests): cubrir (a) tipear actualiza estado sin
+      escribir el DOM, (b) restablecer sí escribe.
 
 ==========================
  P2 — UX / PRODUCTO / ARQUITECTURA
@@ -227,7 +245,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
 --------------------------------------------------------------------------------
   Fase 1 (deja el repo "limpio"):    P0-1 ✔, P0-2 ✔, P1-6 ✔, P0-5 ✔, P0-3 ✔
                                      → FASE 1 COMPLETA 2026-10-28
-  Fase 2 (seguridad y coherencia):   P0-4 ✔, P1-11
+  Fase 2 (seguridad y coherencia):   P0-4 ✔, P1-11 ✔
+                                     → FASE 2 COMPLETA 2026-10-28
   Fase 3 (confianza):                P1-8, P1-9, P1-10
   Fase 4 (pulido):                   P1-7, P2-12, P2-14
 
@@ -326,6 +345,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Prueba node: texto con <script>, &, " y ' → snippet100% escapado.
     - Verificación: eslint 0/0 · build OK · dev HTTP 200.
 
-  Pendiente: P1-11 (contentEditable), luego Fase 3 (P1-8 tests, P1-9 CI,
-             P1-10 README) y Fase 4 (P1-7 a11y, P2-12 CSS, P2-14 UX).
+  Pendiente: Fase 3 → P1-8 (tests), P1-9 (CI), P1-10 (README).
+
+2026-10-28 · Fase 2 · P1-11 COMPLETADO — "refactor(preview): extraer
+  EditableText sincronizado y boton restablecer"  → FIN DE FASE 2
+    - Nuevo src/components/EditableText.jsx: modelo "React no toca el texto
+      tras el mount" + useLayoutEffect que sincroniza solo si difiere del DOM
+      (tipeo → sin escritura → caret estable; reset → escritura → UI real,
+      antes del paint).
+    - Fallback de plaintext-only con detección de soporte + onPaste en texto
+      plano para navegadores sin soporte.
+    - Visualizador: sin useState(textoInicial); CAMPOS + map con key;
+      botón "Restablecer texto ↺".
+    - App: TEXTO_INICIAL en módulo + restablecerTexto(); CSS del header.
+    - Verificación: eslint 0/0 · build OK · dev HTTP 200 · grep sin
+      estado congelado.
+    - Testear en P1-8: (a) tipear actualiza estado sin tocar el DOM,
+      (b) restablecer escribe el DOM, (c) paste plano en fallback.
+
+  Pendiente: Fase 3 → P1-8 (tests), P1-9 (CI), P1-10 (README); luego Fase 4
+             (P1-7 a11y, P2-12 CSS, P2-14 UX).
 ================================================================================

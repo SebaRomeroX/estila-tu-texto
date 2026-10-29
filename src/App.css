@@ -60,6 +60,30 @@ body {
 
 /* ------------------------- VISUALIZAR ------------------------- */
 
+.visualizador-header {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 1em;
+}
+
+.visualizador-header button {
+  background-color: rgb(29, 29, 29);
+  color: aliceblue;
+  border: 1px solid rgba(240, 248, 255, 0.459);
+  border-radius: .6em;
+  font-size: .9em;
+  padding: .4em .8em;
+}
+
+.visualizador-header button:hover {
+  cursor: pointer;
+  background-color: rgb(39, 39, 39);
+}
+
+.visualizador-header button:active {
+  background-color: rgb(56, 56, 56);
+}
+
 .visualizador {
   display: flex;
   flex-direction: column;
