@@ -16,7 +16,7 @@ export const InputSelect = ({ elemento }) => {
       >
         {
           opciones.map(opcion =>
-            <option value={opcion.contenido}>{opcion.nombre}</option>
+            <option key={opcion.contenido} value={opcion.contenido}>{opcion.nombre}</option>
           )
         }
       </select>
