@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { EstilosContext } from "../context/estilosContext.js"
 
 export const SalidaCodigo = ({ texto }) => {
@@ -6,7 +6,12 @@ export const SalidaCodigo = ({ texto }) => {
   const { color, background, size, family, weight, spacing, height, gap, align } = estilos
   const { titulo, parrafo1, parrafo2, subtitulo, parrafo3 } = texto
   const [copiar, setCopiar] = useState('📝')
+  const timerRef = useRef(null)
 
+  // limpiar el timeout si el componente se desmonta (evita setState tras unmount)
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current)
+  }, [])
 
   function copiarCodigo() {
     const codigo = document.getElementById('codigo').textContent
@@ -17,7 +22,8 @@ export const SalidaCodigo = ({ texto }) => {
       }).catch(() => {
         setCopiar('❗')
       }).finally(() => {
-        setTimeout(() => setCopiar('📝'), 3000)
+        clearTimeout(timerRef.current)
+        timerRef.current = setTimeout(() => setCopiar('📝'), 3000)
       })
   }
 
