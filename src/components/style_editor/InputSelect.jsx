@@ -12,7 +12,7 @@ export const InputSelect = ({ elemento }) => {
       <p>{label}</p>
       <select
         onChange={(e) => actualizarEstilos(campo, e.target.value)}
-        defaultValue={valorObtenido}
+        value={valorObtenido}
       >
         {
           opciones.map(opcion =>

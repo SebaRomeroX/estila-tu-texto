@@ -64,7 +64,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   bundle sin cambios = nunca se empaquetaba). Decisión: borrado sin sustituto;
   si hace falta en el futuro (presets/undo) se crea entonces.
 
-[P0-3] Inputs no sincronizados (mezcla controlled / uncontrolled)
+[x] P0-3 Inputs no sincronizados (mezcla controlled / uncontrolled)
+                                                        ✔ RESUELTO 2026-10-28
   Archivos: src/components/style_editor/InputNumber.jsx, InputSelect.jsx
   Problema: usan `defaultValue` (no controlados) mientras InputColor usa
             `value` (controlado). Si el estado cambia por código (reset,
@@ -76,6 +77,11 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Criterio: limpiar un number input y desenfocarlo no rompe el preview ni el
             código generado; cambiar el estado desde un preset actualiza todos
             los inputs.
+  Verificado: patrón draft local + contexto siempre válido (String(Number(v))
+  dentro de [min,max]); revert a último valor válido en blur si el draft está
+  vacío; sync numérica del draft ante cambios externos; InputSelect controlado.
+  eslint 0/0 · build OK · dev HTTP 200 · defaults todos dentro de rango (sin
+  clamp sorpresivo al montar).
 
 [P0-4] Doble fuente de verdad en el código generado + sin escape de HTML
   Archivo: src/components/Salida.jsx
@@ -204,7 +210,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
 --------------------------------------------------------------------------------
 3. ORDEN DE EJECUCIÓN PROPUESTO
 --------------------------------------------------------------------------------
-  Fase 1 (deja el repo "limpio"):    P0-1 ✔, P0-2 ✔, P1-6 ✔, P0-5 ✔, P0-3
+  Fase 1 (deja el repo "limpio"):    P0-1 ✔, P0-2 ✔, P1-6 ✔, P0-5 ✔, P0-3 ✔
+                                     → FASE 1 COMPLETA 2026-10-28
   Fase 2 (seguridad y coherencia):   P0-4, P1-11
   Fase 3 (confianza):                P1-8, P1-9, P1-10
   Fase 4 (pulido):                   P1-7, P2-12, P2-14
@@ -221,7 +228,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [ ] npm run build → verde (se mantiene)
   [ ] CI en GitHub Actions corriendo lint+test+build
   [x] Sin código muerto (useEstilos.jsx eliminado)  ✔ 2026-10-28
-  [ ] Inputs 100% controlados y con validación de rangos
+  [x] Inputs 100% controlados y con validación de rangos  ✔ 2026-10-28
   [ ] Snippet generado desde una única función, con escape de HTML
   [ ] Recorrido completo por teclado + aria-live en el botón copiar
   [ ] README con datos reales (scripts, hosting, URL del repo)
@@ -272,6 +279,21 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Nota pendiente para P0-4/P1-8: el estado sigue siendo un emoji como
       feedback (sin aria-live) → eso es P1-7, fuera del alcance de P0-5.
 
-  Pendiente: P0-3 (inputs controlados), P0-4 (generateCode + escape),
-             P1-7 (accesibilidad), P1-8 (tests)...
+  Pendiente: P0-4 (generateCode + escape)...
+
+2026-10-28 · Fase 1 · P0-3 COMPLETADO — "fix(inputs): controlar number y
+  select con validacion de rangos"  → FIN DE FASE 1
+    - InputNumber: patrón draft local (lo que se tipea) + contexto que solo
+      recibe números normalizados en [min, max]; revert a último valor válido
+      en blur si el draft está vacío/inválido; sync numérica del draft cuando
+      el estado cambia por fuera (presets/reset futuros).
+    - InputSelect: defaultValue → value (controlado).
+    - Garantía: el contexto nunca contiene '' → el snippet jamás muestra
+      `font-size: em` ni el preview pierde propiedades.
+    - step no se valida estrictamente (solo hint nativo) → decisión consciente,
+      documentada.
+    - Verificación: eslint 0/0 · vite build OK · dev server HTTP 200.
+
+  Pendiente: Fase 2 → P0-4 (generateCode + escape de HTML), P1-11
+             (contentEditable); luego Fase 3 (tests, CI, README).
 ================================================================================
