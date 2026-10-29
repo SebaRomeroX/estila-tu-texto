@@ -1,27 +1,17 @@
 import { useContext, useState } from "react"
 import { EstilosContext } from "../context/estilosContext.js"
+import { estilosToStyleObject } from "../lib/estilos.js"
 
 export const Visualizador = ({ texto, actualizarTexto }) => {
   const { estilos } = useContext(EstilosContext)
-  const { color, background, size, family, weight, spacing, height, gap, align } = estilos
   const [textoInicial] = useState(texto)
 
   return (
-    <section style={{ background: background }}>
+    <section style={{ background: estilos.background }}>
       <article
         className='visualizador seccion'
         spellCheck='false'
-        style={{
-          color: color,
-          background: background,
-          fontFamily: family,
-          fontSize: `${size}em`,
-          fontWeight: weight,
-          letterSpacing: `${spacing}em`,
-          lineHeight: `${height}em`,
-          gap: `${gap}em`,
-          textAlign: align
-        }}
+        style={estilosToStyleObject(estilos)}
       >
         {/* contentEditable esta en CADA elemento para que no se elimine
           si se borrara su contenido, queda el elemento vacio */}

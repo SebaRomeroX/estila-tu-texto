@@ -83,7 +83,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   eslint 0/0 · build OK · dev HTTP 200 · defaults todos dentro de rango (sin
   clamp sorpresivo al montar).
 
-[P0-4] Doble fuente de verdad en el código generado + sin escape de HTML
+[x] P0-4 Doble fuente de verdad en el código generado + sin escape de HTML
+                                                        ✔ RESUELTO 2026-10-28
   Archivo: src/components/Salida.jsx
   Problema a: el string HTML+CSS se construye a mano con template literal
               duplicando los estilos reales del preview → si cambia un estilo
@@ -100,6 +101,20 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
               - sea usada TANTO para el <pre> como para clipboard.writeText.
   Criterio: escribir `<script>alert(1)</script>` en el preview genera snippet
             escapado; no existe ningún valor de estilo duplicado en plantilla.
+  Verificado (2026-10-28):
+    - Nuevo src/lib/estilos.js → estilosToStyleObject(): ÚNICA traducción
+      estado → CSS con unidades; la consumen Visualizador (style={}) y
+      generateCode (camelToKebab → texto).
+    - Nuevo src/lib/generateCode.js → escapeHtml() (& < > " ', & primero) +
+      generateCode(texto, estilos) usada TANTO en el <pre> como en
+      clipboard.writeText. id="codigo"/getElementById eliminados.
+    - Test en node: '<script>alert(1)</script>' → &lt;script&gt;; 'Tom & Jerry'
+      → &amp; → ESCAPE OK.
+    - Grep: sin mapeo manual de estilos en componentes; sin lectura del DOM
+      (solo queda getElementById('root') legítimo en main.jsx).
+    - Layout fijo (display/flex-direction/padding) documentado como boilerplate
+      estático en generateCode, fuera de la fuente única por no ser configurable.
+    - eslint 0/0 · build OK · dev HTTP 200.
 
 [x] P0-5 Timer sin limpieza (setState tras unmount)  ✔ RESUELTO 2026-10-28
   Archivo: src/components/Salida.jsx (setTimeout de 3000 ms en copiarCodigo)
@@ -212,7 +227,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
 --------------------------------------------------------------------------------
   Fase 1 (deja el repo "limpio"):    P0-1 ✔, P0-2 ✔, P1-6 ✔, P0-5 ✔, P0-3 ✔
                                      → FASE 1 COMPLETA 2026-10-28
-  Fase 2 (seguridad y coherencia):   P0-4, P1-11
+  Fase 2 (seguridad y coherencia):   P0-4 ✔, P1-11
   Fase 3 (confianza):                P1-8, P1-9, P1-10
   Fase 4 (pulido):                   P1-7, P2-12, P2-14
 
@@ -229,7 +244,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [ ] CI en GitHub Actions corriendo lint+test+build
   [x] Sin código muerto (useEstilos.jsx eliminado)  ✔ 2026-10-28
   [x] Inputs 100% controlados y con validación de rangos  ✔ 2026-10-28
-  [ ] Snippet generado desde una única función, con escape de HTML
+  [x] Snippet generado desde una única función, con escape de HTML  ✔ 2026-10-28
   [ ] Recorrido completo por teclado + aria-live en el botón copiar
   [ ] README con datos reales (scripts, hosting, URL del repo)
   [ ] Responsive en móvil y scrollbar del <pre> arreglado
@@ -294,6 +309,23 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       documentada.
     - Verificación: eslint 0/0 · vite build OK · dev server HTTP 200.
 
-  Pendiente: Fase 2 → P0-4 (generateCode + escape de HTML), P1-11
-             (contentEditable); luego Fase 3 (tests, CI, README).
+  Pendiente: Fase 2 → P1-11 (contentEditable); luego Fase 3 (tests, CI,
+             README).
+
+2026-10-28 · Fase 2 · P0-4 COMPLETADO — "fix(salida): generar el codigo desde
+  el estado con escape de html"
+    - Nuevo src/lib/estilos.js: estilosToStyleObject() = fuente única de la
+      traducción estado → CSS con unidades (la usan Visualizador y
+      generateCode → preview y snippet no pueden divergir en estilos).
+    - Nuevo src/lib/generateCode.js: escapeHtml() (& < > " ') + generateCode()
+      usada para el <pre> Y para clipboard.writeText (mismo string, sin DOM).
+    - Salida.jsx: eliminada la template literal de estilos y el
+      id="codigo"/getElementById; cleanup de P0-5 intacto.
+    - Visualizador.jsx: eliminado el mapeo manual de estilos inline (los
+      contentEditable no se tocaron → P1-11).
+    - Prueba node: texto con <script>, &, " y ' → snippet100% escapado.
+    - Verificación: eslint 0/0 · build OK · dev HTTP 200.
+
+  Pendiente: P1-11 (contentEditable), luego Fase 3 (P1-8 tests, P1-9 CI,
+             P1-10 README) y Fase 4 (P1-7 a11y, P2-12 CSS, P2-14 UX).
 ================================================================================
