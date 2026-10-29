@@ -52,7 +52,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Criterio: `npm run lint` → 0 errores, 0 warnings.
   Verificado: eslint 0/0, vite build OK, dev server HTTP 200.
 
-[P0-2] Código muerto engañoso
+[x] P0-2 Código muerto engañoso  ✔ RESUELTO 2026-10-28
   Archivo: src/useEstilos.jsx (20 líneas)
   Problema: hook duplicado, con nombres de clave distintos (Color vs color),
             importado por NADIE. Es una bomba de confusión para el siguiente
@@ -60,6 +60,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Acción:  eliminarlo. Si se quiere conservar la idea, moverlo a
            src/hooks/useEstilos.js implementándolo encima del Context.
   Criterio: `grep -r useEstilos src/` → 0 resultados huérfanos.
+  Verificado: grep en src/ → 0 resultados; eslint 0/0; build OK (hash del
+  bundle sin cambios = nunca se empaquetaba). Decisión: borrado sin sustituto;
+  si hace falta en el futuro (presets/undo) se crea entonces.
 
 [P0-3] Inputs no sincronizados (mezcla controlled / uncontrolled)
   Archivos: src/components/style_editor/InputNumber.jsx, InputSelect.jsx
@@ -213,7 +216,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [ ] npm test → verde, con casos de generateCode y de los inputs
   [ ] npm run build → verde (se mantiene)
   [ ] CI en GitHub Actions corriendo lint+test+build
-  [ ] Sin código muerto (useEstilos.jsx eliminado)
+  [x] Sin código muerto (useEstilos.jsx eliminado)  ✔ 2026-10-28
   [ ] Inputs 100% controlados y con validación de rangos
   [ ] Snippet generado desde una única función, con escape de HTML
   [ ] Recorrido completo por teclado + aria-live en el botón copiar
@@ -235,5 +238,18 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Beneficio extra: HMR rápido al editar el context (antes full reload).
     - Nota: se mantuvo la lógica y defaults del provider sin cambios.
 
-  Pendiente: P0-2 (código muerto useEstilos.jsx), P0-3, P0-4, P0-5...
+  Pendiente: P0-3, P0-4, P0-5...
+
+2026-10-28 · Fase 1 · P0-2 COMPLETADO — "chore: eliminar hook useEstilos sin
+  uso"
+    - Eliminado src/useEstilos.jsx (hook huérfano con claves en español que
+      duplicaba el estado del Context en inglés).
+    - Verificación: grep "useEstilos" en src/ → 0 resultados · eslint 0/0 ·
+      vite build OK con el MISMO hash de bundle → confirmación de que nunca
+      se empaquetaba.
+    - Decisión: borrado sin sustituto (no hay consumidores); crear un
+      src/hooks/useEstilos.js hoy sería reintroducir código muerto.
+
+  Pendiente: P0-3 (inputs controlados), P0-4 (generateCode + escape),
+             P0-5 (timer sin cleanup), P1-6 (key en map)...
 ================================================================================
