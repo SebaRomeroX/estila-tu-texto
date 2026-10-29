@@ -189,7 +189,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Badge de Actions añadido al README (se pondrá verde en el primer push;
       es el único cambio de README en esta fase, el resto es P1-10).
 
-[P1-10] README con información falsa / rota
+[x] P1-10 README con información falsa / rota  ✔ RESUELTO 2026-10-28
   - `[[Demo en Vivo](...)]` → markdown mal formateado (corchetes dobles).
   - "Vercel para despliegue" pero el enlace es de Netlify → unificar.
   - Instrucciones: `npm start` NO existe (el script es `npm run dev`).
@@ -199,6 +199,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   - package.json `"name": "component_builder"` vs repo `estila-tu-texto`.
   - Dependencias huérfanas: `gh-pages` sin script de deploy; `@types/react*`
     sin TypeScript → eliminar o justificar.
+  Verificado (2026-10-28):
+    - Links arreglados: corchetes dobles → "Demo · Código Fuente" con la URL
+      real del repo (SebaRomeroX/estila-tu-texto, antes decía component_builder).
+    - Hosting unificado: demo verificada VIVA en https://estilatutexto.netlify.app/
+      (fetch → responde la app) → "Vercel" corregido a "Netlify".
+    - Instalación: clone URL real + `npm run dev` (antes `start`, inexistente),
+      en bloque de código, + lista de scripts reales (lint/test/test:coverage/
+      build).
+    - Exageración corregida: "Todas las propiedades CSS de texto" →
+      "propiedades tipográficas esenciales" + bullet de alineación real.
+    - package.json name: component_builder → estila-tu-texto (coherente con
+      repo, carpeta y README).
+    - gh-pages: ELIMINADO (45 pkgs, sin script de deploy; el deploy es
+      Netlify). @types/react*: MANTENIDOS con justificación → IntelliSense de
+      JSX en editores (VS Code los usa en archivos .jsx), inofensivos en
+      build/runtime.
+    - Verificación: npm ci OK (lock sincronizado) · lint 0/0 · test 24/24 ·
+      build OK.
 
 [x] P1-11 Fragilidad del preview contentEditable  ✔ RESUELTO 2026-10-28
   Archivo: src/components/Visualizador.jsx
@@ -276,7 +294,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 1 COMPLETA 2026-10-28
   Fase 2 (seguridad y coherencia):   P0-4 ✔, P1-11 ✔
                                      → FASE 2 COMPLETA 2026-10-28
-  Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10
+  Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
+                                     → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7, P2-12, P2-14
 
   Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
@@ -294,7 +313,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [x] Inputs 100% controlados y con validación de rangos  ✔ 2026-10-28
   [x] Snippet generado desde una única función, con escape de HTML  ✔ 2026-10-28
   [ ] Recorrido completo por teclado + aria-live en el botón copiar
-  [ ] README con datos reales (scripts, hosting, URL del repo)
+  [x] README con datos reales (scripts, hosting, URL del repo)  ✔ 2026-10-28
   [ ] Responsive en móvil y scrollbar del <pre> arreglado
 
 --------------------------------------------------------------------------------
@@ -417,5 +436,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Badge de Actions en el README (verde tras el primer push).
     - Verificación: YAML válido · lint 0/0 · coverage lib 100% · build OK.
 
-  Pendiente: P1-10 (README); luego Fase 4 (P1-7 a11y, P2-12 CSS, P2-14 UX).
+2026-10-28 · Fase 3 · P1-10 COMPLETADO — "docs(readme): corregir datos falsos
+  y alinear package.json"  → FIN DE FASE 3
+    - README: links (doble corchete + URL del repo), hosting (Vercel → Netlify,
+      demo verificada viva), clone real + npm run dev + scripts, promesa
+      exagerada suavizada, badge de CI.
+    - package.json: name estila-tu-texto; eliminado gh-pages (huérfano,
+      -45 pkgs); @types/* conservados y justificados (IntelliSense JSX).
+    - Verificación: npm ci OK · lint 0/0 · test 24/24 · build OK.
+
+  Pendiente: Fase 4 → P1-7 (accesibilidad), P2-12 (CSS), P2-14 (UX).
 ================================================================================

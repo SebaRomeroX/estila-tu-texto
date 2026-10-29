@@ -2,8 +2,7 @@
 
 [![CI](https://github.com/SebaRomeroX/estila-tu-texto/actions/workflows/ci.yml/badge.svg)](https://github.com/SebaRomeroX/estila-tu-texto/actions/workflows/ci.yml)
 
-[[Demo en Vivo](https://estilatutexto.netlify.app/)]
-[[Código Fuente](https://github.com/SebaRomeroX/component_builder)]
+[Demo en Vivo](https://estilatutexto.netlify.app/) · [Código Fuente](https://github.com/SebaRomeroX/estila-tu-texto)
 
 **Experimenta con estilos de texto y obtén el código listo para usar.** Una herramienta visual para diseñar tipografía sin escribir CSS manualmente.
 
@@ -24,7 +23,7 @@
 
 - **React** (con Hooks)
 - **CSS**
-- **Vercel** para despliegue
+- **Netlify** para despliegue
 
 ### ✨ **Control Total de Tipografía**
 
@@ -34,7 +33,8 @@
 - ✅ **Color** (color picker)
 - ✅ **Interlineado (line-height)**
 - ✅ **Espaciado entre letras (letter-spacing)**
-- ✅ **Todas las propiedades CSS de texto que necesitas**
+- ✅ **Alineación del texto**
+- ✅ Las propiedades tipográficas esenciales, sin CSS a mano
 
 ### ⚡ **Experiencia en Tiempo Real**
 
@@ -60,13 +60,14 @@ Fácil de extender: ¿nuevo estilo? solo crea su input y añádelo al estado
 
 ### 🚀 Instalación Local
 
-git clone TU_LINK_REPO_AQUÍ
-
+```bash
+git clone https://github.com/SebaRomeroX/estila-tu-texto.git
 cd estila-tu-texto
-
 npm install
+npm run dev
+```
 
-npm start
+**Scripts útiles:** `npm run lint` · `npm test` · `npm run test:coverage` · `npm run build`
 
 ### 💡Lecciones Clave
 
