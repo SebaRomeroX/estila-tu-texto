@@ -1,4 +1,19 @@
 
+/* ------------------------- VARIABLES ------------------------- */
+
+:root {
+  --color-fondo: rgb(17, 17, 17);
+  --color-texto: aliceblue;
+  --color-superficie: rgb(29, 29, 29);
+  --color-superficie-hover: rgb(39, 39, 39);
+  --color-superficie-active: rgb(56, 56, 56);
+  --color-acento: rgb(45, 90, 173);
+  --color-borde: rgba(240, 248, 255, 0.459);
+  --color-foco: rgb(140, 185, 255);
+  --color-codigo: #000000;
+}
+
+
 /* ------------------------- GENERAL ------------------------- */
 
 * {
@@ -20,13 +35,13 @@
 }
 
 body {
-  background-color: rgb(17, 17, 17);
-  color: aliceblue;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
   font-family: system-ui;
 }
 
 .header {
-  background-color: rgb(45, 90, 173)  ;
+  background-color: var(--color-acento);
 }
 
 .titulo {
@@ -44,6 +59,7 @@ body {
 
 .inputs-configuracion {
   display: flex;
+  flex-wrap: wrap;
   padding: 1em 2em;
   gap: 2em;
 
@@ -64,16 +80,17 @@ body {
   font-family: monospace;
 }
 
-.inputs-configuracion select, input {
-  color: aliceblue;
-  background-color: rgb(29, 29, 29);
+.inputs-configuracion input,
+.inputs-configuracion select {
+  color: var(--color-texto);
+  background-color: var(--color-superficie);
   font-size: 1em;
 
   padding: .2em .5em;
-  box-sizing: content-box;
-  height: 1.5em;
+  box-sizing: border-box;
+  height: 1.9em;
 
-  border: 1px solid rgba(240, 248, 255, 0.459);
+  border: 1px solid var(--color-borde);
   border-radius: .3em;
 }
 
@@ -88,9 +105,9 @@ body {
 }
 
 .visualizador-header button {
-  background-color: rgb(29, 29, 29);
-  color: aliceblue;
-  border: 1px solid rgba(240, 248, 255, 0.459);
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  border: 1px solid var(--color-borde);
   border-radius: .6em;
   font-size: .9em;
   padding: .4em .8em;
@@ -98,11 +115,11 @@ body {
 
 .visualizador-header button:hover {
   cursor: pointer;
-  background-color: rgb(39, 39, 39);
+  background-color: var(--color-superficie-hover);
 }
 
 .visualizador-header button:active {
-  background-color: rgb(56, 56, 56);
+  background-color: var(--color-superficie-active);
 }
 
 .visualizador {
@@ -117,7 +134,7 @@ body {
 }
 
 .visualizador *:focus-visible {
-  outline: 2px solid rgb(140, 185, 255);
+  outline: 2px solid var(--color-foco);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -126,9 +143,9 @@ body {
 /* ------------------------- SALIDA ------------------------- */
 
 .salida-codigo {
-  border: 1px solid rgba(240, 248, 255, 0.493);
+  border: 1px solid var(--color-borde);
   border-radius: 1em;
-  background-color: rgb(29, 29, 29);
+  background-color: var(--color-superficie);
 }
 
 .salida-codigo header {
@@ -140,7 +157,7 @@ body {
 
 .salida-codigo button {
   background-color: inherit;
-  color: aliceblue;
+  color: var(--color-texto);
   border-radius: .6em;
   font-size: 1em;
   padding: .6em 1em;
@@ -152,11 +169,11 @@ body {
 
 .salida-codigo button:hover {
   cursor: pointer;
-  background-color: rgb(39, 39, 39);
+  background-color: var(--color-superficie-hover);
 }
 
 .salida-codigo button:active {
-  background-color: rgb(56, 56, 56);
+  background-color: var(--color-superficie-active);
 }
 
 .salida-codigo span {
@@ -164,33 +181,15 @@ body {
 }
 
 .salida-codigo pre {
-  background-color: black;
+  background-color: var(--color-codigo);
   font-size: 1.4em;
   border-radius: 0 0 1em 1em;
   overflow: auto;
-}
 
-
-/*  ARREGLAR AQUI ESTOS ESTILOS */
-/*  LA BARRA ESTA FEA */
-/*  SE ASOMA POR ABAJO */
-.salida-codigo pre::-webkit-scrollbar {
-  width: 10px; 
-  height: 10px;
-}
-
-.salida-codigo pre::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.salida-codigo pre::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.salida-codigo pre::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 5px;
+  /* barra estándar (Firefox/Chrome/Edge): thumb y track oscuros,
+     la esquina ya no asoma en blanco sobre las esquinas redondeadas */
+  scrollbar-width: thin;
+  scrollbar-color: #555555 var(--color-codigo);
 }
 
 
@@ -206,4 +205,22 @@ body {
   text-decoration: none;
   color: inherit;
   font-weight: 700;
+}
+
+
+/* ------------------------- RESPONSIVE ------------------------- */
+
+@media (max-width: 640px) {
+  .seccion {
+    padding: 20px 16px;
+  }
+
+  .inputs-configuracion {
+    padding: 1em 0;
+    gap: 1em;
+  }
+
+  .salida-codigo pre {
+    font-size: 1em;
+  }
 }

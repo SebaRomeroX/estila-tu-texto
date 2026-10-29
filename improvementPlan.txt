@@ -276,7 +276,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
  P2 — UX / PRODUCTO / ARQUITECTURA
 ==========================
 
-[P2-12] CSS con deuda explícita
+[x] P2-12 CSS con deuda explícita  ✔ RESUELTO 2026-10-28
   - Comentario en el código: "/* ARREGLAR AQUI ESTOS ESTILOS ... LA BARRA ESTA
     FEA / SE ASOMA POR ABAJO */" → resolver el scrollbar del <pre>.
   - Selector global `select, input` fuera de `.inputs-configuracion` → afecta
@@ -287,6 +287,25 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     en móvil → responsive (wrap o grid).
   - Sin variables CSS: los colores están hardcodeados (rgb(17,17,17),
     aliceblue, rgb(29,29,29) repetidos) → :root { --bg: ...; --fg: ... }.
+  Verificado (2026-10-28):
+    - Scrollbar: las4 reglas ::-webkit-scrollbar* (y las3 notas ARREGLAR AQUI)
+      REEMPLAZADAS por scrollbar-width: thin + scrollbar-color: #555 #000
+      (estándar FF/Chrome/Edge; el track oscuro pinta la esquina → no asoma
+      el blanco bajo las esquinas redondeadas).
+    - Selector acotado: `.inputs-configuracion input, .inputs-configuracion
+      select` (antes el `input` suelto pintaba cualquier input del documento).
+    - box-sizing: border-box + height: 1.9em (misma altura visual aprox.
+      que el hack content-box 1.5em + .4em de padding; delta ~2px).
+    - Responsive: flex-wrap: wrap en las filas + @media (max-width: 640px)
+      con .seccion 20px/16px, gaps a 1em y código a 1em.
+    - Variables: :root con9 --color-* (fondo, texto, superficie, hover,
+      active, acento, borde, foco, código) reemplazando todos los valores
+      repetidos (unificados también los dos alphas de borde 0.459/0.493).
+    - Greps de aceptación: 0 "ARREGLAR" · 0 "::-webkit-scrollbar" ·
+      0 rgb()/rgba( fuera de :root.
+    - Verificación: 25/25 tests · lint 0/0 · build OK · dev HTTP 200.
+    - Pendiente humano: revisión visual en browser (scrollbar real, móvil,
+      delta de2px en inputs) — acá no hay browser para screenshot.
 
 [P2-13] Lógica de negocio dispersa
   - Valores por defecto de estilos en el Context; rangos (min/max/step) en
@@ -320,7 +339,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 2 COMPLETA 2026-10-28
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
-  Fase 4 (pulido):                   P1-7 ✔, P2-12, P2-14
+  Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14
 
   Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
   verificando antes de commitear:
@@ -340,7 +359,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (axe: 0 violaciones automatizado; walkthrough visual + contraste de
       color quedan para revisión humana en browser real)
   [x] README con datos reales (scripts, hosting, URL del repo)  ✔ 2026-10-28
-  [ ] Responsive en móvil y scrollbar del <pre> arreglado
+  [x] Responsive en móvil y scrollbar del <pre> arreglado  ✔ 2026-10-28
+      (revisión visual humana en browser pendiente: scrollbar, móvil, inputs)
 
 --------------------------------------------------------------------------------
 5. REGISTRO DE AVANCES
@@ -484,5 +504,17 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       los edits de axe sin commitear (hay que re-aplicarlos); no usar checkout
       sobre trabajo en curso sin confirmar.
 
-  Pendiente: P2-12 (CSS), P2-14 (UX); después P2-15 (tipos) y P2-16 (DX).
+  Pendiente: P2-14 (UX); después P2-15 (tipos) y P2-16 (DX).
+
+2026-10-28 · Fase 4 · P2-12 COMPLETADO — "style(css): resolver deuda de
+  estilos (scrollbar, responsive, variables)"
+    - Scrollbar estándar (scrollbar-width/scrollbar-color) con track oscuro →
+      fin del "se asoma por abajo" y de las notas ARREGLAR AQUI.
+    - Selector de inputs acotado, border-box sin hack, flex-wrap + media query
+      640px, y :root con9 variables de color.
+    - Greps: 0 ARREGLAR · 0 webkit-scrollbar · 0 rgb( fuera de :root.
+    - Verificación: 25/25 · lint 0/0 · build OK · dev 200. Visual fino
+      (scrollbar/móvil/2px) pendiente de revisión humana en browser.
+
+  Pendiente: P2-14 (UX); después P2-15 (tipos) y P2-16 (DX).
 ================================================================================
