@@ -31,11 +31,10 @@ export const EditableText = ({ etiqueta = 'p', valor, onCambio }) => {
     onCambio(e.target.textContent)
   }
 
-  // fallback donde plaintext-only no existe: 'true' permite pegar HTML rico,
-  // así que acá se fuerza texto plano (execCommand está deprecado pero es lo
-  // único soportado de forma universal para insertar en la selección)
+  // sanitiza el pegado en TODOS los navegadores (no depende de la detección):
+  // en soportes sin execCommand no se cancela el evento y manda el nativo
   function manejarPaste (e) {
-    if (soportaPlaintextOnly) return
+    if (typeof document.execCommand !== 'function') return
     e.preventDefault()
     const textoPlano = e.clipboardData.getData('text/plain')
     document.execCommand('insertText', false, textoPlano)

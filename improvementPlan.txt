@@ -148,13 +148,33 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Criterio: pasar un recorrido de teclado completo con sentido y que
             `npx axe` (o revisión manual) no marque críticos.
 
-[P1-8] Sin pruebas
+[x] P1-8 Sin pruebas  ✔ RESUELTO 2026-10-28
   Acción:  incorporar Vitest + React Testing Library con casos mínimos:
               - generateCode(): escaping, valores por defecto, snapshot.
               - Cambiar un input actualiza el preview Y el snippet.
               - Copiar: éxito y ruteo de error (mock navigator.clipboard).
               - contentEditable dispara actualizarTexto con el texto correcto.
   Criterio: `npm test` verde y cobertura de la lógica pura (lib) al 100%.
+  Verificado (2026-10-28):
+    - devDeps: vitest 5 + coverage-v8, @testing-library/react 16, jest-dom 7,
+      user-event 14, jsdom 30 (sin conflictos de peer con vite 7).
+    - vite.config.js: environment jsdom, setup con mocks de clipboard y
+      execCommand, coverage sobre src/lib con thresholds 100% (test files
+      excluidos del conteo). Scripts: test, test:watch, test:coverage.
+    - 3 archivos / 24 tests: generateCode.test.js (escaping, snapshot, unidades),
+      EditableText.test.jsx (mount, tipeo, no-reescritura en re-render,
+      sync externa, paste plano), App.test.jsx (integración: color/fuente/tamaño
+      actualizan preview+snippet, campo vacío y fuera de rango, copiar éxito y
+      error, restablecer).
+    - Resultado: 24/24 verdes · src/lib 100% statements/branches/functions/
+      lines · eslint 0/0 · build OK.
+    - Hallazgos durante la implementación: App necesita el provider en el test
+      (como en main.jsx); user-event setup() secuestra navigator.clipboard →
+      tests de copiar usan fireEvent y el espía se re-instala en cada
+      beforeEach; jest-dom compara value de input[type=number] como number.
+    - Ajuste de producto mínimo: manejarPaste siempre sanitiza (ya no depende
+      de la detección de plaintext-only → testable y más simple).
+    - .gitignore/eslint: coverage/ ignorado.
 
 [P1-9] Sin CI
   Acción:  .github/workflows/ci.yml → npm ci, lint, test, build en push/PR.
@@ -247,7 +267,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 1 COMPLETA 2026-10-28
   Fase 2 (seguridad y coherencia):   P0-4 ✔, P1-11 ✔
                                      → FASE 2 COMPLETA 2026-10-28
-  Fase 3 (confianza):                P1-8, P1-9, P1-10
+  Fase 3 (confianza):                P1-8 ✔, P1-9, P1-10
   Fase 4 (pulido):                   P1-7, P2-12, P2-14
 
   Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
@@ -258,7 +278,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
 4. DEFINICIÓN DE ÉXITO (meta 8/10)
 --------------------------------------------------------------------------------
   [x] npm run lint → 0 errores  (logrado 2026-10-28, mantenerlo en cada fase)
-  [ ] npm test → verde, con casos de generateCode y de los inputs
+  [x] npm test → verde, con casos de generateCode y de los inputs  ✔ 24/24, 2026-10-28
   [ ] npm run build → verde (se mantiene)
   [ ] CI en GitHub Actions corriendo lint+test+build
   [x] Sin código muerto (useEstilos.jsx eliminado)  ✔ 2026-10-28
@@ -363,6 +383,21 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Testear en P1-8: (a) tipear actualiza estado sin tocar el DOM,
       (b) restablecer escribe el DOM, (c) paste plano en fallback.
 
-  Pendiente: Fase 3 → P1-8 (tests), P1-9 (CI), P1-10 (README); luego Fase 4
-             (P1-7 a11y, P2-12 CSS, P2-14 UX).
+  Pendiente: Fase 3 → P1-9 (CI), P1-10 (README).
+
+2026-10-28 · Fase 3 · P1-8 COMPLETADO — "test: incorporar vitest con tests de
+  lib, inputs y preview"
+    - Infra: vitest 5 + RTL 16 + jest-dom 7 + user-event 14 + jsdom 30,
+      config en vite.config.js (jsdom, setup con mocks, coverage con
+      thresholds 100% sobre src/lib), scripts test/test:watch/test:coverage.
+    - 3 archivos, 24 tests: lib (escaping/snapshot/unidades), EditableText
+      (tipeo/sync/paste), App integración (inputs → preview+snippet, rangos,
+      copiar éxito/error, restablecer).
+    - Resultado: 24/24 · lib 100% en las 4 métricas · lint 0/0 · build OK.
+    - Ajuste de producto: manejarPaste siempre sanitiza (testable).
+    - Nota: los criterios de P0-3 (campo vacío no rompe) y P1-11 (reset
+      funcional) quedan verificados POR TEST.
+
+  Pendiente: P1-9 (CI), P1-10 (README); luego Fase 4 (P1-7 a11y, P2-12 CSS,
+             P2-14 UX).
 ================================================================================

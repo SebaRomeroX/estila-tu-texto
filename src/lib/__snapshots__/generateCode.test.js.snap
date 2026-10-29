@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateCode > genera el snippet con los valores por defecto (snapshot) 1`] = `
+"<article class='texto'>
+  <h2>Titulo de prueba</h2>
+  <p>Parrafo uno</p>
+  <p>Parrafo dos</p>
+  <h3>Subtitulo</h3>
+  <p>Parrafo tres</p>
+</article>
+
+<style>
+  .texto {
+    color: #F0F8FF;
+    background: #020202;
+    font-family: system-ui;
+    font-size: 1.2em;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.4em;
+    gap: 1em;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 60px;
+  }
+</style>"
+`;
