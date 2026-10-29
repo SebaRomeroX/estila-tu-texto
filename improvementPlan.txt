@@ -95,19 +95,23 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Criterio: escribir `<script>alert(1)</script>` en el preview genera snippet
             escapado; no existe ningún valor de estilo duplicado en plantilla.
 
-[P0-5] Timer sin limpieza (setState tras unmount)
+[x] P0-5 Timer sin limpieza (setState tras unmount)  ✔ RESUELTO 2026-10-28
   Archivo: src/components/Salida.jsx (setTimeout de 3000 ms en copiarCodigo)
   Problema: no hay clearTimeout ni guard de montaje → warning de React y posible
             fuga si se desmonta el componente.
   Acción:  guardar el id en useRef, limpiar en useEffect cleanup.
+  Verificado: ref + cleanup en useEffect añadidos; clearTimeout previo antes de
+  cada clic sucesivo (solo el último timer manda); eslint 0/0; build OK.
 
 ==========================
  P1 — CALIDAD / ACCESIBILIDAD / TESTS
 ==========================
 
-[P1-6] Faltan claves en listas (warnings de runtime)
+[x] P1-6 Faltan claves en listas (warnings de runtime)  ✔ RESUELTO 2026-10-28
   Archivo: src/components/style_editor/InputSelect.jsx (map sin `key`)
   Acción:  añadir `key={opcion.contenido}` (y revisar listas equivalentes).
+  Verificado: único `.map(` del codebase (grep) → corregido con
+  key={opcion.contenido}; eslint 0/0; build OK.
 
 [P1-7] Accesibilidad (hoy ~0)
   - <label> envuelve <p> en vez de usar texto real + htmlFor/id.
@@ -200,7 +204,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
 --------------------------------------------------------------------------------
 3. ORDEN DE EJECUCIÓN PROPUESTO
 --------------------------------------------------------------------------------
-  Fase 1 (deja el repo "limpio"):    P0-1, P0-2, P1-6, P1-5, P0-3
+  Fase 1 (deja el repo "limpio"):    P0-1 ✔, P0-2 ✔, P1-6 ✔, P0-5 ✔, P0-3
   Fase 2 (seguridad y coherencia):   P0-4, P1-11
   Fase 3 (confianza):                P1-8, P1-9, P1-10
   Fase 4 (pulido):                   P1-7, P2-12, P2-14
@@ -250,6 +254,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Decisión: borrado sin sustituto (no hay consumidores); crear un
       src/hooks/useEstilos.js hoy sería reintroducir código muerto.
 
+  Pendiente: P0-3 (inputs controlados), P0-4 (generateCode + escape)...
+
+2026-10-28 · Fase 1 · P1-6 COMPLETADO — "fix(inputs): agregar key a las
+  opciones del select"
+    - key={opcion.contenido} en el <option> del map de InputSelect.
+    - Grep confirmó que es el ÚNICO .map( de todo src/ → no hay listas
+      equivalentes pendientes.
+    - Verificación: eslint 0/0 · build OK.
+
+2026-10-28 · Fase 1 · P0-5 COMPLETADO — "fix(salida): limpiar timeout del
+  boton copiar al desmontar"
+    - El id del setTimeout ahora vive en un useRef con cleanup en useEffect.
+    - Bonus: clearTimeout previo en cada clic → un clic rápido ya no encadena
+      varios timers de reset.
+    - Verificación: eslint 0/0 · build OK.
+    - Nota pendiente para P0-4/P1-8: el estado sigue siendo un emoji como
+      feedback (sin aria-live) → eso es P1-7, fuera del alcance de P0-5.
+
   Pendiente: P0-3 (inputs controlados), P0-4 (generateCode + escape),
-             P0-5 (timer sin cleanup), P1-6 (key en map)...
+             P1-7 (accesibilidad), P1-8 (tests)...
 ================================================================================
