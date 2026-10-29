@@ -320,9 +320,35 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   - Persistencia (localStorage) de la última configuración.
   - index.html: sin meta description ni Open Graph → compartir mal el link.
 
-[P2-15] TypeScript o al menos PropTypes
+[x] P2-15 TypeScript o al menos PropTypes  ✔ RESUELTO 2026-10-29
   - Sin tipos: `estilos[campo]` es any por composición; errores silenciosos.
   - Decisión: migración incremental con `// @ts-check` + JSDoc, o TS real.
+  Verificado (2026-10-29):
+    - Decisión: NO migración TS completa (renames .js→.ts, riesgo alto) sino
+      typecheck incremental en JSDoc — el propio plan lo contempla.
+    - Infra: typescript (tsc 7) devDep + jsconfig.json (checkJs + noImplicitAny;
+      strict:false explícito: tsc 7 trae strict por defecto → los null-checks
+      quedan para una adopción futura, no ahora) + src/vite-env.d.ts (vite/client
+      para imports de CSS).
+    - src/types.js: typedefs del dominio (Estilos, CampoEstilo, Texto,
+      CampoTexto, ContextoEstilos, Opcion, ElementoInput y los Parametros* de
+      cada componente) → fuente única de formas.
+    - Anotaciones en context (EstilosProvider/estilosContext), lib (estilos,
+      generateCode), App, EditableText, Visualizador, Salida, InputsParams
+      (los3 exports como Record<string, ElementoInput> → `campo` deja de ser
+      string libre) y los 3 Inputs.
+    - Casos reales que el typecheck cazó durante la implementación:
+      69 errores iniciales; los interesantes: rutas rotas de import()
+      (./types.js vs ../types.js), `e.target.textContent` en un handler
+      (target es EventTarget → a currentTarget, mismo nodo acá) y
+      textAlign:string vs la unión TextAlign de CSSProperties (cast en la
+      frontera dominio→CSS con comentario).
+    - App.test.jsx: `let` tipados (HTMLElement/HTMLPreElement) y
+      navigator.clipboard.writeText.mockRejectedValueOnce → vi.mocked(...).
+    - Nuevo script npm run typecheck (tsc --noEmit -p jsconfig.json) y paso
+      "Typecheck (JSDoc + checkJs)" en el CI, después de lint.
+    - Verificación: typecheck 0 errores · lint 0/0 · 25/25 tests ·
+      coverage lib 100% · build OK · dev HTTP 200.
 
 [P2-16] DX
   - Sin Prettier ni hooks de formato → formato inconsistente (comillas mezcla
@@ -340,10 +366,11 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14
+  Fase 5 (tipos y DX):               P2-15 ✔, P2-16
 
   Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
   verificando antes de commitear:
-      npm run lint && npm test && npm run build
+      npm run lint && npm run typecheck && npm test && npm run build
 
 --------------------------------------------------------------------------------
 4. DEFINICIÓN DE ÉXITO (meta 8/10)
@@ -361,6 +388,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [x] README con datos reales (scripts, hosting, URL del repo)  ✔ 2026-10-28
   [x] Responsive en móvil y scrollbar del <pre> arreglado  ✔ 2026-10-28
       (revisión visual humana en browser pendiente: scrollbar, móvil, inputs)
+  [x] Typecheck (JSDoc + checkJs) en 0 errores y corriendo en el CI  ✔ 2026-10-29
 
 --------------------------------------------------------------------------------
 5. REGISTRO DE AVANCES
@@ -516,5 +544,18 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: 25/25 · lint 0/0 · build OK · dev 200. Visual fino
       (scrollbar/móvil/2px) pendiente de revisión humana en browser.
 
-  Pendiente: P2-14 (UX); después P2-15 (tipos) y P2-16 (DX).
+2026-10-29 · Fase 5 · P2-15 COMPLETADO — "feat(types): typecheck incremental
+  con JSDoc y tipos del dominio"
+    - jsconfig.json (checkJs + noImplicitAny, strict:false explícito) +
+      typescript devDep + vite-env.d.ts.
+    - src/types.js con los typedefs del dominio; anotaciones en context, lib,
+      componentes e inputs (InputsParams tipado → campo: CampoEstilo).
+    - Typecheck cazó rutas rotas de import(), e.target vs currentTarget en un
+      handler y textAlign vs la unión TextAlign (cast documentado en la
+      frontera dominio→CSS).
+    - Script npm run typecheck + paso en CI (tras lint).
+    - Verificación: typecheck 0 errores · lint 0/0 · 25/25 · lib 100% ·
+      build OK · dev 200. De 69 errores iniciales a 0.
+
+  Pendiente: P2-16 (DX); luego P2-14 (UX, a planificar).
 ================================================================================

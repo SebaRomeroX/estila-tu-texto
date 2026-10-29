@@ -1,7 +1,12 @@
 import { estilosToStyleObject } from './estilos.js'
 
-// Escapa texto del usuario para inyectarlo seguro dentro del HTML del snippet.
-// El orden importa: & primero, para no escapar dos veces los ya escapados.
+/**
+ * Escapa texto del usuario para inyectarlo seguro dentro del HTML del snippet.
+ * El orden importa: & primero, para no escapar dos veces los ya escapados.
+ *
+ * @param {*} texto
+ * @returns {string}
+ */
 export function escapeHtml (texto) {
   return String(texto)
     .replaceAll('&', '&amp;')
@@ -11,6 +16,10 @@ export function escapeHtml (texto) {
     .replaceAll("'", '&#39;')
 }
 
+/**
+ * @param {string} propiedad
+ * @returns {string}
+ */
 const camelToKebab = (propiedad) =>
   propiedad.replace(/[A-Z]/g, (letra) => `-${letra.toLowerCase()}`)
 
@@ -22,8 +31,14 @@ const LAYOUT_FIJO = [
   'padding: 30px 60px;',
 ]
 
-// Genera el snippet HTML+CSS a partir del MISMO estado que alimenta el
-// preview. Es la única fuente de verdad: sirve para el <pre> y para copiar.
+/**
+ * Genera el snippet HTML+CSS a partir del MISMO estado que alimenta el
+ * preview. Es la única fuente de verdad: sirve para el <pre> y para copiar.
+ *
+ * @param {import('../types.js').Texto} texto
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
 export function generateCode (texto, estilos) {
   const { titulo, parrafo1, parrafo2, subtitulo, parrafo3 } = texto
 

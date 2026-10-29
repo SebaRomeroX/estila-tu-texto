@@ -14,9 +14,12 @@ const soportaPlaintextOnly = (() => {
 // el vdom (sin children). El efecto solo escribe cuando el estado externo
 // difiere del DOM (ej. "Restablecer texto") → mientras se tipea nunca escribe
 // y por lo tanto el caret no salta.
+/**
+ * @param {import('../types.js').ParametrosEditableText} props
+ */
 export const EditableText = ({ etiqueta = 'p', nombre, valor, onCambio }) => {
-  const ref = useRef(null)
-  const Tag = etiqueta
+  const ref = useRef(/** @type {HTMLElement | null} */ (null))
+  const Tag = /** @type {any} */ (etiqueta)
 
   // useLayoutEffect: escribe ANTES del paint → nunca hay frame en blanco al
   // montar ni al restablecer
@@ -27,12 +30,20 @@ export const EditableText = ({ etiqueta = 'p', nombre, valor, onCambio }) => {
     }
   }, [valor])
 
+  /**
+   * @param {import('react').SyntheticEvent<HTMLElement>} e
+   */
   function manejarInput (e) {
-    onCambio(e.target.textContent)
+    // currentTarget (el elemento con el handler) en vez de target: tipado
+    // correcto y aquí siempre son el mismo nodo
+    onCambio(e.currentTarget.textContent ?? '')
   }
 
   // sanitiza el pegado en TODOS los navegadores (no depende de la detección):
   // en soportes sin execCommand no se cancela el evento y manda el nativo
+  /**
+   * @param {import('react').ClipboardEvent<HTMLElement>} e
+   */
   function manejarPaste (e) {
     if (typeof document.execCommand !== 'function') return
     e.preventDefault()

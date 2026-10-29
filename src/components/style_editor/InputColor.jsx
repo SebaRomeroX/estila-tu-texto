@@ -1,6 +1,9 @@
 import { useContext } from "react"
 import { EstilosContext } from "../../context/estilosContext.js"
 
+/**
+ * @param {import('../../types.js').ParametrosInput} props
+ */
 export const InputColor = ({ elemento }) => {
   const { label, campo } = elemento
   const { estilos, actualizarEstilos } = useContext(EstilosContext)

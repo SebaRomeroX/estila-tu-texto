@@ -1,3 +1,6 @@
 import { createContext } from "react"
 
-export const EstilosContext = createContext()
+// contexto con forma explícita: consumirlo da { estilos, actualizarEstilos }
+export const EstilosContext = createContext(
+  /** @type {import('../types.js').ContextoEstilos | undefined} */ (undefined)
+)

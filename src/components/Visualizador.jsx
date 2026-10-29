@@ -5,6 +5,7 @@ import { EditableText } from "./EditableText.jsx"
 
 // estructura del preview: qué campo edita, con qué etiqueta HTML y cómo
 // nombra ese campo para lectores de pantalla
+/** @type {Array<{ campo: import('../types.js').CampoTexto, etiqueta: string, nombre: string }>} */
 const CAMPOS = [
   { campo: 'titulo', etiqueta: 'h2', nombre: 'Título' },
   { campo: 'parrafo1', etiqueta: 'p', nombre: 'Párrafo 1' },
@@ -13,6 +14,9 @@ const CAMPOS = [
   { campo: 'parrafo3', etiqueta: 'p', nombre: 'Párrafo 3' },
 ]
 
+/**
+ * @param {import('../types.js').ParametrosVisualizador} props
+ */
 export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
   const { estilos } = useContext(EstilosContext)
 

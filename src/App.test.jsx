@@ -5,8 +5,11 @@ import axe from 'axe-core'
 import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
 
+/** @type {HTMLElement} */
 let container
+/** @type {HTMLPreElement} */
 let pre
+/** @type {HTMLElement} */
 let preview
 
 beforeEach(() => {
@@ -102,7 +105,7 @@ describe('botón copiar', () => {
   })
 
   it('feedbacka error si el clipboard falla', async () => {
-    navigator.clipboard.writeText.mockRejectedValueOnce(new Error('denegado'))
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('denegado'))
 
     fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
 

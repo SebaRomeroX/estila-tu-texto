@@ -15,7 +15,11 @@ const TEXTO_INICIAL = {
 const App = () => {
   const [texto, setTexto] = useState(TEXTO_INICIAL)
 
-  function actualizarTexto (campo, valor) {
+  /**
+ * @param {import('./types.js').CampoTexto} campo
+ * @param {string} valor
+ */
+function actualizarTexto (campo, valor) {
     setTexto(prev => ({...prev, [campo]: valor}))
   }
 

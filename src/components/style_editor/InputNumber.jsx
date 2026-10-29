@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { EstilosContext } from "../../context/estilosContext.js"
 
+/**
+ * @param {import('../../types.js').ParametrosInput} props
+ */
 export const InputNumber = ({ elemento }) => {
   const { label, min, max, step, campo } = elemento
   const { estilos, actualizarEstilos } = useContext(EstilosContext)
@@ -19,6 +22,9 @@ export const InputNumber = ({ elemento }) => {
     ))
   }, [valorObtenido])
 
+  /**
+   * @param {import('react').ChangeEvent<HTMLInputElement>} e
+   */
   function handleChange (e) {
     const raw = e.target.value
     setDraft(raw)

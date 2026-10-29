@@ -23,6 +23,12 @@ const OPCIONES_FUENTE = [
   { nombre: 'System UI', contenido: 'system-ui' },
 ]
 
+/**
+ * Fichas de configuración de cada input. Tipadas como ElementoInput para que
+ * `campo` sea CampoEstilo (no string suelto) y el compilador valide los rangos.
+ *
+ * @type {Record<string, import('./types.js').ElementoInput>}
+ */
 export const InputsNumberParams = {
   gap: {
     label: 'Espacio elementos',
@@ -54,6 +60,7 @@ export const InputsNumberParams = {
   },
 }
 
+/** @type {Record<string, import('./types.js').ElementoInput>} */
 export const InputsSelectsParams = {
   align: {
     label: 'Posicion texto',
@@ -79,6 +86,7 @@ export const InputsSelectsParams = {
   },
 }
 
+/** @type {Record<string, import('./types.js').ElementoInput>} */
 export const InputsColorParams = {
   color: {
     label: 'Color letra',

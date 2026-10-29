@@ -3,16 +3,20 @@ import { EstilosContext } from "../context/estilosContext.js"
 import { generateCode } from "../lib/generateCode.js"
 
 // feedback del copiar: emoji para la vista, texto para lectores de pantalla
+/** @type {Record<string, { emoji: string, mensaje: string }>} */
 const ESTADOS_COPIA = {
   espera: { emoji: '📝', mensaje: '' },
   ok: { emoji: '✔', mensaje: 'Código copiado al portapapeles' },
   error: { emoji: '❗', mensaje: 'Error al copiar el código' },
 }
 
+/**
+ * @param {import('../types.js').ParametrosSalida} props
+ */
 export const SalidaCodigo = ({ texto }) => {
   const { estilos } = useContext(EstilosContext)
   const [estadoCopia, setEstadoCopia] = useState('espera')
-  const timerRef = useRef(null)
+  const timerRef = useRef(/** @type {number | undefined} */ (undefined))
 
   // limpiar el timeout si el componente se desmonta (evita setState tras unmount)
   useEffect(() => {
