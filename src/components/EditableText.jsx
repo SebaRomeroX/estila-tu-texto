@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react"
+import { useLayoutEffect, useRef } from 'react'
 
 // Detección de soporte de contenteditable="plaintext-only". En navegadores sin
 // soporte el atributo se considera inválido y el elemento queda NO editable,
@@ -33,7 +33,7 @@ export const EditableText = ({ etiqueta = 'p', nombre, valor, onCambio }) => {
   /**
    * @param {import('react').SyntheticEvent<HTMLElement>} e
    */
-  function manejarInput (e) {
+  function manejarInput(e) {
     // currentTarget (el elemento con el handler) en vez de target: tipado
     // correcto y aquí siempre son el mismo nodo
     onCambio(e.currentTarget.textContent ?? '')
@@ -44,7 +44,7 @@ export const EditableText = ({ etiqueta = 'p', nombre, valor, onCambio }) => {
   /**
    * @param {import('react').ClipboardEvent<HTMLElement>} e
    */
-  function manejarPaste (e) {
+  function manejarPaste(e) {
     if (typeof document.execCommand !== 'function') return
     e.preventDefault()
     const textoPlano = e.clipboardData.getData('text/plain')

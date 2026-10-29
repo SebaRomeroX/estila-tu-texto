@@ -350,11 +350,28 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: typecheck 0 errores · lint 0/0 · 25/25 tests ·
       coverage lib 100% · build OK · dev HTTP 200.
 
-[P2-16] DX
+[x] P2-16 DX  ✔ RESUELTO 2026-10-29
   - Sin Prettier ni hooks de formato → formato inconsistente (comillas mezcla
     de " y ', sangrías de 4 vs 2 espacios, `function` con/sin espacio).
   - Sin .editorconfig.
   - Faltan scripts: `test`, `format`, `typecheck`.
+  Verificado (2026-10-29):
+    - Prettier devDep + .prettierrc con el estilo dominante del repo
+      (singleQuote, jsxSingleQuote, semi:false) → el formateo masivo no
+      pelea con el código existente.
+    - .prettierignore: dist, coverage, package-lock.json, improvementPlan.txt.
+    - .editorconfig: utf-8, LF, indent 2 espacios, final newline
+      (trim_trailing desactivado solo en .md).
+    - Scripts: format (prettier --write .) y format:check (prettier --check .);
+      `typecheck` ya existía desde P2-15 y `test` desde P1-8 (los3 faltantes
+      del plan cubiertos).
+    - CI: paso "Formato (Prettier)" como PRIMERA puerta (format:check →
+      lint → typecheck → test+coverage → build).
+    - Formateo corrido sobre todo el repo (una sola vez) y verificado:
+      format:check OK · typecheck 0 errores · lint 0/0 · 25/25 tests ·
+      build OK · dev HTTP 200.
+    - Sin conflictos con ESLint: la config solo usa recommended (sin reglas
+      de estilo) → Prettier manda en formato, ESLint en calidad.
 
 --------------------------------------------------------------------------------
 3. ORDEN DE EJECUCIÓN PROPUESTO
@@ -366,7 +383,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14
-  Fase 5 (tipos y DX):               P2-15 ✔, P2-16
+  Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
+                                     → FASE 5 COMPLETA 2026-10-29
 
   Cada fase = 1 commit convencional (feat/fix/test/docs/style) en español,
   verificando antes de commitear:
@@ -378,7 +396,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [x] npm run lint → 0 errores  (logrado 2026-10-28, mantenerlo en cada fase)
   [x] npm test → verde, con casos de generateCode y de los inputs  ✔ 24/24, 2026-10-28
   [ ] npm run build → verde (se mantiene)
-  [x] CI en GitHub Actions corriendo lint+test+build  ✔ 2026-10-28
+  [x] CI en GitHub Actions: format+lint+typecheck+test+build  ✔ 2026-10-28/29
   [x] Sin código muerto (useEstilos.jsx eliminado)  ✔ 2026-10-28
   [x] Inputs 100% controlados y con validación de rangos  ✔ 2026-10-28
   [x] Snippet generado desde una única función, con escape de HTML  ✔ 2026-10-28
@@ -389,6 +407,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   [x] Responsive en móvil y scrollbar del <pre> arreglado  ✔ 2026-10-28
       (revisión visual humana en browser pendiente: scrollbar, móvil, inputs)
   [x] Typecheck (JSDoc + checkJs) en 0 errores y corriendo en el CI  ✔ 2026-10-29
+  [x] Formato único (Prettier + editorconfig) con chequeo en el CI  ✔ 2026-10-29
 
 --------------------------------------------------------------------------------
 5. REGISTRO DE AVANCES
@@ -557,5 +576,15 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: typecheck 0 errores · lint 0/0 · 25/25 · lib 100% ·
       build OK · dev 200. De 69 errores iniciales a 0.
 
-  Pendiente: P2-16 (DX); luego P2-14 (UX, a planificar).
+2026-10-29 · Fase 5 · P2-16 COMPLETADO — "chore(dx): prettier, editorconfig y
+  scripts de formato"
+    - Prettier con el estilo dominante del repo (comillas simples, sin punto
+      y coma), .prettierignore y .editorconfig.
+    - Scripts format/format:check; CI con format:check como primera puerta
+      (format:check → lint → typecheck → test+coverage → build).
+    - Formateo único sobre todo el repo; verificación completa en verde.
+    - Verificación: format:check OK · typecheck 0 · lint 0/0 · 25/25 ·
+      build OK · dev 200.
+
+  Pendiente: solo P2-14 (UX) — a planificar con el usuario.
 ================================================================================

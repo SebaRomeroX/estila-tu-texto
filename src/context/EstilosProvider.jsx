@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { EstilosContext } from "./estilosContext.js"
+import { useState } from 'react'
+import { EstilosContext } from './estilosContext.js'
 
 /**
  * @param {{ children: import('react').ReactNode }} props
  */
-export function EstilosProvider ({ children }) {
+export function EstilosProvider({ children }) {
   const [estilos, setEstilos] = useState(
     /** @type {import('../types.js').Estilos} */ ({
       color: '#F0F8FF',
@@ -16,15 +16,15 @@ export function EstilosProvider ({ children }) {
       height: '1.4',
       gap: '1',
       align: 'left',
-    })
+    }),
   )
 
   /**
    * @param {import('../types.js').CampoEstilo} campo
    * @param {string} valor
    */
-  function actualizarEstilos (campo, valor) {
-    setEstilos(prev => ({...prev, [campo]: valor}))
+  function actualizarEstilos(campo, valor) {
+    setEstilos((prev) => ({ ...prev, [campo]: valor }))
   }
 
   return (

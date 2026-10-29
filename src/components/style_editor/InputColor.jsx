@@ -1,5 +1,5 @@
-import { useContext } from "react"
-import { EstilosContext } from "../../context/estilosContext.js"
+import { useContext } from 'react'
+import { EstilosContext } from '../../context/estilosContext.js'
 
 /**
  * @param {import('../../types.js').ParametrosInput} props
@@ -21,7 +21,9 @@ export const InputColor = ({ elemento }) => {
         />
       </label>
       {/* valor visible: el estado no depende solo del color (WCAG 1.4.1) */}
-      <span className='valor-color' aria-hidden='true'>{valorObtenido}</span>
+      <span className='valor-color' aria-hidden='true'>
+        {valorObtenido}
+      </span>
     </div>
   )
 }

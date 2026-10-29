@@ -35,28 +35,28 @@ export const InputsNumberParams = {
     campo: 'gap',
     min: 1,
     max: 3,
-    step: 0.1 
+    step: 0.1,
   },
   tamaño: {
     label: 'Tamaño',
     campo: 'size',
     min: 1,
     max: 2,
-    step: 0.1
+    step: 0.1,
   },
   altura: {
     label: 'Altura linea',
     campo: 'height',
     min: 1,
-    max: 2, 
-    step: 0.1
+    max: 2,
+    step: 0.1,
   },
   espacio: {
     label: 'Espacio letras',
     campo: 'spacing',
     min: 0,
     max: 0.3,
-    step: 0.01
+    step: 0.01,
   },
 }
 
@@ -66,8 +66,8 @@ export const InputsSelectsParams = {
     label: 'Posicion texto',
     campo: 'align',
     opciones: [
-      {nombre: 'inicio', contenido: 'left'},
-      {nombre: 'centrado', contenido: 'center'}
+      { nombre: 'inicio', contenido: 'left' },
+      { nombre: 'centrado', contenido: 'center' },
     ],
   },
   fuente: {
@@ -79,9 +79,9 @@ export const InputsSelectsParams = {
     label: 'Ancho letra',
     campo: 'weight',
     opciones: [
-      {nombre: '100', contenido: 100},
-      {nombre: '400', contenido: 400},
-      {nombre: '600', contenido: 600},
+      { nombre: '100', contenido: 100 },
+      { nombre: '400', contenido: 400 },
+      { nombre: '600', contenido: 600 },
     ],
   },
 }

@@ -1,7 +1,7 @@
-import { useContext } from "react"
-import { EstilosContext } from "../context/estilosContext.js"
-import { estilosToStyleObject } from "../lib/estilos.js"
-import { EditableText } from "./EditableText.jsx"
+import { useContext } from 'react'
+import { EstilosContext } from '../context/estilosContext.js'
+import { estilosToStyleObject } from '../lib/estilos.js'
+import { EditableText } from './EditableText.jsx'
 
 // estructura del preview: qué campo edita, con qué etiqueta HTML y cómo
 // nombra ese campo para lectores de pantalla

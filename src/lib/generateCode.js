@@ -7,7 +7,7 @@ import { estilosToStyleObject } from './estilos.js'
  * @param {*} texto
  * @returns {string}
  */
-export function escapeHtml (texto) {
+export function escapeHtml(texto) {
   return String(texto)
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
@@ -39,14 +39,15 @@ const LAYOUT_FIJO = [
  * @param {import('../types.js').Estilos} estilos
  * @returns {string}
  */
-export function generateCode (texto, estilos) {
+export function generateCode(texto, estilos) {
   const { titulo, parrafo1, parrafo2, subtitulo, parrafo3 } = texto
 
   const declaracionesCss = [
-    ...Object.entries(estilosToStyleObject(estilos))
-      .map(([propiedad, valor]) => `${camelToKebab(propiedad)}: ${valor};`),
+    ...Object.entries(estilosToStyleObject(estilos)).map(
+      ([propiedad, valor]) => `${camelToKebab(propiedad)}: ${valor};`,
+    ),
     ...LAYOUT_FIJO,
-  ].map(declaracion => `    ${declaracion}`)
+  ].map((declaracion) => `    ${declaracion}`)
 
   return [
     `<article class='texto'>`,

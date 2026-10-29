@@ -10,14 +10,14 @@ beforeEach(() => {
 describe('EditableText', () => {
   it('muestra el valor al montar', () => {
     const { container } = render(
-      <EditableText etiqueta='h2' valor='Hola mundo' onCambio={() => {}} />
+      <EditableText etiqueta='h2' valor='Hola mundo' onCambio={() => {}} />,
     )
     expect(container.querySelector('h2')).toHaveTextContent('Hola mundo')
   })
 
   it('declara contentEditable en el elemento', () => {
     const { container } = render(
-      <EditableText etiqueta='p' valor='base' onCambio={() => {}} />
+      <EditableText etiqueta='p' valor='base' onCambio={() => {}} />,
     )
     expect(container.querySelector('p')).toHaveAttribute('contenteditable')
   })
@@ -25,7 +25,7 @@ describe('EditableText', () => {
   it('notifica el texto al tipear', () => {
     const onCambio = vi.fn()
     const { container } = render(
-      <EditableText etiqueta='p' valor='base' onCambio={onCambio} />
+      <EditableText etiqueta='p' valor='base' onCambio={onCambio} />,
     )
     const elemento = container.querySelector('p')
 
@@ -36,13 +36,15 @@ describe('EditableText', () => {
   })
 
   it('no reescribe el DOM tras un re-render si el usuario editó', () => {
-    function Vista () {
+    function Vista() {
       const [valor, setValor] = useState('inicial')
       const [, setTick] = useState(0)
 
       return (
         <div>
-          <button type='button' onClick={() => setTick(t => t + 1)}>redibujar</button>
+          <button type='button' onClick={() => setTick((t) => t + 1)}>
+            redibujar
+          </button>
           <EditableText etiqueta='h3' valor={valor} onCambio={setValor} />
         </div>
       )
@@ -63,12 +65,14 @@ describe('EditableText', () => {
   })
 
   it('sincroniza cambios externos del valor hacia el DOM', () => {
-    function Externo () {
+    function Externo() {
       const [valor, setValor] = useState('uno')
 
       return (
         <div>
-          <button type='button' onClick={() => setValor('dos')}>cambiar desde fuera</button>
+          <button type='button' onClick={() => setValor('dos')}>
+            cambiar desde fuera
+          </button>
           <EditableText etiqueta='p' valor={valor} onCambio={() => {}} />
         </div>
       )
@@ -85,7 +89,7 @@ describe('EditableText', () => {
 
   it('fuerza texto plano al pegar', () => {
     const { container } = render(
-      <EditableText etiqueta='p' valor='x' onCambio={() => {}} />
+      <EditableText etiqueta='p' valor='x' onCambio={() => {}} />,
     )
     const elemento = container.querySelector('p')
 
@@ -94,6 +98,10 @@ describe('EditableText', () => {
     })
 
     expect(noCancelado).toBe(false)
-    expect(document.execCommand).toHaveBeenCalledWith('insertText', false, '<b>rico</b>')
+    expect(document.execCommand).toHaveBeenCalledWith(
+      'insertText',
+      false,
+      '<b>rico</b>',
+    )
   })
 })

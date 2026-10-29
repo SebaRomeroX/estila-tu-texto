@@ -1,4 +1,3 @@
-
 /* ------------------------- VARIABLES ------------------------- */
 
 :root {
@@ -12,7 +11,6 @@
   --color-foco: rgb(140, 185, 255);
   --color-codigo: #000000;
 }
-
 
 /* ------------------------- GENERAL ------------------------- */
 
@@ -54,7 +52,6 @@ body {
   margin: auto;
 }
 
-
 /* ------------------------- INPUTS ------------------------- */
 
 .inputs-configuracion {
@@ -64,19 +61,19 @@ body {
   gap: 2em;
 
   font-size: 1.1em;
-  opacity: .9;
+  opacity: 0.9;
 }
 
 .inputs-configuracion label,
 .campo-color {
   display: flex;
   flex-direction: column;
-  gap: .4em;
+  gap: 0.4em;
 }
 
 .valor-color {
-  font-size: .8em;
-  opacity: .7;
+  font-size: 0.8em;
+  opacity: 0.7;
   font-family: monospace;
 }
 
@@ -86,14 +83,13 @@ body {
   background-color: var(--color-superficie);
   font-size: 1em;
 
-  padding: .2em .5em;
+  padding: 0.2em 0.5em;
   box-sizing: border-box;
   height: 1.9em;
 
   border: 1px solid var(--color-borde);
-  border-radius: .3em;
+  border-radius: 0.3em;
 }
-
 
 /* ------------------------- VISUALIZAR ------------------------- */
 
@@ -108,9 +104,9 @@ body {
   background-color: var(--color-superficie);
   color: var(--color-texto);
   border: 1px solid var(--color-borde);
-  border-radius: .6em;
-  font-size: .9em;
-  padding: .4em .8em;
+  border-radius: 0.6em;
+  font-size: 0.9em;
+  padding: 0.4em 0.8em;
 }
 
 .visualizador-header button:hover {
@@ -139,7 +135,6 @@ body {
   border-radius: 2px;
 }
 
-
 /* ------------------------- SALIDA ------------------------- */
 
 .salida-codigo {
@@ -158,13 +153,13 @@ body {
 .salida-codigo button {
   background-color: inherit;
   color: var(--color-texto);
-  border-radius: .6em;
+  border-radius: 0.6em;
   font-size: 1em;
-  padding: .6em 1em;
+  padding: 0.6em 1em;
   height: fit-content;
   display: flex;
   align-items: center;
-  gap: .4em;
+  gap: 0.4em;
 }
 
 .salida-codigo button:hover {
@@ -192,7 +187,6 @@ body {
   scrollbar-color: #555555 var(--color-codigo);
 }
 
-
 /* ------------------------- FOOTER ------------------------- */
 
 .footer {
@@ -206,7 +200,6 @@ body {
   color: inherit;
   font-weight: 700;
 }
-
 
 /* ------------------------- RESPONSIVE ------------------------- */
 

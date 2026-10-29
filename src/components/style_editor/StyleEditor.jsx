@@ -1,4 +1,8 @@
-import { InputsColorParams, InputsNumberParams, InputsSelectsParams } from '../../InputsParams.js'
+import {
+  InputsColorParams,
+  InputsNumberParams,
+  InputsSelectsParams,
+} from '../../InputsParams.js'
 import { InputNumber } from './InputNumber.jsx'
 import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'

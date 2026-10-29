@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react"
-import { EstilosContext } from "../../context/estilosContext.js"
+import { useContext, useEffect, useState } from 'react'
+import { EstilosContext } from '../../context/estilosContext.js'
 
 /**
  * @param {import('../../types.js').ParametrosInput} props
@@ -17,15 +17,15 @@ export const InputNumber = ({ elemento }) => {
   // si el estado cambia por fuera (reset/presets futuros), reflejarlo aquí.
   // se compara en números para no pisar un "1." a medio tipear.
   useEffect(() => {
-    setDraft(prev => (
-      Number(prev) === Number(valorObtenido) ? prev : String(valorObtenido)
-    ))
+    setDraft((prev) =>
+      Number(prev) === Number(valorObtenido) ? prev : String(valorObtenido),
+    )
   }, [valorObtenido])
 
   /**
    * @param {import('react').ChangeEvent<HTMLInputElement>} e
    */
-  function handleChange (e) {
+  function handleChange(e) {
     const raw = e.target.value
     setDraft(raw)
 
@@ -36,7 +36,7 @@ export const InputNumber = ({ elemento }) => {
     actualizarEstilos(campo, String(numero))
   }
 
-  function handleBlur () {
+  function handleBlur() {
     const numero = Number(draft)
     const valido = draft.trim() !== '' && Number.isFinite(numero)
 
@@ -54,7 +54,7 @@ export const InputNumber = ({ elemento }) => {
     <label>
       <span>{label}</span>
       <input
-        type="number"
+        type='number'
         value={draft}
         onChange={handleChange}
         onBlur={handleBlur}

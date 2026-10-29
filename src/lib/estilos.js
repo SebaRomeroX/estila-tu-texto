@@ -7,8 +7,18 @@
  * @param {import('../types.js').Estilos} estilos
  * @returns {import('react').CSSProperties}
  */
-export function estilosToStyleObject (estilos) {
-  const { color, background, family, size, weight, spacing, height, gap, align } = estilos
+export function estilosToStyleObject(estilos) {
+  const {
+    color,
+    background,
+    family,
+    size,
+    weight,
+    spacing,
+    height,
+    gap,
+    align,
+  } = estilos
 
   return {
     color,
@@ -20,6 +30,8 @@ export function estilosToStyleObject (estilos) {
     lineHeight: `${height}em`,
     gap: `${gap}em`,
     // el dominio guarda string libre (viene de inputs); en CSS es una unión
-    textAlign: /** @type {import('react').CSSProperties['textAlign']} */ (align),
+    textAlign: /** @type {import('react').CSSProperties['textAlign']} */ (
+      align
+    ),
   }
 }

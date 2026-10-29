@@ -24,8 +24,9 @@ const TEXTO = {
 
 describe('escapeHtml', () => {
   it('escapa los 5 caracteres peligrosos', () => {
-    expect(escapeHtml(`<script>"x" & 'y'</script>`))
-      .toBe('&lt;script&gt;&quot;x&quot; &amp; &#39;y&#39;&lt;/script&gt;')
+    expect(escapeHtml(`<script>"x" & 'y'</script>`)).toBe(
+      '&lt;script&gt;&quot;x&quot; &amp; &#39;y&#39;&lt;/script&gt;',
+    )
   })
 
   it('escapa & primero para no doble-escapar lo ya escapado', () => {
@@ -65,13 +66,20 @@ describe('generateCode', () => {
   })
 
   it('escapa el texto del usuario en la parte HTML', () => {
-    const codigo = generateCode({ ...TEXTO, titulo: '<b>hola</b> & chau' }, ESTILOS)
+    const codigo = generateCode(
+      { ...TEXTO, titulo: '<b>hola</b> & chau' },
+      ESTILOS,
+    )
     expect(codigo).toContain('<h2>&lt;b&gt;hola&lt;/b&gt; &amp; chau</h2>')
     expect(codigo).not.toContain('<b>')
   })
 
   it('refleja cambios de estilos en el CSS generado', () => {
-    const codigo = generateCode(TEXTO, { ...ESTILOS, size: '2', align: 'center' })
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      size: '2',
+      align: 'center',
+    })
     expect(codigo).toContain('font-size: 2em;')
     expect(codigo).toContain('text-align: center;')
     expect(codigo).not.toContain('font-size: 1.2em;')

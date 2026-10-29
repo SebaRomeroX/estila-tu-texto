@@ -25,7 +25,7 @@ beforeEach(() => {
   const utils = render(
     <EstilosProvider>
       <App />
-    </EstilosProvider>
+    </EstilosProvider>,
   )
   container = utils.container
   pre = container.querySelector('pre')
@@ -58,7 +58,9 @@ describe('preview y snippet compartidos', () => {
   })
 
   it('cambiar el tamaño numérico actualiza el preview Y el snippet', () => {
-    fireEvent.change(screen.getByLabelText('Tamaño'), { target: { value: '1.5' } })
+    fireEvent.change(screen.getByLabelText('Tamaño'), {
+      target: { value: '1.5' },
+    })
 
     expect(preview.style.fontSize).toBe('1.5em')
     expect(pre).toHaveTextContent('font-size: 1.5em;')
@@ -105,7 +107,9 @@ describe('botón copiar', () => {
   })
 
   it('feedbacka error si el clipboard falla', async () => {
-    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('denegado'))
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(
+      new Error('denegado'),
+    )
 
     fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
 
@@ -126,7 +130,7 @@ describe('accesibilidad', () => {
 
     // aserción estricta: cero violaciones de cualquier impacto
     expect(
-      violations.map(violacion => `${violacion.impact}:${violacion.id}`)
+      violations.map((violacion) => `${violacion.impact}:${violacion.id}`),
     ).toEqual([])
   })
 })
