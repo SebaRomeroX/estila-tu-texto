@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { EstilosContext } from "../../context/estilosContext"
+import { EstilosContext } from "../../context/estilosContext.js"
 
 export const InputColor = ({ elemento }) => {
   const { label, campo } = elemento

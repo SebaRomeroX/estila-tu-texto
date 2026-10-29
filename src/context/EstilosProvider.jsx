@@ -1,6 +1,5 @@
-import { createContext, useState } from "react"
-
-export const EstilosContext = createContext()
+import { useState } from "react"
+import { EstilosContext } from "./estilosContext.js"
 
 export function EstilosProvider ({ children }) {
   const [estilos, setEstilos] = useState({
@@ -14,7 +13,7 @@ export function EstilosProvider ({ children }) {
     gap: '1',
     align: 'left',
   })
-  
+
   function actualizarEstilos (campo, valor) {
     setEstilos(prev => ({...prev, [campo]: valor}))
   }

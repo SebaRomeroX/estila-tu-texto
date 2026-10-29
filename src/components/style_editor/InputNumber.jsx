@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { EstilosContext } from "../../context/estilosContext"
+import { EstilosContext } from "../../context/estilosContext.js"
 
 export const InputNumber = ({ elemento }) => {
   const { label, min, max, step, campo } = elemento

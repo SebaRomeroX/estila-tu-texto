@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { EstilosContext } from "../context/estilosContext"
+import { EstilosContext } from "../context/estilosContext.js"
 
 export const SalidaCodigo = ({ texto }) => {
   const { estilos } = useContext(EstilosContext)
