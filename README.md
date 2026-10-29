@@ -1,5 +1,7 @@
 ### 🎨 Estila Tu Texto
 
+[![CI](https://github.com/SebaRomeroX/estila-tu-texto/actions/workflows/ci.yml/badge.svg)](https://github.com/SebaRomeroX/estila-tu-texto/actions/workflows/ci.yml)
+
 [[Demo en Vivo](https://estilatutexto.netlify.app/)]
 [[Código Fuente](https://github.com/SebaRomeroX/component_builder)]
 
