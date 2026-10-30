@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { StyleEditor } from './components/style_editor/StyleEditor'
 import { SalidaCodigo } from './components/Salida'
 import { Visualizador } from './components/Visualizador'
+import { CLAVE_TEXTO, cargarObjeto, guardarObjeto } from './lib/persistencia.js'
 
 const TEXTO_INICIAL = {
   titulo: 'Texto de Ejemplo',
@@ -14,7 +15,18 @@ const TEXTO_INICIAL = {
 }
 
 const App = () => {
-  const [texto, setTexto] = useState(TEXTO_INICIAL)
+  // init lazy: el texto de la sesión anterior (si lo hay y es válido) gana
+  const [texto, setTexto] = useState(
+    /** @type {import('./types.js').Texto} */ (
+      cargarObjeto(CLAVE_TEXTO, TEXTO_INICIAL)
+    ),
+  )
+
+  // el texto se guarda en cada edición; el aviso de privacidad está en el
+  // footer (se guarda solo en este navegador, no se envía a ningún lado)
+  useEffect(() => {
+    guardarObjeto(CLAVE_TEXTO, texto)
+  }, [texto])
 
   /**
    * @param {import('./types.js').CampoTexto} campo
@@ -52,6 +64,12 @@ const App = () => {
           >
             Seba Romero
           </a>
+        </p>
+        <p className='nota-privacidad'>
+          <span aria-hidden='true'>🔒 </span>
+          Guardado local: tu texto y estilos se quedan en este navegador
+          (localStorage); en un equipo compartido, quienes tengan acceso podrán
+          verlos.
         </p>
       </footer>
     </div>

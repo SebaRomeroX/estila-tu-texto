@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
+import { CLAVE_ESTILOS, CLAVE_TEXTO } from './lib/persistencia.js'
 
 /** @type {HTMLElement} */
 let container
@@ -11,6 +12,20 @@ let container
 let pre
 /** @type {HTMLElement} */
 let preview
+/** @type {ReturnType<typeof render>} */
+let app
+
+// igual que en main.jsx: la app vive dentro del provider
+function renderApp() {
+  app = render(
+    <EstilosProvider>
+      <App />
+    </EstilosProvider>,
+  )
+  container = app.container
+  pre = container.querySelector('pre')
+  preview = container.querySelector('.visualizador')
+}
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -21,15 +36,7 @@ beforeEach(() => {
     configurable: true,
   })
 
-  // igual que en main.jsx: la app vive dentro del provider
-  const utils = render(
-    <EstilosProvider>
-      <App />
-    </EstilosProvider>,
-  )
-  container = utils.container
-  pre = container.querySelector('pre')
-  preview = container.querySelector('.visualizador')
+  renderApp()
 })
 
 describe('preview y snippet compartidos', () => {
@@ -188,5 +195,46 @@ describe('botón restablecer texto', () => {
     expect(h2).toHaveTextContent('Texto de Ejemplo')
     expect(pre).toHaveTextContent('Texto de Ejemplo')
     expect(pre).not.toHaveTextContent('Editado a mano')
+  })
+})
+
+describe('persistencia en localStorage', () => {
+  it('los estilos sobreviven a un remount', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    app.unmount()
+    renderApp()
+
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+    expect(pre).toHaveTextContent('color: #123456;')
+  })
+
+  it('el texto editado sobrevive a un remount', () => {
+    const h2 = screen.getByText('Texto de Ejemplo')
+    h2.textContent = 'Texto persistido'
+    fireEvent.input(h2)
+
+    app.unmount()
+    renderApp()
+
+    expect(screen.getByText('Texto persistido')).toBeInTheDocument()
+    expect(pre).toHaveTextContent('Texto persistido')
+  })
+
+  it('datos corruptos en el storage no rompen la app', () => {
+    localStorage.setItem(CLAVE_ESTILOS, '{roto')
+    localStorage.setItem(CLAVE_TEXTO, '{roto')
+
+    app.unmount()
+    renderApp()
+
+    expect(preview.style.color).toBe('rgb(240, 248, 255)') // default
+    expect(screen.getByText('Texto de Ejemplo')).toBeInTheDocument()
+  })
+
+  it('muestra el aviso de guardado local (info sensible)', () => {
+    expect(screen.getByText(/guardado local/i)).toBeInTheDocument()
   })
 })

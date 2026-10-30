@@ -224,6 +224,13 @@ body {
   font-weight: 700;
 }
 
+.nota-privacidad {
+  max-width: 60ch;
+  margin: 0.6em auto 0;
+  font-size: 0.75em;
+  opacity: 0.75;
+}
+
 /* ------------------------- RESPONSIVE ------------------------- */
 
 @media (max-width: 640px) {

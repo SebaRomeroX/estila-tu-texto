@@ -325,6 +325,25 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
   - Diferido también: og:image (requiere un asset 1200x630 real).
 
+[x] P2-14b Persistencia en localStorage (estilos + texto, con aviso)  ✔ 2026-10-30
+  Verificado (2026-10-30):
+    - src/lib/persistencia.js: cargarObjeto/guardarObjeto con claves
+      estila-tu-texto:estilos y :texto. Carga defensiva: sin datos → defaults;
+      JSON corrupto, no-objeto o clave con tipo incorrecto → cae al default
+      (fusión {...defaults, ...saneado}); escritura en try/catch (modo privado
+      o cuota llena → la sesión sigue sin persistir).
+    - Provider y App con init lazy desde storage + effect que guarda.
+    - Aviso de info sensible en el footer (.nota-privacidad): "tu texto y
+      estilos se quedan en este navegador; en un equipo compartido, quienes
+      tengan acceso podrán verlos" (emoji aria-hidden).
+    - Tests: 8 unit de persistencia (todas las ramas, incluida la excepción de
+      storage) + 4 de integración (estilos y texto sobreviven al remount,
+      datos corruptos → defaults, aviso visible) → 40/40.
+    - Fuga de estado entre tests mitigada: localStorage.clear() global en
+      test/setup.js.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (4 archivos, 8/8 ramas) · build OK · dev 200.
+
 [x] P2-14a Presets de estilos + restablecer estilos  ✔ RESUELTO 2026-10-30
   Verificado (2026-10-30):
     - src/lib/presets.js: 4 temas (Clásico, Editorial, Consola, Impacto) con
@@ -404,7 +423,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 2 COMPLETA 2026-10-28
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
-  Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b, P2-14c
+  Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
+                                     P2-14c
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -619,6 +639,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       comillas en style.fontFamily (la aserción del snippet usa el string crudo).
     - README: temas movidos de "Próximas Mejoras" a features.
 
-  Pendiente: P2-14b (localStorage + aviso) y P2-14c (metas). Diferidos por el
-  usuario: text-transform/decoration y copiar HTML/CSS por separado.
+2026-10-30 · Fase 4 · P2-14b COMPLETADO — "feat(persistencia): guardar estilos
+  y texto en localStorage con aviso de privacidad"
+    - lib/persistencia.js con carga defensiva y guardado a prueba de fallos
+      (modo privado / cuota llena); init lazy en provider y App + effect.
+    - Aviso de info sensible en el footer (texto + estilos se guardan solo en
+      el navegador).
+    - Tests: 8 unit (todas las ramas) + 4 de integración → 40/40 · coverage
+      lib 100% (4 archivos, 8/8 ramas) · lint 0/0 · typecheck 0 · build OK.
+    - localStorage.clear() global en setup para evitar fugas entre tests.
+
+  Pendiente: P2-14c (metas de index.html). Diferidos por el usuario:
+  text-transform/decoration y copiar HTML/CSS por separado.
 ================================================================================
