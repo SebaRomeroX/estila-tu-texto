@@ -325,6 +325,17 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
   - Diferido también: og:image (requiere un asset 1200x630 real).
 
+[x] P2-14c Metas sociales en index.html  ✔ 2026-10-30
+  Verificado (2026-10-30):
+    - meta description + theme-color (#2D5AAD = --color-acento).
+    - Open Graph: og:type, og:site_name, og:title, og:description, og:url
+      (https://estilatutexto.netlify.app/), og:locale es_ES.
+    - twitter:card = summary (sin imagen, coherente con la ausencia de og:image).
+    - DECISIÓN del usuario: sin og:image (requiere asset 1200x630 real);
+      queda comentado en el HTML para cuando exista.
+    - Verificación: format OK · build OK y las metas presentes en dist/index.html
+      · 40/40 tests · typecheck 0 · lint 0/0.
+
 [x] P2-14b Persistencia en localStorage (estilos + texto, con aviso)  ✔ 2026-10-30
   Verificado (2026-10-30):
     - src/lib/persistencia.js: cargarObjeto/guardarObjeto con claves
@@ -424,7 +435,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
-                                     P2-14c
+                                     P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -450,6 +461,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (revisión visual humana en browser pendiente: scrollbar, móvil, inputs)
   [x] Typecheck (JSDoc + checkJs) en 0 errores y corriendo en el CI  ✔ 2026-10-29
   [x] Formato único (Prettier + editorconfig) con chequeo en el CI  ✔ 2026-10-29
+  [x] P2-14a/b/c: temas + reset, persistencia con aviso, metas sociales
+      ✔ 2026-10-30 (diferidos por decisión del usuario: text-transform/
+      decoration y copiar HTML/CSS por separado)
 
 --------------------------------------------------------------------------------
 5. REGISTRO DE AVANCES
@@ -649,6 +663,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       lib 100% (4 archivos, 8/8 ramas) · lint 0/0 · typecheck 0 · build OK.
     - localStorage.clear() global en setup para evitar fugas entre tests.
 
-  Pendiente: P2-14c (metas de index.html). Diferidos por el usuario:
-  text-transform/decoration y copiar HTML/CSS por separado.
+2026-10-30 · Fase 4 · P2-14c COMPLETADO — "feat(seo): metas description y
+  open graph en index.html"  → FIN DE FASE 4
+    - description, theme-color, og:type/site_name/title/description/url/locale
+      y twitter:card=summary; sin og:image por decisión del usuario.
+    - Verificación: metas presentes en dist/index.html · build OK · 40/40 ·
+      typecheck 0 · lint 0/0.
+
+  ESTADO FINAL DEL PLAN: todos los issues resueltos salvo los 2 diferidos
+  explícitamente por el usuario (text-transform/decoration y copiar HTML/CSS
+  por separado), que quedan documentados como ideas en el README.
 ================================================================================
