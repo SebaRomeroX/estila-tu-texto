@@ -34,6 +34,7 @@
 - ✅ **Interlineado (line-height)**
 - ✅ **Espaciado entre letras (letter-spacing)**
 - ✅ **Alineación del texto**
+- ✅ **Temas predefinidos** (Clásico, Editorial, Consola, Impacto) y restablecer estilos
 - ✅ Las propiedades tipográficas esenciales, sin CSS a mano
 
 ### ⚡ **Experiencia en Tiempo Real**
@@ -82,8 +83,6 @@ Estaba experimentando cómo las propiedades tipográficas (fuentes, line-height,
 ### 🔮 Próximas Mejoras (Ideas)
 
 Añadir más propiedades CSS (text-transform, text-decoration)
-
-Temas predefinidos (combinaciones de estilos)
 
 Historial de estilos recientes
 

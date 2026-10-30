@@ -28,6 +28,12 @@
  * @typedef {Object} ContextoEstilos
  * @property {Estilos} estilos
  * @property {(campo: CampoEstilo, valor: string) => void} actualizarEstilos
+ * @property {(nuevos: Estilos) => void} aplicarEstilos
+ *
+ * @typedef {Object} Preset
+ * @property {string} id
+ * @property {string} nombre
+ * @property {Estilos} estilos
  *
  * @typedef {Object} Opcion
  * @property {string} nombre

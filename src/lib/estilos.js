@@ -1,4 +1,20 @@
 /**
+ * Valores por defecto de la tipografía. Fuente única: los usa el provider
+ * (estado inicial), los presets ("Clásico") y la persistencia (fallback).
+ */
+export const ESTILOS_POR_DEFECTO = Object.freeze({
+  color: '#F0F8FF',
+  background: '#020202',
+  family: 'system-ui',
+  size: '1.2',
+  weight: '400',
+  spacing: '0.04',
+  height: '1.4',
+  gap: '1',
+  align: 'left',
+})
+
+/**
  * Fuente ÚNICA de la traducción estilos -> propiedades CSS con unidades.
  * Tanto el preview (Visualizador) como el código generado (generateCode)
  * leen de aquí: cambiar una unidad o agregar una propiedad en un solo lugar

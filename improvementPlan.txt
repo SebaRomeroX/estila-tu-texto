@@ -313,12 +313,34 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Acción: crear src/lib/typography.js (defaults, rangos, unidades) y que
           tanto el preview como el generador lean de ahí.
 
-[P2-14] UX faltante (hoja de ruta ya escrita en el README)
-  - Reset / presets de estilos.
-  - text-transform, text-decoration (prometidos en README).
-  - Copiar solo CSS y solo HTML por separado.
-  - Persistencia (localStorage) de la última configuración.
+[P2-14] UX faltante (hoja de ruta ya escrita en el README)  → 3 sub-issues
+  - Reset / presets de estilos.              → P2-14a
+  - Persistencia (localStorage) de la última configuración (texto + estilos,
+    con aviso de info sensible).             → P2-14b
   - index.html: sin meta description ni Open Graph → compartir mal el link.
+                                             → P2-14c
+  - DIFERIDOS por decisión del usuario (2026-10-29, "lo decido después"):
+      * text-transform, text-decoration (a)
+      * Copiar solo CSS y solo HTML por separado (c)
+    Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
+  - Diferido también: og:image (requiere un asset 1200x630 real).
+
+[x] P2-14a Presets de estilos + restablecer estilos  ✔ RESUELTO 2026-10-30
+  Verificado (2026-10-30):
+    - src/lib/presets.js: 4 temas (Clásico, Editorial, Consola, Impacto) con
+      valores DENTRO de los rangos de InputsParams y opciones existentes de los
+      selects (weight 100/400/600, align left/center, family de OPCIONES_FUENTE).
+    - ESTILOS_POR_DEFECTO movido a lib/estilos.js (Object.freeze) → fuente
+      única para provider, preset "Clásico" y (próximo) fallback de persistencia.
+    - Contexto: aplicarEstilos(estilos) reemplaza el set completo (typedef
+      ContextoEstilos ampliado + nuevo typedef Preset).
+    - UI: fila "Temas:" con 4 botones (aria-label "Aplicar tema X") + botón
+      "Restablecer estilos ↺" (hoy solo existía reset de TEXTO). Reuso de las
+      reglas de botón existentes (.visualizador-header button, .temas button)
+      sin duplicar CSS; responsive: reset no se empuja a la derecha en móvil.
+    - Tests: 3 nuevos (tema Consola → preview+snippet; Clásico = defaults;
+      restablecer tras editar). 28/28 verdes.
+    - README: temas salen de "Próximas Mejoras" y entran a features.
 
 [x] P2-15 TypeScript o al menos PropTypes  ✔ RESUELTO 2026-10-29
   - Sin tipos: `estilos[campo]` es any por composición; errores silenciosos.
@@ -382,7 +404,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 2 COMPLETA 2026-10-28
   Fase 3 (confianza):                P1-8 ✔, P1-9 ✔, P1-10 ✔
                                      → FASE 3 COMPLETA 2026-10-28
-  Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14
+  Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b, P2-14c
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -586,5 +608,17 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format:check OK · typecheck 0 · lint 0/0 · 25/25 ·
       build OK · dev 200.
 
-  Pendiente: solo P2-14 (UX) — a planificar con el usuario.
+2026-10-30 · Fase 4 · P2-14a COMPLETADO — "feat(presets): temas predefinidos
+  y restablecer estilos"
+    - lib/presets.js con 4 temas dentro de los rangos/opciones reales de los
+      inputs; ESTILOS_POR_DEFECTO a lib/estilos.js (freeze) como fuente única.
+    - Contexto: aplicarEstilos() para reemplazar el set completo.
+    - UI: fila "Temas:" + "Restablecer estilos ↺"; CSS reutilizado, responsive.
+    - Tests: 3 nuevos → 28/28 · coverage lib 100% (14/14) · lint 0/0 ·
+      typecheck 0 · build OK. Hallazgo: CSSOM normaliza "Courier New" con
+      comillas en style.fontFamily (la aserción del snippet usa el string crudo).
+    - README: temas movidos de "Próximas Mejoras" a features.
+
+  Pendiente: P2-14b (localStorage + aviso) y P2-14c (metas). Diferidos por el
+  usuario: text-transform/decoration y copiar HTML/CSS por separado.
 ================================================================================

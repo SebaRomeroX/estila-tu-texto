@@ -1,22 +1,13 @@
 import { useState } from 'react'
 import { EstilosContext } from './estilosContext.js'
+import { ESTILOS_POR_DEFECTO } from '../lib/estilos.js'
 
 /**
  * @param {{ children: import('react').ReactNode }} props
  */
 export function EstilosProvider({ children }) {
   const [estilos, setEstilos] = useState(
-    /** @type {import('../types.js').Estilos} */ ({
-      color: '#F0F8FF',
-      background: '#020202',
-      family: 'system-ui',
-      size: '1.2',
-      weight: '400',
-      spacing: '0.04',
-      height: '1.4',
-      gap: '1',
-      align: 'left',
-    }),
+    /** @type {import('../types.js').Estilos} */ ({ ...ESTILOS_POR_DEFECTO }),
   )
 
   /**
@@ -27,8 +18,18 @@ export function EstilosProvider({ children }) {
     setEstilos((prev) => ({ ...prev, [campo]: valor }))
   }
 
+  // reemplaza el set completo: lo usan los presets y el reset de estilos
+  /**
+   * @param {import('../types.js').Estilos} nuevos
+   */
+  function aplicarEstilos(nuevos) {
+    setEstilos({ ...nuevos })
+  }
+
   return (
-    <EstilosContext.Provider value={{ estilos, actualizarEstilos }}>
+    <EstilosContext.Provider
+      value={{ estilos, actualizarEstilos, aplicarEstilos }}
+    >
       {children}
     </EstilosContext.Provider>
   )

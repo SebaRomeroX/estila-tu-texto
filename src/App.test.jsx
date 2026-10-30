@@ -95,6 +95,44 @@ describe('validación de rangos de los inputs numéricos', () => {
   })
 })
 
+describe('temas predefinidos', () => {
+  it('aplicar un tema cambia el preview Y el snippet', () => {
+    fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))
+
+    expect(preview.style.color).toBe('rgb(121, 224, 139)') // #79E08B
+    // CSSOM normaliza las familias con espacios: "Courier New"
+    expect(preview.style.fontFamily).toBe('"Courier New", Courier, monospace')
+    expect(pre).toHaveTextContent('color: #79E08B;')
+    expect(pre).toHaveTextContent(
+      'font-family: Courier New, Courier, monospace;',
+    )
+  })
+
+  it('el tema Clásico repite exactamente los valores por defecto', () => {
+    // cualquier tema y volver al clásico deja el estado idéntico al inicial
+    fireEvent.click(screen.getByRole('button', { name: /tema Impacto/i }))
+    fireEvent.click(screen.getByRole('button', { name: /tema Clásico/i }))
+
+    expect(preview.style.color).toBe('rgb(240, 248, 255)') // #F0F8FF
+    expect(preview.style.textAlign).toBe('left')
+    expect(pre).toHaveTextContent('font-size: 1.2em;')
+  })
+
+  it('restablecer estilos vuelve a los defaults tras editarlos', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    expect(pre).toHaveTextContent('color: #123456;')
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /restablecer estilos/i }),
+    )
+
+    expect(preview.style.color).toBe('rgb(240, 248, 255)')
+    expect(pre).toHaveTextContent('color: #F0F8FF;')
+  })
+})
+
 describe('botón copiar', () => {
   it('copia exactamente el string que muestra el snippet', async () => {
     // fireEvent en vez de user-event: setup() de user-event secuestra el
