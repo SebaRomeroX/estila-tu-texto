@@ -141,6 +141,14 @@ body {
   background-color: var(--color-superficie-active);
 }
 
+/* tema aplicado: estado visible además del aria-pressed (no depende solo
+   del color del texto) */
+.temas button[aria-pressed='true'] {
+  background-color: var(--color-superficie-active);
+  border-color: var(--color-foco);
+  font-weight: 600;
+}
+
 .visualizador {
   display: flex;
   flex-direction: column;

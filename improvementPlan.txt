@@ -325,6 +325,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
   - Diferido también: og:image (requiere un asset 1200x630 real).
 
+[x] P2-17 Tema activo visible y anunciado (aria-pressed)  ✔ 2026-10-31
+  Verificado (2026-10-31):
+    - lib/presets.js: presetActivo(estilos) pura → id del preset cuyos 9
+      valores coinciden exactamente, o null tras una edición manual.
+    - StyleEditor: aria-pressed en cada botón de tema + estado visual
+      (.temas button[aria-pressed='true']: fondo activo, borde de foco,
+      semibold) → no depende solo del color.
+    - Tests: 3 unit de presetActivo (defaults=clasico, cada preset, editado →
+      null) + 3 de integración (marca al aplicar, ninguno tras editar,
+      Clásico tras reset) → 46/46.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (10/10 ramas) · build OK · axe sigue en 0.
+
 [x] P2-14c Metas sociales en index.html  ✔ 2026-10-30
   Verificado (2026-10-30):
     - meta description + theme-color (#2D5AAD = --color-acento).
@@ -436,6 +449,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
+  Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -670,7 +684,12 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: metas presentes en dist/index.html · build OK · 40/40 ·
       typecheck 0 · lint 0/0.
 
-  ESTADO FINAL DEL PLAN: todos los issues resueltos salvo los 2 diferidos
-  explícitamente por el usuario (text-transform/decoration y copiar HTML/CSS
-  por separado), que quedan documentados como ideas en el README.
+2026-10-31 · Post-plan · P2-17 COMPLETADO — "feat(presets): marcar el tema
+  activo con aria-pressed"
+    - presetActivo() pura en lib/presets.js (coincidencia exacta de los 9
+      valores; null si hubo edición manual).
+    - aria-pressed en los botones de tema + estilo de estado activo.
+    - Tests: 3 unit + 3 de integración → 46/46 · coverage 10/10 ramas.
+
+  Pendiente: P2-18 (borrar datos guardados), luego nota final de evaluación.
 ================================================================================

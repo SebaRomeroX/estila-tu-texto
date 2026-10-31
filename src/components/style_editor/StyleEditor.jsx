@@ -6,13 +6,14 @@ import {
 } from '../../InputsParams.js'
 import { EstilosContext } from '../../context/estilosContext.js'
 import { ESTILOS_POR_DEFECTO } from '../../lib/estilos.js'
-import { PRESETS } from '../../lib/presets.js'
+import { PRESETS, presetActivo } from '../../lib/presets.js'
 import { InputNumber } from './InputNumber.jsx'
 import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'
 
 export const StyleEditor = () => {
-  const { aplicarEstilos } = useContext(EstilosContext)
+  const { estilos, aplicarEstilos } = useContext(EstilosContext)
+  const activo = presetActivo(estilos)
 
   return (
     <section className='seccion'>
@@ -24,6 +25,7 @@ export const StyleEditor = () => {
             key={id}
             type='button'
             aria-label={`Aplicar tema ${nombre}`}
+            aria-pressed={id === activo}
             onClick={() => aplicarEstilos(estilos)}
           >
             {nombre}

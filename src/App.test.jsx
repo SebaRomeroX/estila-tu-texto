@@ -138,6 +138,41 @@ describe('temas predefinidos', () => {
     expect(preview.style.color).toBe('rgb(240, 248, 255)')
     expect(pre).toHaveTextContent('color: #F0F8FF;')
   })
+
+  it('marca con aria-pressed el tema aplicado', () => {
+    const clasico = screen.getByRole('button', { name: /tema Clásico/i })
+    const consola = screen.getByRole('button', { name: /tema Consola/i })
+
+    // la app arranca con los defaults = tema Clásico
+    expect(clasico).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.click(consola)
+
+    expect(consola).toHaveAttribute('aria-pressed', 'true')
+    expect(clasico).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('al editar a mano ningún tema queda marcado', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    const botones = screen.getAllByRole('button', { name: /aplicar tema/i })
+    for (const boton of botones) {
+      expect(boton).toHaveAttribute('aria-pressed', 'false')
+    }
+  })
+
+  it('restablecer estilos vuelve a marcar Clásico', () => {
+    fireEvent.click(screen.getByRole('button', { name: /tema Impacto/i }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /restablecer estilos/i }),
+    )
+
+    expect(
+      screen.getByRole('button', { name: /tema Clásico/i }),
+    ).toHaveAttribute('aria-pressed', 'true')
+  })
 })
 
 describe('botón copiar', () => {

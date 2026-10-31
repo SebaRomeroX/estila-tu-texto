@@ -60,3 +60,24 @@ export const PRESETS = [
     },
   },
 ]
+
+// claves del dominio, tipadas: indexar Estilos con un string suelto sería un
+// error de tipos (noImplicitAny)
+const CAMPOS = /** @type {Array<keyof import('../types.js').Estilos>} */ (
+  Object.keys(ESTILOS_POR_DEFECTO)
+)
+
+/**
+ * Devuelve el id del preset cuyos valores coinciden EXACTAMENTE con los
+ * estilos actuales, o null si el usuario editó algo a mano (ya no es un tema).
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string | null}
+ */
+export function presetActivo(estilos) {
+  const preset = PRESETS.find(({ estilos: candidato }) =>
+    CAMPOS.every((campo) => candidato[campo] === estilos[campo]),
+  )
+
+  return preset ? preset.id : null
+}
