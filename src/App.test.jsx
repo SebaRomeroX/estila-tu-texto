@@ -273,3 +273,51 @@ describe('persistencia en localStorage', () => {
     expect(screen.getByText(/guardado local/i)).toBeInTheDocument()
   })
 })
+
+describe('borrar datos guardados', () => {
+  it('con confirmación: vuelve a defaults y no queda nada personal', () => {
+    const confirmar = vi.spyOn(window, 'confirm').mockReturnValue(true)
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    const h2 = screen.getByText('Texto de Ejemplo')
+    h2.textContent = 'Dato sensible'
+    fireEvent.input(h2)
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /borrar datos guardados/i }),
+    )
+
+    expect(confirmar).toHaveBeenCalledTimes(1)
+    // UI de vuelta a los defaults
+    expect(preview.style.color).toBe('rgb(240, 248, 255)')
+    expect(screen.getByText('Texto de Ejemplo')).toBeInTheDocument()
+    expect(screen.queryByText('Dato sensible')).not.toBeInTheDocument()
+    // y lo persistido ya no contiene datos personales
+    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS)).color).toBe(
+      '#F0F8FF',
+    )
+    expect(JSON.parse(localStorage.getItem(CLAVE_TEXTO)).titulo).toBe(
+      'Texto de Ejemplo',
+    )
+    // feedback para lectores de pantalla
+    expect(screen.getByText(/datos guardados borrados/i)).toBeInTheDocument()
+  })
+
+  it('sin confirmación no cambia nada', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false)
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    fireEvent.click(
+      screen.getByRole('button', { name: /borrar datos guardados/i }),
+    )
+
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS)).color).toBe(
+      '#123456',
+    )
+  })
+})

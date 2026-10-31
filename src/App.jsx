@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import './App.css'
 import { StyleEditor } from './components/style_editor/StyleEditor'
 import { SalidaCodigo } from './components/Salida'
 import { Visualizador } from './components/Visualizador'
-import { CLAVE_TEXTO, cargarObjeto, guardarObjeto } from './lib/persistencia.js'
+import { EstilosContext } from './context/estilosContext.js'
+import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
+import {
+  CLAVE_TEXTO,
+  borrarDatos,
+  cargarObjeto,
+  guardarObjeto,
+} from './lib/persistencia.js'
 
 const TEXTO_INICIAL = {
   titulo: 'Texto de Ejemplo',
@@ -15,6 +22,9 @@ const TEXTO_INICIAL = {
 }
 
 const App = () => {
+  const { aplicarEstilos } = useContext(EstilosContext)
+  const [mensajeBorrado, setMensajeBorrado] = useState('')
+
   // init lazy: el texto de la sesión anterior (si lo hay y es válido) gana
   const [texto, setTexto] = useState(
     /** @type {import('./types.js').Texto} */ (
@@ -38,6 +48,19 @@ const App = () => {
 
   function restablecerTexto() {
     setTexto({ ...TEXTO_INICIAL })
+  }
+
+  // acción destructiva: pide confirmación antes de borrar nada
+  function borrarDatosGuardados() {
+    const confirmado = window.confirm(
+      'Se borrarán tu texto y estilos guardados en este navegador. ¿Continuar?',
+    )
+    if (!confirmado) return
+
+    borrarDatos()
+    restablecerTexto()
+    aplicarEstilos(ESTILOS_POR_DEFECTO)
+    setMensajeBorrado('Datos guardados borrados')
   }
 
   return (
@@ -69,7 +92,17 @@ const App = () => {
           <span aria-hidden='true'>🔒 </span>
           Guardado local: tu texto y estilos se quedan en este navegador
           (localStorage); en un equipo compartido, quienes tengan acceso podrán
-          verlos.
+          verlos.{' '}
+          <button
+            type='button'
+            className='borrar-datos'
+            onClick={borrarDatosGuardados}
+          >
+            Borrar datos guardados
+          </button>
+          <span className='sr-only' role='status' aria-live='polite'>
+            {mensajeBorrado}
+          </span>
         </p>
       </footer>
     </div>

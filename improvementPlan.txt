@@ -325,6 +325,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
   - Diferido también: og:image (requiere un asset 1200x630 real).
 
+[x] P2-18 Borrar datos guardados (coherencia con el aviso)  ✔ 2026-10-31
+  Verificado (2026-10-31):
+    - lib/persistencia.js: borrarDatos() elimina ambas claves en try/catch.
+    - App: botón "Borrar datos guardados" en el footer junto al aviso;
+      window.confirm antes de la acción destructiva → borra storage, restablece
+      texto y estilos, y anuncia "Datos guardados borrados" por role=status
+      aria-live=polite.
+    - Tests: 2 unit (borra ambas claves; no lanza si el storage falla) + 2 de
+      integración (confirmado → defaults y storage sin datos personales;
+      cancelado → no cambia nada) → 50/50.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (10/10 ramas) · build OK · dev 200 · axe 0.
+
 [x] P2-17 Tema activo visible y anunciado (aria-pressed)  ✔ 2026-10-31
   Verificado (2026-10-31):
     - lib/presets.js: presetActivo(estilos) pura → id del preset cuyos 9
@@ -449,7 +462,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
-  Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18
+  Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -691,5 +704,13 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - aria-pressed en los botones de tema + estilo de estado activo.
     - Tests: 3 unit + 3 de integración → 46/46 · coverage 10/10 ramas.
 
-  Pendiente: P2-18 (borrar datos guardados), luego nota final de evaluación.
+2026-10-31 · Post-plan · P2-18 COMPLETADO — "feat(privacidad): boton para
+  borrar los datos guardados"
+    - borrarDatos() en lib/persistencia.js (removeItem de ambas claves, sin
+      lanzar si el storage está bloqueado).
+    - Botón en el footer junto al aviso, con confirm() previo y feedback
+      role=status ("Datos guardados borrados"); restablece texto y estilos.
+    - Tests: 2 unit + 2 de integración → 50/50 · coverage 10/10 ramas.
+
+  Pendiente: nota final de evaluación (re-rating).
 ================================================================================

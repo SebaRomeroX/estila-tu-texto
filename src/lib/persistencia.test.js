@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { CLAVE_ESTILOS, cargarObjeto, guardarObjeto } from './persistencia.js'
+import {
+  CLAVE_ESTILOS,
+  CLAVE_TEXTO,
+  borrarDatos,
+  cargarObjeto,
+  guardarObjeto,
+} from './persistencia.js'
 
 const POR_DEFECTO = { color: '#000000', size: '1' }
 
@@ -81,5 +87,25 @@ describe('guardarObjeto', () => {
     })
 
     expect(() => guardarObjeto(CLAVE_ESTILOS, POR_DEFECTO)).not.toThrow()
+  })
+})
+
+describe('borrarDatos', () => {
+  it('elimina texto y estilos guardados', () => {
+    localStorage.setItem(CLAVE_ESTILOS, '{"color":"#111111"}')
+    localStorage.setItem(CLAVE_TEXTO, '{"titulo":"algo"}')
+
+    borrarDatos()
+
+    expect(localStorage.getItem(CLAVE_ESTILOS)).toBeNull()
+    expect(localStorage.getItem(CLAVE_TEXTO)).toBeNull()
+  })
+
+  it('si localStorage falla al borrar, no lanza', () => {
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new Error('bloqueado')
+    })
+
+    expect(() => borrarDatos()).not.toThrow()
   })
 })

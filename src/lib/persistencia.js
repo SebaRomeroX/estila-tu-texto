@@ -54,3 +54,16 @@ export function guardarObjeto(clave, valor) {
     // sin persistencia, pero la sesión sigue funcionando
   }
 }
+
+/**
+ * Borra los datos persistidos (texto y estilos). Lo usa el botón "Borrar
+ * datos guardados"; igual que el resto, nunca lanza.
+ */
+export function borrarDatos() {
+  try {
+    localStorage.removeItem(CLAVE_ESTILOS)
+    localStorage.removeItem(CLAVE_TEXTO)
+  } catch {
+    // storage bloqueado: no hay nada que borrar
+  }
+}
