@@ -307,13 +307,23 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Pendiente humano: revisión visual en browser (scrollbar real, móvil,
       delta de2px en inputs) — acá no hay browser para screenshot.
 
-[P2-13] Lógica de negocio dispersa
+[x] P2-13 Lógica de negocio dispersa  ✔ RESUELTO de facto (2026-10-31)
   - Valores por defecto de estilos en el Context; rangos (min/max/step) en
     InputsParams.js; unidades ("em") repetidas en Visualizador y Salida.
   Acción: crear src/lib/typography.js (defaults, rangos, unidades) y que
           tanto el preview como el generador lean de ahí.
+  Verificado (2026-10-31) — se resolvió sin crear typography.js:
+    - Defaults: ESTILOS_POR_DEFECTO en lib/estilos.js (congelado) → provider,
+      presets y persistencia lo consumen.
+    - Unidades: solo existen en estilosToStyleObject (lib/estilos.js); preview
+      y generador ya leen de ahí desde P0-4 → grep confirma 0 "em" fuera.
+    - Rangos: solo en InputsParams.js (único lugar; es config, no lógica
+      duplicada).
+    - Un archivo extra (typography.js) habría sido una capa sin valor: el
+      objetivo del issue era fuente única, y ya hay 3 fuentes únicas por
+      dominio (estilos, rangos, texto).
 
-[P2-14] UX faltante (hoja de ruta ya escrita en el README)  → 3 sub-issues
+[x] P2-14 UX faltante (hoja de ruta ya escrita en el README)  → 3 sub-issues
   - Reset / presets de estilos.              → P2-14a
   - Persistencia (localStorage) de la última configuración (texto + estilos,
     con aviso de info sensible).             → P2-14b
@@ -713,4 +723,55 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Tests: 2 unit + 2 de integración → 50/50 · coverage 10/10 ramas.
 
   Pendiente: nota final de evaluación (re-rating).
+================================================================================
+
+--------------------------------------------------------------------------------
+6. EVALUACIÓN FINAL (2026-10-31)
+--------------------------------------------------------------------------------
+
+NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
+
+  Justificación de la nota:
+    Calidad de código y proceso (lo que más cambió):
+      - lint 0/0 · typecheck 0 errores · 50 tests · cobertura 100% de la
+        lógica pura (10/10 ramas) · axe 0 violaciones · build verde.
+      - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
+      - Prettier + .editorconfig: formato único y automatizado.
+    Arquitectura:
+      - Fuente única para estilos/unidades (lib/estilos.js) y para el snippet
+        (generateCode) → preview y código copiado no pueden divergir.
+      - Dominio tipado con JSDoc (checkJs + noImplicitAny): 69 errores reales
+        cazados, 0 hoy. Sin `any` silencioso en la frontera de componentes.
+      - EditableText: React no toca el texto tras el mount → sin saltos de
+        caret y reset confiable.
+      - Persistencia defensiva (JSON corrupto / storage bloqueado nunca
+        rompen) con aviso de privacidad y borrado explícito.
+    Producto / accesibilidad:
+      - Temas, reset de estilos, estado de tema activo (aria-pressed),
+        responsive, foco visible, landmarks, aria-live, metas sociales.
+    Documentación:
+      - README veraz (hosting real, scripts, features) y este plan con
+        trazabilidad commit a commit.
+
+  Qué la separa del 9-10 (honesto):
+    1. No hay TypeScript estricto: JSDoc + strict:false (sin
+       strictNullChecks) → una migración a TS real sigue pendiente.
+    2. Verificación visual/contraste en browser real pendiente (scrollbar,
+       móvil, contraste WCAG, walkthrough de teclado): jsdom no renderiza.
+    3. Sin tests en browser real (Playwright/E2E) ni presupuesto de
+       performance (bundle ~197 KB JS, sin code-splitting).
+    4. `public/vista_previa.png` desactualizada (previa al rediseño CSS).
+    5. Sin og:image (requiere asset 1200x630) → previews sociales pobres.
+    6. Funciones diferidas por decisión del usuario: text-transform/
+       text-decoration y copiar HTML/CSS por separado.
+    7. Modelo de un solo bloque de estilos: no se puede estilar el título
+       distinto de los párrafos (limitación de diseño del producto).
+
+  Estado de los issues: 21/21 resueltos (P2-13 y P2-14 se cerraron por vías
+  distintas a las sugeridas, documentadas arriba; 2 features diferidas por el
+  usuario y anotadas como ideas en el README).
+
+  Próximo paso natural (fuera de este plan): push de los 3 commits locales
+  (P2-17, P2-18 y este) para que CI y Netlify publiquen todo. Los 3 de P2-14
+  ya están en origin/main (b798808).
 ================================================================================
