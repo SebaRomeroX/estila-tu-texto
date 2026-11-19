@@ -72,6 +72,19 @@ describe('preview y snippet compartidos', () => {
     expect(preview.style.fontSize).toBe('1.5em')
     expect(pre).toHaveTextContent('font-size: 1.5em;')
   })
+
+  it('el título "Vista previa" usa el mismo color que el texto', () => {
+    const tituloVista = screen.getByRole('heading', { name: /vista previa/i })
+
+    expect(tituloVista).toHaveStyle({ color: 'rgb(240, 248, 255)' }) // default
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    // mismo color que el preview: no se pierde contraste al cambiar el tema
+    expect(tituloVista).toHaveStyle({ color: 'rgb(18, 52, 86)' })
+  })
 })
 
 describe('validación de rangos de los inputs numéricos', () => {
@@ -191,6 +204,14 @@ describe('temas predefinidos', () => {
     expect(
       screen.getByRole('button', { name: /tema Clásico/i }),
     ).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('con un tema claro el encabezado del preview usa su color de texto', () => {
+    fireEvent.click(screen.getByRole('button', { name: /tema Editorial/i }))
+
+    expect(screen.getByRole('heading', { name: /vista previa/i })).toHaveStyle({
+      color: 'rgb(34, 34, 34)',
+    }) // #222222 sobre beige
   })
 })
 

@@ -21,7 +21,10 @@ export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
   const { estilos } = useContext(EstilosContext)
 
   return (
-    <section style={{ background: estilos.background }}>
+    // el encabezado del preview vive sobre el fondo del usuario: debe usar
+    // también SU color de texto, si no pierde contraste (ej. tema Editorial:
+    // aliceblue sobre beige). La tipografía del header no se toca.
+    <section style={{ background: estilos.background, color: estilos.color }}>
       <div className='seccion'>
         <div className='visualizador-header'>
           <h2 className='titulo'>Vista previa</h2>
