@@ -13,6 +13,9 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   gap: '1',
   align: 'left',
   ancho: '65',
+  transform: 'none',
+  decoracion: 'none',
+  estiloLetra: 'normal',
 })
 
 /**
@@ -36,6 +39,9 @@ export function estilosToStyleObject(estilos) {
     gap,
     align,
     ancho,
+    transform,
+    decoracion,
+    estiloLetra,
   } = estilos
 
   return {
@@ -44,6 +50,10 @@ export function estilosToStyleObject(estilos) {
     fontFamily: family,
     fontSize: `${size}em`,
     fontWeight: weight,
+    // valores libres del dominio (vienen de selects); en CSS son uniones
+    fontStyle: /** @type {import('react').CSSProperties['fontStyle']} */ (
+      estiloLetra
+    ),
     letterSpacing: `${spacing}em`,
     // sin unidad: se multiplica por el tamaño de fuente del contexto y no se
     // acumula con la herencia (con "em" un 1.4 dentro de otro 1.4 da 1.96)
@@ -55,5 +65,11 @@ export function estilosToStyleObject(estilos) {
     textAlign: /** @type {import('react').CSSProperties['textAlign']} */ (
       align
     ),
+    textTransform:
+      /** @type {import('react').CSSProperties['textTransform']} */ (transform),
+    textDecoration:
+      /** @type {import('react').CSSProperties['textDecoration']} */ (
+        decoracion
+      ),
   }
 }

@@ -55,6 +55,11 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.espacio} />
         <InputNumber elemento={InputsNumberParams.ancho} />
       </div>
+      <div className='inputs-configuracion'>
+        <InputSelect elemento={InputsSelectsParams.transform} />
+        <InputSelect elemento={InputsSelectsParams.decoracion} />
+        <InputSelect elemento={InputsSelectsParams.estiloLetra} />
+      </div>
     </section>
   )
 }

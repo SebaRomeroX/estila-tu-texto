@@ -368,12 +368,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (48/48 ramas) · build OK · axe 0.
 
-[ ] P2-23 text-transform, text-decoration y cursiva  → S
-  - Los 2 features diferidos en P2-14a, más font-style (cursiva), que no
-    estaba en la lista original.
-  Acción: 3 campos string (transform, decoracion, estiloLetra) con selects
-          en el editor; el snippet se actualiza solo (generateCode itera
-          estilosToStyleObject).
+[x] P2-23 text-transform, text-decoration y cursiva  ✔ 2026-11-18
+  Verificado (2026-11-18):
+    - 3 campos string nuevos: transform (none/uppercase/lowercase/capitalize),
+      decoracion (none/underline/line-through) y estiloLetra (normal/italic).
+    - Selects "Mayusculas", "Decoracion" y "Estilo letra" en una tercera fila
+      del editor; el snippet se actualiza solo porque generateCode itera
+      estilosToStyleObject (text-transform, text-decoration, font-style).
+    - Presets actualizados con las 3 claves (Impacto usa uppercase como
+      muestra del feature) → presetActivo sigue reconociéndolos.
+    - Tests: 1 unit de traducción + 1 del snippet + 1 de integración
+      (preview y snippet) → 77/77; snapshot actualizado.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (48/48 ramas) · build OK · axe 0.
 
 [ ] P2-24 Compartir el estado por URL (sin backend)  → M
   - Hoy compartir un estilo implica mandar capturas; no hay forma de pasar
@@ -565,7 +572,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
   Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔, P2-19 ✔, P2-20 ✔
-  Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22 ✔, P2-23, P2-24,
+  Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22 ✔, P2-23 ✔, P2-24,
                                           P2-25 (top 5 de la sección 7)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
@@ -852,6 +859,13 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - line-height unitless: deja de acumularse con la herencia.
     - Tests: 3 nuevos → 74/74 · snapshot actualizado.
 
+2026-11-18 · Post-plan · P2-23 COMPLETADO — "feat(estilos): mayusculas,
+  decoracion y cursiva"
+    - text-transform, text-decoration y font-style como 3 campos string con
+      selects; el snippet se actualiza solo.
+    - Impacto usa uppercase como muestra; presetActivo sigue funcionando.
+    - Tests: 3 nuevos → 77/77 · snapshot actualizado.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -860,7 +874,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 74 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 77 tests · cobertura 100% de la
         lógica pura (48/48 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -895,7 +909,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 25/25 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 26/26 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; 2 features diferidas por el
   usuario y anotadas como ideas en el README).
 

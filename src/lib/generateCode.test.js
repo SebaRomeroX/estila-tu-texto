@@ -13,6 +13,9 @@ const ESTILOS = {
   gap: '1',
   align: 'left',
   ancho: '65',
+  transform: 'none',
+  decoracion: 'none',
+  estiloLetra: 'normal',
 }
 
 const TEXTO = {
@@ -48,12 +51,15 @@ describe('estilosToStyleObject', () => {
       fontFamily: 'system-ui',
       fontSize: '1.2em',
       fontWeight: '400',
+      fontStyle: 'normal',
       letterSpacing: '0.04em',
       // line-height va sin unidad: no se acumula con la herencia
       lineHeight: '1.4',
       gap: '1em',
       maxWidth: '65ch',
       textAlign: 'left',
+      textTransform: 'none',
+      textDecoration: 'none',
     })
   })
 
@@ -66,6 +72,19 @@ describe('estilosToStyleObject', () => {
     expect(estilosToStyleObject({ ...ESTILOS, ancho: '45' }).maxWidth).toBe(
       '45ch',
     )
+  })
+
+  it('traduce mayúsculas, decoración y cursiva', () => {
+    const estilo = estilosToStyleObject({
+      ...ESTILOS,
+      transform: 'uppercase',
+      decoracion: 'underline',
+      estiloLetra: 'italic',
+    })
+
+    expect(estilo.textTransform).toBe('uppercase')
+    expect(estilo.textDecoration).toBe('underline')
+    expect(estilo.fontStyle).toBe('italic')
   })
 })
 
@@ -108,5 +127,18 @@ describe('generateCode', () => {
     expect(codigo).toContain('max-width: 45ch;')
     expect(codigo).toContain('line-height: 1.4;')
     expect(codigo).not.toContain('line-height: 1.4em;')
+  })
+
+  it('emite mayúsculas, decoración y cursiva', () => {
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      transform: 'capitalize',
+      decoracion: 'line-through',
+      estiloLetra: 'italic',
+    })
+
+    expect(codigo).toContain('text-transform: capitalize;')
+    expect(codigo).toContain('text-decoration: line-through;')
+    expect(codigo).toContain('font-style: italic;')
   })
 })

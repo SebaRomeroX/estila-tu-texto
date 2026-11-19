@@ -91,6 +91,33 @@ export const InputsSelectsParams = {
       { nombre: '600', contenido: 600 },
     ],
   },
+  transform: {
+    label: 'Mayusculas',
+    campo: 'transform',
+    opciones: [
+      { nombre: 'ninguna', contenido: 'none' },
+      { nombre: 'MAYÚSCULAS', contenido: 'uppercase' },
+      { nombre: 'minúsculas', contenido: 'lowercase' },
+      { nombre: 'Capitalizar', contenido: 'capitalize' },
+    ],
+  },
+  decoracion: {
+    label: 'Decoracion',
+    campo: 'decoracion',
+    opciones: [
+      { nombre: 'ninguna', contenido: 'none' },
+      { nombre: 'subrayado', contenido: 'underline' },
+      { nombre: 'tachado', contenido: 'line-through' },
+    ],
+  },
+  estiloLetra: {
+    label: 'Estilo letra',
+    campo: 'estiloLetra',
+    opciones: [
+      { nombre: 'normal', contenido: 'normal' },
+      { nombre: 'cursiva', contenido: 'italic' },
+    ],
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */

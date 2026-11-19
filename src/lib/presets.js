@@ -28,6 +28,9 @@ export const PRESETS = [
       gap: '1.2',
       align: 'left',
       ancho: '65',
+      transform: 'none',
+      decoracion: 'none',
+      estiloLetra: 'normal',
     },
   },
   {
@@ -44,6 +47,9 @@ export const PRESETS = [
       gap: '0.8',
       align: 'left',
       ancho: '80',
+      transform: 'none',
+      decoracion: 'none',
+      estiloLetra: 'normal',
     },
   },
   {
@@ -60,6 +66,9 @@ export const PRESETS = [
       gap: '1',
       align: 'center',
       ancho: '50',
+      transform: 'uppercase',
+      decoracion: 'none',
+      estiloLetra: 'normal',
     },
   },
 ]

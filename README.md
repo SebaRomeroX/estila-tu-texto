@@ -56,6 +56,7 @@
 - **Texto editable:** usa el default, escribe algo nuevo o pega otro texto
 - **Contraste verificado:** indicador WCAG en vivo (AAA / AA / insuficiente) del par texto/fondo
 - **Lectura cómoda:** ancho de línea en `ch` y `line-height` sin unidad
+- **Énfasis:** mayúsculas, capitalizar, subrayado, tachado y cursiva
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**
@@ -84,8 +85,6 @@ npm run dev
 Estaba experimentando cómo las propiedades tipográficas (fuentes, line-height, letter-spacing) afectan el impacto visual de un sitio. Además, conozco muchos desarrolladores a los que les impacienta estilar texto, así que construí una herramienta que lo hace practico y rápido.
 
 ### 🔮 Próximas Mejoras (Ideas)
-
-Añadir más propiedades CSS (text-transform, text-decoration)
 
 Historial de estilos recientes
 

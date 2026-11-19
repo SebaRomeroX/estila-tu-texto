@@ -14,6 +14,9 @@
  * @property {string} gap
  * @property {string} align
  * @property {string} ancho
+ * @property {string} transform
+ * @property {string} decoracion
+ * @property {string} estiloLetra
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

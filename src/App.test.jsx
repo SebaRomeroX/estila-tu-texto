@@ -89,6 +89,26 @@ describe('preview y snippet compartidos', () => {
     expect(pre).toHaveTextContent('max-width: 45ch;')
   })
 
+  it('aplica mayúsculas, decoración y cursiva al preview y al snippet', () => {
+    fireEvent.change(screen.getByLabelText('Mayusculas'), {
+      target: { value: 'uppercase' },
+    })
+    expect(preview.style.textTransform).toBe('uppercase')
+    expect(pre).toHaveTextContent('text-transform: uppercase;')
+
+    fireEvent.change(screen.getByLabelText('Decoracion'), {
+      target: { value: 'line-through' },
+    })
+    expect(preview.style.textDecoration).toBe('line-through')
+    expect(pre).toHaveTextContent('text-decoration: line-through;')
+
+    fireEvent.change(screen.getByLabelText('Estilo letra'), {
+      target: { value: 'italic' },
+    })
+    expect(preview.style.fontStyle).toBe('italic')
+    expect(pre).toHaveTextContent('font-style: italic;')
+  })
+
   it('el título "Vista previa" usa el mismo color que el texto', () => {
     const tituloVista = screen.getByRole('heading', { name: /vista previa/i })
 
