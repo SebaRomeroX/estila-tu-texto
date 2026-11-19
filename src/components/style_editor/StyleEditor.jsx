@@ -10,6 +10,7 @@ import { PRESETS, presetActivo } from '../../lib/presets.js'
 import { InputNumber } from './InputNumber.jsx'
 import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'
+import { IndicadorContraste } from './IndicadorContraste.jsx'
 
 export const StyleEditor = () => {
   const { estilos, aplicarEstilos } = useContext(EstilosContext)
@@ -45,6 +46,7 @@ export const StyleEditor = () => {
         <InputColor elemento={InputsColorParams.color} />
         <InputColor elemento={InputsColorParams.fondo} />
       </div>
+      <IndicadorContraste />
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.fuente} />
         <InputSelect elemento={InputsSelectsParams.peso} />

@@ -99,6 +99,25 @@ body {
   font-family: monospace;
 }
 
+/* ratio de contraste WCAG: texto real, no depende solo del color */
+.contraste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45em;
+  margin: 0 2em 1em;
+  font-size: 0.95em;
+}
+
+.contraste-etiqueta {
+  opacity: 0.7;
+}
+
+.contraste strong {
+  font-family: var(--fuente-mono);
+  font-variant-numeric: tabular-nums;
+}
+
 .inputs-configuracion input,
 .inputs-configuracion select {
   color: var(--color-texto);
@@ -357,6 +376,10 @@ body {
   .inputs-configuracion {
     padding: 1em 0;
     gap: 1em;
+  }
+
+  .contraste {
+    margin: 0 0 1em;
   }
 
   .codigo-editor {

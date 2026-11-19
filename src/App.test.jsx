@@ -87,6 +87,36 @@ describe('preview y snippet compartidos', () => {
   })
 })
 
+describe('contraste WCAG', () => {
+  it('muestra el ratio y el nivel del par texto/fondo', () => {
+    const indicador = screen.getByText(/contraste texto\/fondo/i).closest('p')
+
+    // aliceblue sobre #020202: muy por encima de 7:1
+    expect(indicador).toHaveTextContent('19.34')
+    expect(indicador).toHaveTextContent('AAA')
+  })
+
+  it('avisa cuando el par elegido es ilegible', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#020202' },
+    })
+
+    const indicador = screen.getByText(/contraste texto\/fondo/i).closest('p')
+
+    expect(indicador).toHaveTextContent('1.00:1')
+    expect(indicador).toHaveTextContent('Insuficiente')
+  })
+
+  it('sigue al tema aplicado', () => {
+    fireEvent.click(screen.getByRole('button', { name: /tema Editorial/i }))
+
+    // #222 sobre #F7F3EC: 14.38:1
+    const indicador = screen.getByText(/contraste texto\/fondo/i).closest('p')
+
+    expect(indicador).toHaveTextContent('14.38')
+  })
+})
+
 describe('validación de rangos de los inputs numéricos', () => {
   it('un campo vacío no rompe el snippet y se revierte al desenfocar', () => {
     const tamaño = screen.getByLabelText('Tamaño')

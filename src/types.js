@@ -41,6 +41,17 @@
  * @property {TipoToken} tipo
  * @property {string} texto
  *
+ * @typedef {Object} Rgb
+ * @property {number} r
+ * @property {number} g
+ * @property {number} b
+ *
+ * @typedef {'AAA' | 'AA' | 'AA (texto grande)' | 'Insuficiente'} NivelContraste
+ *
+ * @typedef {Object} ResultadoContraste
+ * @property {number} ratio
+ * @property {NivelContraste} nivel
+ *
  * @typedef {Object} Opcion
  * @property {string} nombre
  * @property {string | number} contenido
