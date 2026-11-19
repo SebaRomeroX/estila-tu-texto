@@ -53,6 +53,7 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.tamaño} />
         <InputNumber elemento={InputsNumberParams.altura} />
         <InputNumber elemento={InputsNumberParams.espacio} />
+        <InputNumber elemento={InputsNumberParams.ancho} />
       </div>
     </section>
   )

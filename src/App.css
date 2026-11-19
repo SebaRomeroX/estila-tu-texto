@@ -173,6 +173,9 @@ body {
 .visualizador {
   display: flex;
   flex-direction: column;
+  /* el ancho máximo viene del estado (max-width en ch); con esto el bloque
+     queda centrado en la sección en vez de pegado a la izquierda */
+  margin-inline: auto;
 }
 
 /* el foco de mouse ya se feedbacka con el caret del texto,

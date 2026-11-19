@@ -58,6 +58,13 @@ export const InputsNumberParams = {
     max: 0.3,
     step: 0.01,
   },
+  ancho: {
+    label: 'Ancho linea (ch)',
+    campo: 'ancho',
+    min: 30,
+    max: 90,
+    step: 5,
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */

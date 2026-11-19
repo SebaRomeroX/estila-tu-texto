@@ -55,6 +55,7 @@
 
 - **Texto editable:** usa el default, escribe algo nuevo o pega otro texto
 - **Contraste verificado:** indicador WCAG en vivo (AAA / AA / insuficiente) del par texto/fondo
+- **Lectura cómoda:** ancho de línea en `ch` y `line-height` sin unidad
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

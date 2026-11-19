@@ -29,6 +29,7 @@ const LAYOUT_FIJO = [
   'display: flex;',
   'flex-direction: column;',
   'padding: 30px 60px;',
+  'margin-inline: auto;',
 ]
 
 /**

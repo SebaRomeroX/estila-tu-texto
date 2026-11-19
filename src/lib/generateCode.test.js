@@ -12,6 +12,7 @@ const ESTILOS = {
   height: '1.4',
   gap: '1',
   align: 'left',
+  ancho: '65',
 }
 
 const TEXTO = {
@@ -40,7 +41,7 @@ describe('escapeHtml', () => {
 })
 
 describe('estilosToStyleObject', () => {
-  it('aplica las unidades em a las propiedades numericas', () => {
+  it('aplica las unidades correspondientes a cada propiedad', () => {
     expect(estilosToStyleObject(ESTILOS)).toEqual({
       color: '#F0F8FF',
       background: '#020202',
@@ -48,8 +49,10 @@ describe('estilosToStyleObject', () => {
       fontSize: '1.2em',
       fontWeight: '400',
       letterSpacing: '0.04em',
-      lineHeight: '1.4em',
+      // line-height va sin unidad: no se acumula con la herencia
+      lineHeight: '1.4',
       gap: '1em',
+      maxWidth: '65ch',
       textAlign: 'left',
     })
   })
@@ -57,6 +60,12 @@ describe('estilosToStyleObject', () => {
   it('refleja cambios de estado en el objeto de estilo', () => {
     const estilo = estilosToStyleObject({ ...ESTILOS, size: '2' })
     expect(estilo.fontSize).toBe('2em')
+  })
+
+  it('el ancho de línea sale en ch para adaptarse a la fuente', () => {
+    expect(estilosToStyleObject({ ...ESTILOS, ancho: '45' }).maxWidth).toBe(
+      '45ch',
+    )
   })
 })
 
@@ -90,5 +99,14 @@ describe('generateCode', () => {
     expect(codigo).toContain('display: flex;')
     expect(codigo).toContain('flex-direction: column;')
     expect(codigo).toContain('padding: 30px 60px;')
+    expect(codigo).toContain('margin-inline: auto;')
+  })
+
+  it('emite el ancho de línea y el line-height sin unidad', () => {
+    const codigo = generateCode(TEXTO, { ...ESTILOS, ancho: '45' })
+
+    expect(codigo).toContain('max-width: 45ch;')
+    expect(codigo).toContain('line-height: 1.4;')
+    expect(codigo).not.toContain('line-height: 1.4em;')
   })
 })

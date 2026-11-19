@@ -13,6 +13,7 @@
  * @property {string} height
  * @property {string} gap
  * @property {string} align
+ * @property {string} ancho
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

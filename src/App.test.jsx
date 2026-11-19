@@ -73,6 +73,22 @@ describe('preview y snippet compartidos', () => {
     expect(pre).toHaveTextContent('font-size: 1.5em;')
   })
 
+  it('el ancho de línea y el line-height llegan al preview y al snippet', () => {
+    // 65ch por defecto y line-height sin unidad
+    expect(preview.style.maxWidth).toBe('65ch')
+    expect(preview.style.lineHeight).toBe('1.4')
+    expect(pre).toHaveTextContent('max-width: 65ch;')
+    expect(pre).toHaveTextContent('line-height: 1.4;')
+    expect(pre).not.toHaveTextContent('line-height: 1.4em;')
+
+    fireEvent.change(screen.getByLabelText('Ancho linea (ch)'), {
+      target: { value: '45' },
+    })
+
+    expect(preview.style.maxWidth).toBe('45ch')
+    expect(pre).toHaveTextContent('max-width: 45ch;')
+  })
+
   it('el título "Vista previa" usa el mismo color que el texto', () => {
     const tituloVista = screen.getByRole('heading', { name: /vista previa/i })
 

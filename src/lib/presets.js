@@ -27,6 +27,7 @@ export const PRESETS = [
       height: '1.6',
       gap: '1.2',
       align: 'left',
+      ancho: '65',
     },
   },
   {
@@ -42,6 +43,7 @@ export const PRESETS = [
       height: '1.5',
       gap: '0.8',
       align: 'left',
+      ancho: '80',
     },
   },
   {
@@ -57,6 +59,7 @@ export const PRESETS = [
       height: '1.3',
       gap: '1',
       align: 'center',
+      ancho: '50',
     },
   },
 ]

@@ -351,13 +351,22 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (48/48 ramas) · build OK · axe 0.
 
-[ ] P2-22 Ancho de línea (max-width en ch) y line-height sin unidad  → S
-  - El snippet generado no tiene tope de ancho: en un monitor ancho quedan
-    líneas de 150+ caracteres (el defecto tipográfico más común).
-  - line-height se emite como "1.4em", que se multiplica con la herencia;
-    lo correcto es el número sin unidad.
-  Acción: campo "ancho" (30-90ch, default 65) en el modelo + margin-inline
-          auto en el bloque; line-height unitless en estilosToStyleObject.
+[x] P2-22 Ancho de línea (max-width en ch) y line-height sin unidad  ✔ 2026-11-18
+  Verificado (2026-11-18):
+    - Campo "ancho" en el modelo (30-90ch, step 5, default 65), en ch para
+      que la medida se adapte a la fuente elegida.
+    - estilosToStyleObject: maxWidth: "65ch"; lineHeight pasa de "1.4em" a
+      "1.4" (sin unidad: no se acumula con la herencia).
+    - LAYOUT_FIJO del snippet suma "margin-inline: auto" y .visualizador
+      también: el bloque queda centrado en vez de pegado a la izquierda.
+    - Presets con ancho coherente: Clásico/Editorial 65, Consola 80,
+      Impacto 50 (claves nuevas incluidas para que presetActivo siga
+      funcionando).
+    - Tests: 2 unit nuevos (maxWidth en ch; snippet con 45ch y line-height
+      sin em) + 1 de integración (preview y snippet) → 74/74; snapshot
+      actualizado.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (48/48 ramas) · build OK · axe 0.
 
 [ ] P2-23 text-transform, text-decoration y cursiva  → S
   - Los 2 features diferidos en P2-14a, más font-style (cursiva), que no
@@ -556,8 +565,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
   Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔, P2-19 ✔, P2-20 ✔
-  Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22, P2-23, P2-24, P2-25
-                                          (top 5 del catálogo de la sección 7)
+  Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22 ✔, P2-23, P2-24,
+                                          P2-25 (top 5 de la sección 7)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -836,6 +845,13 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Indicador junto a los inputs de color con ratio y nivel, en texto real.
     - Tests: 10 unit + 3 de integración → 71/71 · coverage 48/48 ramas.
 
+2026-11-18 · Post-plan · P2-22 COMPLETADO — "feat(estilos): ancho de linea
+  y line-height sin unidad"
+    - Campo "ancho" (ch) con default 65; el bloque generado y el preview
+      quedan centrados (margin-inline: auto).
+    - line-height unitless: deja de acumularse con la herencia.
+    - Tests: 3 nuevos → 74/74 · snapshot actualizado.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -844,7 +860,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 71 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 74 tests · cobertura 100% de la
         lógica pura (48/48 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -879,7 +895,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 24/24 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 25/25 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; 2 features diferidas por el
   usuario y anotadas como ideas en el README).
 
