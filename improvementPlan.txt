@@ -382,13 +382,29 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (48/48 ramas) · build OK · axe 0.
 
-[ ] P2-24 Compartir el estado por URL (sin backend)  → M
-  - Hoy compartir un estilo implica mandar capturas; no hay forma de pasar
-    texto + estilos.
-  Acción: lib/compartir.js (JSON -> base64url en el hash, con saneo
-          defensivo reutilizando la validación de persistencia) + botón
-          "Compartir" que copia el enlace. Al abrir un enlace se aplica el
-          estado y se limpia el hash (para no pisar ediciones posteriores).
+[x] P2-24 Compartir el estado por URL (sin backend)  ✔ 2026-11-18
+  Verificado (2026-11-18):
+    - lib/compartir.js: codificarEstado (JSON + versión 1 → base64url UTF-8,
+      seguro en el hash), decodificarEstado (tolera hash con o sin #, base64
+      roto, JSON inválido, otra versión o no-objeto → null; sanea texto y
+      estilos con los defaults, así un enlace manipulado no mete claves ni
+      tipos raros), crearEnlace (conserva path/query, reemplaza el hash) y
+      limpiarHashCompartido (respeta anclas que no son estado).
+    - persistencia.js: sanearObjeto extraído y exportado → una sola
+      validación para storage y enlaces.
+    - lib/texto.js: TEXTO_POR_DEFECTO como fuente única (estado inicial,
+      reset y saneo); App dejó de duplicarlo.
+    - App/provider: el estado del enlace gana sobre localStorage; el hash se
+      limpia al montar para que las ediciones posteriores no se pisen.
+    - Salida: botón "Compartir" que copia el enlace SIN navegar (no ensucia
+      historial) + hook useCopiar reutilizado por Copiar y Compartir
+      (feedback role=status y reset a los 3s).
+    - Tests: 8 unit (roundtrip con ñ/emoji/saltos, sin #, 4 casos inválidos,
+      versión/objeto, saneo, crearEnlace, limpiar hash válido y ancla) + 3 de
+      integración (enlace gana y limpia el hash; copiar enlace con estado;
+      error de clipboard) → 88/88.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (59/59 ramas) · build OK · axe 0.
 
 [ ] P2-25 Escala del título (h2) sin rediseñar el modelo  → M
   - Limitación conocida: un solo bloque de estilos para título y párrafos.
@@ -572,7 +588,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
   Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔, P2-19 ✔, P2-20 ✔
-  Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22 ✔, P2-23 ✔, P2-24,
+  Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22 ✔, P2-23 ✔, P2-24 ✔,
                                           P2-25 (top 5 de la sección 7)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
@@ -866,6 +882,15 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Impacto usa uppercase como muestra; presetActivo sigue funcionando.
     - Tests: 3 nuevos → 77/77 · snapshot actualizado.
 
+2026-11-18 · Post-plan · P2-24 COMPLETADO — "feat(compartir): estado en la
+  URL y boton para copiar el enlace"
+    - lib/compartir.js: base64url UTF-8 + versión, saneo con los defaults,
+      enlace sin navegar y limpieza del hash al abrir.
+    - persistencia.js: sanearObjeto extraído (storage y enlaces comparten
+      validación). lib/texto.js: TEXTO_POR_DEFECTO único.
+    - Hook useCopiar compartido por Copiar y Compartir (role=status, reset 3s).
+    - Tests: 8 unit + 3 de integración → 88/88 · coverage 59/59 ramas.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -874,8 +899,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 77 tests · cobertura 100% de la
-        lógica pura (48/48 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 88 tests · cobertura 100% de la
+        lógica pura (59/59 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -909,7 +934,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 26/26 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 27/27 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; 2 features diferidas por el
   usuario y anotadas como ideas en el README).
 

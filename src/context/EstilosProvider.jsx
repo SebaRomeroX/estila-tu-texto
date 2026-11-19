@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { EstilosContext } from './estilosContext.js'
 import { ESTILOS_POR_DEFECTO } from '../lib/estilos.js'
+import { decodificarEstado } from '../lib/compartir.js'
 import {
   CLAVE_ESTILOS,
   cargarObjeto,
@@ -11,11 +12,13 @@ import {
  * @param {{ children: import('react').ReactNode }} props
  */
 export function EstilosProvider({ children }) {
-  // init lazy: si hay estilos guardados válidos, la app arranca con ellos
+  // init lazy: un enlace compartido gana; si no hay, los estilos guardados
   const [estilos, setEstilos] = useState(
-    /** @type {import('../types.js').Estilos} */ (
-      cargarObjeto(CLAVE_ESTILOS, ESTILOS_POR_DEFECTO)
-    ),
+    () =>
+      /** @type {import('../types.js').Estilos} */ (
+        decodificarEstado(window.location.hash)?.estilos ??
+          cargarObjeto(CLAVE_ESTILOS, ESTILOS_POR_DEFECTO)
+      ),
   )
 
   // cada cambio de estilos se persiste (guardarObjeto nunca lanza)

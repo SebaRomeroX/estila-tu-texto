@@ -57,6 +57,7 @@
 - **Contraste verificado:** indicador WCAG en vivo (AAA / AA / insuficiente) del par texto/fondo
 - **Lectura cómoda:** ancho de línea en `ch` y `line-height` sin unidad
 - **Énfasis:** mayúsculas, capitalizar, subrayado, tachado y cursiva
+- **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

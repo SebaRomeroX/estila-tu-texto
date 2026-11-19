@@ -5,32 +5,34 @@ import { SalidaCodigo } from './components/Salida'
 import { Visualizador } from './components/Visualizador'
 import { EstilosContext } from './context/estilosContext.js'
 import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
+import { decodificarEstado, limpiarHashCompartido } from './lib/compartir.js'
 import {
   CLAVE_TEXTO,
   borrarDatos,
   cargarObjeto,
   guardarObjeto,
 } from './lib/persistencia.js'
-
-const TEXTO_INICIAL = {
-  titulo: 'Texto de Ejemplo',
-  parrafo1: 'Esta es una vista previa de tus estilos.',
-  parrafo2:
-    'Puedes escribir lo que quieras aqui para ver como se aplican los estilos. Este va a ser un string mas largo para que se aprecie el salto de linea y la distancia entre ellas.',
-  subtitulo: 'Pega un texto',
-  parrafo3: 'Puedes copiar cualquien texto y pegarlo aqui, si prefieres.',
-}
+import { TEXTO_POR_DEFECTO } from './lib/texto.js'
 
 const App = () => {
   const { aplicarEstilos } = useContext(EstilosContext)
   const [mensajeBorrado, setMensajeBorrado] = useState('')
 
-  // init lazy: el texto de la sesión anterior (si lo hay y es válido) gana
+  // init lazy: un enlace compartido gana; si no hay, la sesión anterior (si
+  // lo hay y es válido) gana sobre los defaults
   const [texto, setTexto] = useState(
-    /** @type {import('./types.js').Texto} */ (
-      cargarObjeto(CLAVE_TEXTO, TEXTO_INICIAL)
-    ),
+    () =>
+      /** @type {import('./types.js').Texto} */ (
+        decodificarEstado(window.location.hash)?.texto ??
+          cargarObjeto(CLAVE_TEXTO, TEXTO_POR_DEFECTO)
+      ),
   )
+
+  // el enlace compartido se aplica UNA vez: se limpia el hash para que las
+  // ediciones posteriores no se pisen al recargar
+  useEffect(() => {
+    limpiarHashCompartido()
+  }, [])
 
   // el texto se guarda en cada edición; el aviso de privacidad está en el
   // footer (se guarda solo en este navegador, no se envía a ningún lado)
@@ -47,7 +49,7 @@ const App = () => {
   }
 
   function restablecerTexto() {
-    setTexto({ ...TEXTO_INICIAL })
+    setTexto({ ...TEXTO_POR_DEFECTO })
   }
 
   // acción destructiva: pide confirmación antes de borrar nada

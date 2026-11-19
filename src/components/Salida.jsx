@@ -1,8 +1,10 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
+import { crearEnlace } from '../lib/compartir.js'
 import { generateCode } from '../lib/generateCode.js'
 import { resaltarCodigo } from '../lib/resaltar.js'
 import { CodigoResaltado } from './CodigoResaltado.jsx'
+import { useCopiar } from './useCopiar.js'
 
 // feedback del copiar: emoji para la vista, texto para lectores de pantalla
 /** @type {Record<string, { emoji: string, mensaje: string }>} */
@@ -12,38 +14,36 @@ const ESTADOS_COPIA = {
   error: { emoji: '❗', mensaje: 'Error al copiar el código' },
 }
 
+/** @type {Record<string, { emoji: string, mensaje: string }>} */
+const ESTADOS_ENLACE = {
+  espera: { emoji: '🔗', mensaje: '' },
+  ok: { emoji: '✔', mensaje: 'Enlace copiado al portapapeles' },
+  error: { emoji: '❗', mensaje: 'No se pudo copiar el enlace' },
+}
+
 /**
  * @param {import('../types.js').ParametrosSalida} props
  */
 export const SalidaCodigo = ({ texto }) => {
   const { estilos } = useContext(EstilosContext)
-  const [estadoCopia, setEstadoCopia] = useState('espera')
-  const timerRef = useRef(/** @type {number | undefined} */ (undefined))
-
-  // limpiar el timeout si el componente se desmonta (evita setState tras unmount)
-  useEffect(() => {
-    return () => clearTimeout(timerRef.current)
-  }, [])
+  const copia = useCopiar()
+  const enlace = useCopiar()
 
   // misma función para mostrar y para copiar → no pueden divergir
   const codigo = generateCode(texto, estilos)
   // el resaltado es solo de presentación: parte del mismo string
   const lineas = useMemo(() => resaltarCodigo(codigo), [codigo])
-  const { emoji, mensaje } = ESTADOS_COPIA[estadoCopia]
+  const { emoji, mensaje } = ESTADOS_COPIA[copia.estado]
+  const { emoji: emojiEnlace, mensaje: mensajeEnlace } =
+    ESTADOS_ENLACE[enlace.estado]
 
   function copiarCodigo() {
-    navigator.clipboard
-      .writeText(codigo)
-      .then(() => {
-        setEstadoCopia('ok')
-      })
-      .catch(() => {
-        setEstadoCopia('error')
-      })
-      .finally(() => {
-        clearTimeout(timerRef.current)
-        timerRef.current = setTimeout(() => setEstadoCopia('espera'), 3000)
-      })
+    copia.copiar(codigo)
+  }
+
+  function compartir() {
+    // no toca la URL actual: arma el enlace y lo copia
+    enlace.copiar(crearEnlace(texto, estilos, window.location.href))
   }
 
   return (
@@ -54,12 +54,20 @@ export const SalidaCodigo = ({ texto }) => {
             <h2 className='titulo'>Codigo</h2>
             <span className='codigo-lenguaje'>HTML + CSS</span>
           </div>
-          <button type='button' onClick={copiarCodigo}>
-            Copiar <span aria-hidden='true'>{emoji}</span>
-            <span className='sr-only' role='status' aria-live='polite'>
-              {mensaje}
-            </span>
-          </button>
+          <div className='salida-codigo-acciones'>
+            <button type='button' onClick={compartir}>
+              Compartir <span aria-hidden='true'>{emojiEnlace}</span>
+              <span className='sr-only' role='status' aria-live='polite'>
+                {mensajeEnlace}
+              </span>
+            </button>
+            <button type='button' onClick={copiarCodigo}>
+              Copiar <span aria-hidden='true'>{emoji}</span>
+              <span className='sr-only' role='status' aria-live='polite'>
+                {mensaje}
+              </span>
+            </button>
+          </div>
         </header>
 
         <CodigoResaltado lineas={lineas} />

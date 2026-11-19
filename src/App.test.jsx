@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
+import { codificarEstado, decodificarEstado } from './lib/compartir.js'
+import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
 import { CLAVE_ESTILOS, CLAVE_TEXTO } from './lib/persistencia.js'
+import { TEXTO_POR_DEFECTO } from './lib/texto.js'
 
 /** @type {HTMLElement} */
 let container
@@ -29,6 +32,8 @@ function renderApp() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  // cada test arranca sin enlace compartido en la URL
+  window.history.replaceState(null, '', '/')
   // user-event reemplaza navigator.clipboard en su setup(): re-instalamos el
   // espía en cada test para no depender del orden
   Object.defineProperty(navigator, 'clipboard', {
@@ -298,6 +303,49 @@ describe('botón copiar', () => {
     )
 
     fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
+
+    await screen.findByText('❗')
+  })
+})
+
+describe('compartir por URL', () => {
+  it('un enlace compartido gana sobre lo guardado y se limpia el hash', () => {
+    const texto = { ...TEXTO_POR_DEFECTO, titulo: 'Texto compartido' }
+    const estilos = { ...ESTILOS_POR_DEFECTO, color: '#123456' }
+    window.location.hash = `s=${codificarEstado(texto, estilos)}`
+
+    app.unmount()
+    renderApp()
+
+    expect(within(preview).getByText('Texto compartido')).toBeInTheDocument()
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+    // se aplica una sola vez: el hash no queda pegado en la URL
+    expect(window.location.hash).toBe('')
+  })
+
+  it('el botón Compartir copia un enlace con el estado actual', async () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: /compartir/i }))
+
+    await screen.findByText('✔')
+    const [enlace] = vi.mocked(navigator.clipboard.writeText).mock.calls[0]
+    const estado = decodificarEstado(new URL(enlace).hash)
+
+    expect(estado.texto.titulo).toBe('Texto de Ejemplo')
+    expect(estado.estilos.color).toBe('#123456')
+    // compartir no navega ni ensucia el historial
+    expect(window.location.hash).toBe('')
+  })
+
+  it('feedbacka error si no se puede copiar el enlace', async () => {
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(
+      new Error('denegado'),
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /compartir/i }))
 
     await screen.findByText('❗')
   })

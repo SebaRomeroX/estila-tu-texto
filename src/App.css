@@ -200,9 +200,18 @@ body {
 
 .salida-codigo header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5em;
   padding: 1em 2em;
+}
+
+.salida-codigo-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5em;
 }
 
 .salida-codigo button {

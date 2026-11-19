@@ -5,6 +5,34 @@ export const CLAVE_ESTILOS = 'estila-tu-texto:estilos'
 export const CLAVE_TEXTO = 'estila-tu-texto:texto'
 
 /**
+ * Sanea un objeto desconocido (JSON de storage o de un enlace compartido):
+ * deja solo las claves conocidas cuyo tipo coincide con el default y completa
+ * el resto. Nunca lanza.
+ *
+ * @param {unknown} guardado
+ * @param {Record<string, string>} porDefecto
+ * @returns {Record<string, string>}
+ */
+export function sanearObjeto(guardado, porDefecto) {
+  if (typeof guardado !== 'object' || guardado === null) {
+    return { ...porDefecto }
+  }
+
+  const objeto = /** @type {Record<string, unknown>} */ (guardado)
+  /** @type {Record<string, string>} */
+  const saneado = {}
+  for (const [campo, valorDefecto] of Object.entries(porDefecto)) {
+    const valor = objeto[campo]
+    // solo claves conocidas y con el mismo tipo que el default
+    if (typeof valor === typeof valorDefecto) {
+      saneado[campo] = /** @type {string} */ (valor)
+    }
+  }
+
+  return { ...porDefecto, ...saneado }
+}
+
+/**
  * Carga un objeto plano de strings desde localStorage, fusionándolo con los
  * valores por defecto. Es defensivo a propósito: un JSON corrupto, un valor
  * que no es objeto o una clave con tipo incorrecto NUNCA rompen la app, solo
@@ -19,20 +47,7 @@ export function cargarObjeto(clave, porDefecto) {
     const crudo = localStorage.getItem(clave)
     if (!crudo) return { ...porDefecto }
 
-    const guardado = JSON.parse(crudo)
-    if (typeof guardado !== 'object' || guardado === null) {
-      return { ...porDefecto }
-    }
-
-    /** @type {Record<string, string>} */
-    const saneado = {}
-    for (const [campo, valorDefecto] of Object.entries(porDefecto)) {
-      const valor = guardado[campo]
-      // solo claves conocidas y con el mismo tipo que el default
-      if (typeof valor === typeof valorDefecto) saneado[campo] = valor
-    }
-
-    return { ...porDefecto, ...saneado }
+    return sanearObjeto(JSON.parse(crudo), porDefecto)
   } catch {
     // JSON inválido o localStorage bloqueado (modo privado)
     return { ...porDefecto }
