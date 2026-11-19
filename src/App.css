@@ -10,6 +10,8 @@
   --color-borde: rgba(240, 248, 255, 0.459);
   --color-foco: rgb(140, 185, 255);
   --color-codigo: #000000;
+  --fuente-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 /* ------------------------- GENERAL ------------------------- */
@@ -202,20 +204,103 @@ body {
   background-color: var(--color-superficie-active);
 }
 
-.salida-codigo span {
+.salida-codigo button span {
   width: 1em;
 }
 
-.salida-codigo pre {
+.salida-codigo-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+}
+
+/* etiqueta de lenguaje, como en un playground de código */
+.codigo-lenguaje {
+  font-family: var(--fuente-mono);
+  font-size: 0.7em;
+  letter-spacing: 0.02em;
+  padding: 0.15em 0.55em;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.4em;
+  opacity: 0.75;
+}
+
+/* ------------------------- EDITOR DE CÓDIGO ------------------------- */
+
+.codigo-editor {
+  /* ambas columnas comparten tamaño y alto de línea: así los números
+     quedan alineados exactamente con su línea de código */
+  --tamano-codigo: 0.9em;
+  --alto-linea: 1.7;
+
+  display: flex;
   background-color: var(--color-codigo);
-  font-size: 1.4em;
   border-radius: 0 0 1em 1em;
-  overflow: auto;
+  overflow: hidden;
+}
+
+.codigo-lineas {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  padding: 1em 0.8em 1em 1.2em;
+  text-align: right;
+  user-select: none;
+
+  color: #6e7681;
+  font-family: var(--fuente-mono);
+  font-size: var(--tamano-codigo);
+  line-height: var(--alto-linea);
+  font-variant-numeric: tabular-nums;
+  border-right: 1px solid rgba(240, 248, 255, 0.08);
+}
+
+.salida-codigo pre {
+  margin: 0;
+  padding: 1em 1.2em;
+  overflow-x: auto;
+  flex: 1;
+
+  font-family: var(--fuente-mono);
+  font-size: var(--tamano-codigo);
+  line-height: var(--alto-linea);
+  white-space: pre;
+  tab-size: 2;
 
   /* barra estándar (Firefox/Chrome/Edge): thumb y track oscuros,
      la esquina ya no asoma en blanco sobre las esquinas redondeadas */
   scrollbar-width: thin;
   scrollbar-color: #555555 var(--color-codigo);
+}
+
+/* colores de token (tema oscuro tipo editor) */
+.tok-etiqueta {
+  color: #7cb7ff;
+}
+
+.tok-atributo {
+  color: #c792ea;
+}
+
+.tok-valor-html,
+.tok-valor-css {
+  color: #ffcb6b;
+}
+
+.tok-texto {
+  color: #e6edf3;
+}
+
+.tok-selector {
+  color: #a5e075;
+}
+
+.tok-propiedad {
+  color: #89ddff;
+}
+
+.tok-puntuacion {
+  color: #8b949e;
 }
 
 /* ------------------------- FOOTER ------------------------- */
@@ -274,7 +359,7 @@ body {
     gap: 1em;
   }
 
-  .salida-codigo pre {
-    font-size: 1em;
+  .codigo-editor {
+    --tamano-codigo: 0.78em;
   }
 }

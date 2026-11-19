@@ -335,6 +335,29 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
   - Diferido también: og:image (requiere un asset 1200x630 real).
 
+[x] P2-19 Vista de editor de código (resaltado + números de línea)  ✔ 2026-11-18
+  Verificado (2026-11-18):
+    - lib/resaltar.js: tokenizador propio sin dependencias para el formato que
+      genera la app. INVARIANTE: concatenar tokens reproduce la línea exacta
+      (test dedicado con el snippet real) → el <pre> sigue siendo el código
+      copiable.
+    - Tipos: TipoToken/Token en src/types.js (exportables para el typecheck).
+    - CodigoResaltado.jsx: gutter de números aria-hidden FUERA del <pre> y
+      tokens coloreados dentro; los saltos de línea son texto ('\n') → el
+      textContent del <pre> no cambia (el test de copiar sigue pasando).
+    - CSS: tema oscuro de editor (8 clases .tok-*), fuente monoespaciada con
+      variable --fuente-mono, --tamano-codigo/--alto-linea compartidos por
+      gutter y código para alineación exacta, white-space: pre + scroll
+      horizontal, tab-size 2 y gutter no seleccionable. Badge "HTML + CSS".
+    - Bug evitado: `.salida-codigo span { width: 1em }` (del emoji del botón)
+      se acotó a `.salida-codigo button span` para no romper los tokens.
+    - Tests: 5 unit del tokenizador (lossless, HTML, texto, CSS, fallback) +
+      2 de integración (numeración sin contaminar el texto; clases de token)
+      → 57/57. Coverage lib 100% (28/28 ramas; se eliminaron dos `?? 0`
+      inalcanzables).
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage 100% ·
+      build OK · dev 200 · axe 0.
+
 [x] P2-18 Borrar datos guardados (coherencia con el aviso)  ✔ 2026-10-31
   Verificado (2026-10-31):
     - lib/persistencia.js: borrarDatos() elimina ambas claves en try/catch.
@@ -472,7 +495,7 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      → FASE 3 COMPLETA 2026-10-28
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
-  Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔
+  Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔, P2-19 ✔
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -725,6 +748,17 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Pendiente: nota final de evaluación (re-rating).
 ================================================================================
 
+2026-11-18 · Post-plan · P2-19 COMPLETADO — "feat(editor): resaltado de
+  sintaxis y numeros de linea en el codigo generado"
+    - Tokenizador propio (lib/resaltar.js) sin dependencias, lossless por
+      contrato y con test que reconstruye el snippet exacto.
+    - Gutter de números fuera del <pre> y aria-hidden → el texto copiable no
+      cambia (el test de "copiar" compara clipboard con pre.textContent).
+    - Tema oscuro de editor: 8 tipos de token, monoespaciada, alineación
+      exacta gutter/código y badge "HTML + CSS".
+    - Tests: 5 unit + 2 de integración → 57/57 · coverage lib 100% (28/28
+      ramas) · lint 0/0 · typecheck 0 · build OK.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -733,7 +767,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 50 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 57 tests · cobertura 100% de la
         lógica pura (10/10 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -748,7 +782,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
         rompen) con aviso de privacidad y borrado explícito.
     Producto / accesibilidad:
       - Temas, reset de estilos, estado de tema activo (aria-pressed),
-        responsive, foco visible, landmarks, aria-live, metas sociales.
+        responsive, foco visible, landmarks, aria-live, metas sociales y
+        vista de editor con resaltado de sintaxis y números de línea.
     Documentación:
       - README veraz (hosting real, scripts, features) y este plan con
         trazabilidad commit a commit.
@@ -767,11 +802,11 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 21/21 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 22/22 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; 2 features diferidas por el
   usuario y anotadas como ideas en el README).
 
-  Próximo paso natural (fuera de este plan): push de los 3 commits locales
-  (P2-17, P2-18 y este) para que CI y Netlify publiquen todo. Los 3 de P2-14
-  ya están en origin/main (b798808).
+  Próximo paso natural (fuera de este plan): push del commit de P2-19
+  (los de P2-17, P2-18 y la nota final ya están en origin/main) para que CI y
+  Netlify publiquen el editor de código.
 ================================================================================

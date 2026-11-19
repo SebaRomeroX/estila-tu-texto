@@ -1,6 +1,8 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
 import { generateCode } from '../lib/generateCode.js'
+import { resaltarCodigo } from '../lib/resaltar.js'
+import { CodigoResaltado } from './CodigoResaltado.jsx'
 
 // feedback del copiar: emoji para la vista, texto para lectores de pantalla
 /** @type {Record<string, { emoji: string, mensaje: string }>} */
@@ -25,6 +27,8 @@ export const SalidaCodigo = ({ texto }) => {
 
   // misma función para mostrar y para copiar → no pueden divergir
   const codigo = generateCode(texto, estilos)
+  // el resaltado es solo de presentación: parte del mismo string
+  const lineas = useMemo(() => resaltarCodigo(codigo), [codigo])
   const { emoji, mensaje } = ESTADOS_COPIA[estadoCopia]
 
   function copiarCodigo() {
@@ -46,7 +50,10 @@ export const SalidaCodigo = ({ texto }) => {
     <section className='seccion'>
       <article className='salida-codigo'>
         <header>
-          <h2 className='titulo'>Codigo</h2>
+          <div className='salida-codigo-titulo'>
+            <h2 className='titulo'>Codigo</h2>
+            <span className='codigo-lenguaje'>HTML + CSS</span>
+          </div>
           <button type='button' onClick={copiarCodigo}>
             Copiar <span aria-hidden='true'>{emoji}</span>
             <span className='sr-only' role='status' aria-live='polite'>
@@ -55,7 +62,7 @@ export const SalidaCodigo = ({ texto }) => {
           </button>
         </header>
 
-        <pre>{codigo}</pre>
+        <CodigoResaltado lineas={lineas} />
       </article>
     </section>
   )

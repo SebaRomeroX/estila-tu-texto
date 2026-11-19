@@ -35,6 +35,12 @@
  * @property {string} nombre
  * @property {Estilos} estilos
  *
+ * @typedef {'etiqueta' | 'atributo' | 'valor-html' | 'texto' | 'selector' | 'propiedad' | 'valor-css' | 'puntuacion'} TipoToken
+ *
+ * @typedef {Object} Token
+ * @property {TipoToken} tipo
+ * @property {string} texto
+ *
  * @typedef {Object} Opcion
  * @property {string} nombre
  * @property {string | number} contenido

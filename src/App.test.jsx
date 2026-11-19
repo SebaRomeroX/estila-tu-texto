@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import App from './App.jsx'
@@ -41,7 +41,7 @@ beforeEach(() => {
 
 describe('preview y snippet compartidos', () => {
   it('renderiza el texto por defecto en el preview y en el snippet', () => {
-    expect(screen.getByText('Texto de Ejemplo')).toBeInTheDocument()
+    expect(within(preview).getByText('Texto de Ejemplo')).toBeInTheDocument()
     expect(pre).toHaveTextContent('<h2>Texto de Ejemplo</h2>')
     expect(pre).toHaveTextContent('font-size: 1.2em;')
   })
@@ -99,6 +99,25 @@ describe('validación de rangos de los inputs numéricos', () => {
     fireEvent.blur(tamaño)
     expect(tamaño).toHaveValue(2)
     expect(pre).toHaveTextContent('font-size: 2em;')
+  })
+})
+
+describe('vista de editor de código', () => {
+  it('numera las líneas sin incluirlas en el texto copiable', () => {
+    const gutter = container.querySelector('.codigo-lineas')
+
+    expect(gutter).toHaveAttribute('aria-hidden', 'true')
+    expect(gutter.children).toHaveLength(pre.textContent.split('\n').length)
+    // el <pre> contiene SOLO código: ni números ni adornos
+    expect(pre.textContent.startsWith('<article')).toBe(true)
+    expect(pre.textContent).toContain('\n  <h2>')
+  })
+
+  it('resalta etiquetas, selectores y propiedades con clases de token', () => {
+    expect(pre.querySelector('.tok-etiqueta')).toHaveTextContent('article')
+    expect(pre.querySelector('.tok-selector')).toHaveTextContent('.texto')
+    expect(pre.querySelector('.tok-propiedad')).toHaveTextContent('color')
+    expect(pre.querySelector('.tok-valor-css')).toHaveTextContent('#F0F8FF')
   })
 })
 
@@ -218,7 +237,7 @@ describe('accesibilidad', () => {
 describe('botón restablecer texto', () => {
   it('restablece el texto en el preview Y en el snippet', async () => {
     const user = userEvent.setup()
-    const h2 = screen.getByText('Texto de Ejemplo')
+    const h2 = within(preview).getByText('Texto de Ejemplo')
 
     // el usuario edita directamente en el preview
     h2.textContent = 'Editado a mano'
@@ -247,14 +266,14 @@ describe('persistencia en localStorage', () => {
   })
 
   it('el texto editado sobrevive a un remount', () => {
-    const h2 = screen.getByText('Texto de Ejemplo')
+    const h2 = within(preview).getByText('Texto de Ejemplo')
     h2.textContent = 'Texto persistido'
     fireEvent.input(h2)
 
     app.unmount()
     renderApp()
 
-    expect(screen.getByText('Texto persistido')).toBeInTheDocument()
+    expect(within(preview).getByText('Texto persistido')).toBeInTheDocument()
     expect(pre).toHaveTextContent('Texto persistido')
   })
 
@@ -266,7 +285,7 @@ describe('persistencia en localStorage', () => {
     renderApp()
 
     expect(preview.style.color).toBe('rgb(240, 248, 255)') // default
-    expect(screen.getByText('Texto de Ejemplo')).toBeInTheDocument()
+    expect(within(preview).getByText('Texto de Ejemplo')).toBeInTheDocument()
   })
 
   it('muestra el aviso de guardado local (info sensible)', () => {
@@ -281,7 +300,7 @@ describe('borrar datos guardados', () => {
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
-    const h2 = screen.getByText('Texto de Ejemplo')
+    const h2 = within(preview).getByText('Texto de Ejemplo')
     h2.textContent = 'Dato sensible'
     fireEvent.input(h2)
 
@@ -292,8 +311,8 @@ describe('borrar datos guardados', () => {
     expect(confirmar).toHaveBeenCalledTimes(1)
     // UI de vuelta a los defaults
     expect(preview.style.color).toBe('rgb(240, 248, 255)')
-    expect(screen.getByText('Texto de Ejemplo')).toBeInTheDocument()
-    expect(screen.queryByText('Dato sensible')).not.toBeInTheDocument()
+    expect(within(preview).getByText('Texto de Ejemplo')).toBeInTheDocument()
+    expect(within(preview).queryByText('Dato sensible')).not.toBeInTheDocument()
     // y lo persistido ya no contiene datos personales
     expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS)).color).toBe(
       '#F0F8FF',

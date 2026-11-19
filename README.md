@@ -46,6 +46,7 @@
 ### 📋 **Código Listo para Usar**
 
 - Botón **"Copiar código"** con un click
+- Vista de **editor**: resaltado de sintaxis HTML/CSS y números de línea
 - Formato limpio y legible
 - HTML semántico con tu texto
 - CSS con las propiedades exactas que elegiste
