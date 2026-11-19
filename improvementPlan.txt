@@ -335,6 +335,43 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     Siguen en "Próximas Mejoras" del README como ideas, sin promesa.
   - Diferido también: og:image (requiere un asset 1200x630 real).
 
+[ ] P2-21 Contraste WCAG en vivo (texto vs fondo)  → M
+  - Hoy la legibilidad depende del ojo del usuario: el bug de P2-20
+    (aliceblue sobre beige) no lo detectó ninguna herramienta.
+  Acción: lib/contraste.js puro (parseo hex, luminancia relativa, ratio y
+          nivel WCAG) + indicador en el editor con el ratio y el nivel
+          (AAA / AA / AA solo texto grande / insuficiente). Sin dependencias.
+
+[ ] P2-22 Ancho de línea (max-width en ch) y line-height sin unidad  → S
+  - El snippet generado no tiene tope de ancho: en un monitor ancho quedan
+    líneas de 150+ caracteres (el defecto tipográfico más común).
+  - line-height se emite como "1.4em", que se multiplica con la herencia;
+    lo correcto es el número sin unidad.
+  Acción: campo "ancho" (30-90ch, default 65) en el modelo + margin-inline
+          auto en el bloque; line-height unitless en estilosToStyleObject.
+
+[ ] P2-23 text-transform, text-decoration y cursiva  → S
+  - Los 2 features diferidos en P2-14a, más font-style (cursiva), que no
+    estaba en la lista original.
+  Acción: 3 campos string (transform, decoracion, estiloLetra) con selects
+          en el editor; el snippet se actualiza solo (generateCode itera
+          estilosToStyleObject).
+
+[ ] P2-24 Compartir el estado por URL (sin backend)  → M
+  - Hoy compartir un estilo implica mandar capturas; no hay forma de pasar
+    texto + estilos.
+  Acción: lib/compartir.js (JSON -> base64url en el hash, con saneo
+          defensivo reutilizando la validación de persistencia) + botón
+          "Compartir" que copia el enlace. Al abrir un enlace se aplica el
+          estado y se limpia el hash (para no pisar ediciones posteriores).
+
+[ ] P2-25 Escala del título (h2) sin rediseñar el modelo  → M
+  - Limitación conocida: un solo bloque de estilos para título y párrafos.
+    El 80% del valor se logra con un multiplicador del título.
+  Acción: campo escalaTitulo (100-200%, default 150 = tamaño actual del UA)
+          + regla .texto h2 explícita en el snippet (hoy depende del UA y se
+          rompe con cualquier reset) + variable CSS en el preview.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -510,6 +547,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
   Fase 4 (pulido):                   P1-7 ✔, P2-12 ✔, P2-14a ✔, P2-14b ✔,
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
   Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔, P2-19 ✔, P2-20 ✔
+  Tanda "más estilos" (2026-11-18):       P2-21, P2-22, P2-23, P2-24, P2-25
+                                          (top 5 del catálogo de la sección 7)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -830,4 +869,81 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 y
   P2-20 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor y el fix de contraste.
+================================================================================
+
+--------------------------------------------------------------------------------
+7. CATÁLOGO DE IDEAS (backlog, 2026-11-18)
+--------------------------------------------------------------------------------
+
+Contexto: el modelo Estilos es un bloque plano de 9 campos. Agregar una
+propiedad CSS cuesta 3 archivos (types.js, lib/estilos.js, InputsParams.js) y
+el snippet se actualiza solo, porque generateCode itera estilosToStyleObject.
+La persistencia ya tolera campos nuevos (merge con defaults del mismo typeof),
+así que no hace falta migración mientras los campos sigan siendo strings.
+
+A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
+  - text-transform (ninguna/MAYÚSCULAS/minúsculas/Capitalizar)   S
+  - text-decoration (ninguna/subrayado/tachado) + color          S
+  - font-style (cursiva)                                         S
+  - text-indent (sangría de primera línea)                       S
+  - word-spacing                                                 S
+  - font-variant: small-caps                                     S
+  - opacity                                                      S
+  - text-align: justify (hoy solo left/center)                   S
+  - color de ::selection                                         S
+  - text-shadow (x, y, blur + color)                             M
+  - hyphens: auto + lang                                         M
+  - text-wrap: balance/pretty                                    S
+
+B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
+  - Ancho de línea (max-width en ch)                             S  → P2-22
+  - line-height sin unidad (hoy 1.4em se multiplica)             S  → P2-22
+  - font-size en rem/px (opcional)                               S
+  - letter-spacing negativo (hoy min 0)                          S
+  - pesos 300/700/800/900 (hoy 100/400/600)                      S
+  - padding del bloque configurable (hoy 30px 60px fijo)         S
+  - border, border-radius, fondo transparente                    M
+
+C) EFECTOS "WOW" (diferenciadores visuales)
+  - texto con degradado (background-clip: text)                  S
+  - drop cap (::first-letter)                                    S
+  - contorno (-webkit-text-stroke) y neón (text-shadow)          M
+  - dos columnas (columns)                                       S
+  - animación de entrada con prefers-reduced-motion              M
+  - tarjeta "glass" (backdrop-filter)                            M
+
+D) FUNCIONES DE PRODUCTO
+  - Contraste WCAG en vivo (AA/AAA)                              M  → P2-21
+  - Compartir por URL (estado en el hash)                        M  → P2-24
+  - Descargar .html / copiar HTML y CSS por separado             S/M
+  - Guardar presets propios + galería                            M
+  - Undo/redo + historial                                        M
+  - Selector de fuente visual (con preview)                      S
+  - Cargar webfonts o marcar "si está instalada"                 M
+    (Roboto, Open Sans, Garamond... no se cargan: el preview miente
+     en equipos que no las tienen)
+  - Escala/peso del título (título != párrafo)                   M  → P2-25
+  - Contador de palabras / tiempo de lectura                     S
+  - Plantillas de texto                                          S
+  - Export a Tailwind                                            M
+  - Modo claro/oscuro de la app                                  M
+  - PWA / offline                                                M
+  - Exportar imagen (redes)                                      M
+  - og:image (diferido en P2-14c)                                M
+
+E) CALIDAD TÉCNICA
+  - TypeScript estricto (hoy JSDoc + strict:false)               L
+  - Playwright + snapshots visuales (contraste real)             M
+  - Code splitting (bundle ~197 KB JS)                           S
+  - i18n                                                         L
+
+TOP 5 ELEGIDOS (esta tanda, en este orden):
+  1. P2-21 contraste WCAG en vivo — convierte el bug de P2-20 en una clase
+     de bug imposible y es un diferenciador real.
+  2. P2-22 ancho de línea + line-height unitless — el snippet pasa de demo a
+     código de producción.
+  3. P2-23 text-transform/decoration/cursiva — las diferidas, baratas.
+  4. P2-24 compartir por URL — crecimiento sin backend.
+  5. P2-25 escala del título — el 80% de "estilos por elemento" con el 20%
+     del esfuerzo.
 ================================================================================
