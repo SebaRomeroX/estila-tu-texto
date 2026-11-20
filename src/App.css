@@ -118,6 +118,15 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* aviso de fuente del sistema no instalada: el preview caería al fallback */
+.aviso-fuente {
+  margin: 0 2em 1em;
+  padding: 0.6em 0.9em;
+  border-left: 3px solid #d9a441;
+  background-color: rgba(217, 164, 65, 0.12);
+  font-size: 0.95em;
+}
+
 .inputs-configuracion input,
 .inputs-configuracion select {
   color: var(--color-texto);
@@ -397,6 +406,10 @@ body {
   }
 
   .contraste {
+    margin: 0 0 1em;
+  }
+
+  .aviso-fuente {
     margin: 0 0 1em;
   }
 

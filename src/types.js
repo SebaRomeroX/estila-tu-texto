@@ -60,6 +60,14 @@
  * @typedef {Object} Opcion
  * @property {string} nombre
  * @property {string | number} contenido
+ * @property {string} [grupo] etiqueta del <optgroup> (si se agrupa)
+ *
+ * @typedef {Object} Fuente
+ * @property {string} nombre
+ * @property {string} contenido pila CSS que se guarda y se emite
+ * @property {boolean} web true si se self-hostea en public/fonts
+ * @property {string} [google] familia para la CSS2 API de Google Fonts
+ * @property {string} [grupo] etiqueta del <optgroup>
  *
  * @typedef {Object} ElementoInput
  * @property {string} label

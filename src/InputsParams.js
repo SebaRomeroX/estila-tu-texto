@@ -1,27 +1,4 @@
-const OPCIONES_FUENTE = [
-  { nombre: 'Times New Roman', contenido: 'Times New Roman, Times, serif' },
-  { nombre: 'Georgia', contenido: 'Georgia, serif' },
-  { nombre: 'Garamond', contenido: 'Garamond, serif' },
-  { nombre: 'Palatino', contenido: 'Palatino, Palatino Linotype, serif' },
-  { nombre: 'Arial', contenido: 'Arial, Helvetica, sans-serif' },
-  { nombre: 'Helvetica', contenido: 'Helvetica, sans-serif' },
-  { nombre: 'Verdana', contenido: 'Verdana, Geneva, sans-serif' },
-  { nombre: 'Open Sans', contenido: 'Open Sans, sans-serif' },
-  { nombre: 'Roboto', contenido: 'Roboto, sans-serif' },
-  { nombre: 'Segoe UI', contenido: 'Segoe UI, Tahoma, sans-serif' },
-  { nombre: 'Courier New', contenido: 'Courier New, Courier, monospace' },
-  { nombre: 'Consolas', contenido: 'Consolas, Monaco, monospace' },
-  { nombre: 'Monaco', contenido: 'Monaco, monospace' },
-  { nombre: 'Comic Sans MS', contenido: 'Comic Sans MS, cursive' },
-  { nombre: 'Brush Script', contenido: 'Brush Script MT, cursive' },
-  { nombre: 'Papyrus', contenido: 'Papyrus, fantasy' },
-  { nombre: 'Serif (genérica)', contenido: 'serif' },
-  { nombre: 'Sans-serif (genérica)', contenido: 'sans-serif' },
-  { nombre: 'Monospace (genérica)', contenido: 'monospace' },
-  { nombre: 'Cursive (genérica)', contenido: 'cursive' },
-  { nombre: 'Fantasy (genérica)', contenido: 'fantasy' },
-  { nombre: 'System UI', contenido: 'system-ui' },
-]
+import { FUENTES } from './lib/fuentes.js'
 
 /**
  * Fichas de configuración de cada input. Tipadas como ElementoInput para que
@@ -87,7 +64,7 @@ export const InputsSelectsParams = {
   fuente: {
     label: 'Fuente',
     campo: 'family',
-    opciones: OPCIONES_FUENTE,
+    opciones: FUENTES,
   },
   peso: {
     label: 'Ancho letra',

@@ -11,6 +11,7 @@ import { InputNumber } from './InputNumber.jsx'
 import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'
 import { IndicadorContraste } from './IndicadorContraste.jsx'
+import { AvisoFuente } from './AvisoFuente.jsx'
 
 export const StyleEditor = () => {
   const { estilos, aplicarEstilos } = useContext(EstilosContext)
@@ -56,6 +57,7 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.ancho} />
         <InputNumber elemento={InputsNumberParams.escalaTitulo} />
       </div>
+      <AvisoFuente />
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.transform} />
         <InputSelect elemento={InputsSelectsParams.decoracion} />

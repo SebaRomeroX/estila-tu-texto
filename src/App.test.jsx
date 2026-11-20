@@ -34,6 +34,8 @@ beforeEach(() => {
   vi.clearAllMocks()
   // cada test arranca sin enlace compartido en la URL
   window.history.replaceState(null, '', '/')
+  // y sin un FontFaceSet falso de un test anterior
+  Reflect.deleteProperty(document, 'fonts')
   // user-event reemplaza navigator.clipboard en su setup(): re-instalamos el
   // espía en cada test para no depender del orden
   Object.defineProperty(navigator, 'clipboard', {
@@ -67,6 +69,73 @@ describe('preview y snippet compartidos', () => {
 
     expect(preview.style.fontFamily).toBe('Arial, Helvetica, sans-serif')
     expect(pre).toHaveTextContent('font-family: Arial, Helvetica, sans-serif;')
+  })
+
+  it('agrupa las fuentes en optgroups honestos', () => {
+    const select = screen.getByLabelText('Fuente')
+    const grupos = [...select.querySelectorAll('optgroup')].map(
+      (grupo) => grupo.label,
+    )
+
+    expect(grupos).toEqual([
+      'Cargadas (siempre iguales)',
+      'Del sistema (según tu equipo)',
+      'Genéricas (siempre disponibles)',
+    ])
+    expect(
+      within(select).getByRole('option', { name: 'Roboto' }),
+    ).toBeInTheDocument()
+  })
+
+  it('una fuente web llega al preview y el snippet trae la hoja para replicarla', () => {
+    fireEvent.change(screen.getByLabelText('Fuente'), {
+      target: { value: 'Roboto, sans-serif' },
+    })
+
+    expect(preview.style.fontFamily).toBe('Roboto, sans-serif')
+    expect(pre).toHaveTextContent('font-family: Roboto, sans-serif;')
+    expect(pre).toHaveTextContent(
+      'https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap',
+    )
+  })
+
+  it('avisa cuando la fuente del sistema no está instalada', () => {
+    Object.defineProperty(document, 'fonts', {
+      configurable: true,
+      value: { check: vi.fn(() => false) },
+    })
+
+    fireEvent.change(screen.getByLabelText('Fuente'), {
+      target: { value: 'Georgia, serif' },
+    })
+
+    expect(screen.getByText(/«Georgia» no está instalada/i)).toBeInTheDocument()
+  })
+
+  it('no avisa si la fuente del sistema sí está instalada', () => {
+    Object.defineProperty(document, 'fonts', {
+      configurable: true,
+      value: { check: vi.fn(() => true) },
+    })
+
+    fireEvent.change(screen.getByLabelText('Fuente'), {
+      target: { value: 'Georgia, serif' },
+    })
+
+    expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
+  })
+
+  it('no avisa para fuentes web: se cargan solas', () => {
+    Object.defineProperty(document, 'fonts', {
+      configurable: true,
+      value: { check: vi.fn(() => false) },
+    })
+
+    fireEvent.change(screen.getByLabelText('Fuente'), {
+      target: { value: 'Open Sans, sans-serif' },
+    })
+
+    expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
 
   it('cambiar el tamaño numérico actualiza el preview Y el snippet', () => {

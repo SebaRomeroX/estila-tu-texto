@@ -1,4 +1,5 @@
 import { estilosToStyleObject, factorTitulo } from './estilos.js'
+import { enlaceGoogleFonts } from './fuentes.js'
 
 /**
  * Escapa texto del usuario para inyectarlo seguro dentro del HTML del snippet.
@@ -43,6 +44,8 @@ const LAYOUT_FIJO = [
 export function generateCode(texto, estilos) {
   const { titulo, parrafo1, parrafo2, subtitulo, parrafo3 } = texto
 
+  const enlaceFuente = enlaceGoogleFonts(estilos.family)
+
   const declaracionesCss = [
     ...Object.entries(estilosToStyleObject(estilos)).map(
       ([propiedad, valor]) => `${camelToKebab(propiedad)}: ${valor};`,
@@ -51,6 +54,15 @@ export function generateCode(texto, estilos) {
   ].map((declaracion) => `    ${declaracion}`)
 
   return [
+    // solo para fuentes web: sin esta hoja el snippet se ve distinto fuera de
+    // la app (el navegador cae al fallback). Las del sistema no la necesitan.
+    ...(enlaceFuente
+      ? [
+          `<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->`,
+          `<link rel="stylesheet" href="${enlaceFuente}">`,
+          ``,
+        ]
+      : []),
     `<article class='texto'>`,
     `  <h2>${escapeHtml(titulo)}</h2>`,
     `  <p>${escapeHtml(parrafo1)}</p>`,

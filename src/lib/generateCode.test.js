@@ -178,4 +178,20 @@ describe('generateCode', () => {
     expect(codigo).toContain('.texto h2 {')
     expect(codigo).toContain('font-size: 1.8em;')
   })
+
+  it('agrega la hoja de Google Fonts solo para fuentes web', () => {
+    const conWeb = generateCode(TEXTO, {
+      ...ESTILOS,
+      family: 'Roboto, sans-serif',
+    })
+
+    expect(conWeb).toContain(
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap">',
+    )
+    expect(conWeb).toContain('<!-- Fuente web:')
+
+    const conSistema = generateCode(TEXTO, ESTILOS)
+    expect(conSistema).not.toContain('fonts.googleapis.com')
+    expect(conSistema).not.toContain('<!-- Fuente web:')
+  })
 })
