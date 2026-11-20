@@ -60,6 +60,7 @@
 - **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
+- **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

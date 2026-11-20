@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
@@ -44,6 +44,13 @@ beforeEach(() => {
   })
 
   renderApp()
+})
+
+afterEach(() => {
+  // el test de descarga define estos métodos (jsdom no los implementa)
+  vi.restoreAllMocks()
+  Reflect.deleteProperty(URL, 'createObjectURL')
+  Reflect.deleteProperty(URL, 'revokeObjectURL')
 })
 
 describe('preview y snippet compartidos', () => {
@@ -388,6 +395,41 @@ describe('botón copiar', () => {
     fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
 
     await screen.findByText('❗')
+  })
+})
+
+describe('descargar .html', () => {
+  it('descarga un documento completo con el texto y los estilos actuales', async () => {
+    Object.defineProperty(URL, 'createObjectURL', {
+      configurable: true,
+      writable: true,
+      value: vi.fn(() => 'blob:test'),
+    })
+    Object.defineProperty(URL, 'revokeObjectURL', {
+      configurable: true,
+      writable: true,
+      value: vi.fn(),
+    })
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => {})
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /descargar/i }))
+
+    expect(URL.createObjectURL).toHaveBeenCalledTimes(1)
+    const blob = /** @type {Blob} */ (
+      vi.mocked(URL.createObjectURL).mock.calls[0][0]
+    )
+    const documento = await blob.text()
+
+    expect(documento.startsWith('<!doctype html>')).toBe(true)
+    expect(documento).toContain('<h2>Texto de Ejemplo</h2>')
+    expect(documento).toContain('color: #123456;')
+    expect(documento).toContain('<style>')
+    expect(click).toHaveBeenCalled()
   })
 })
 

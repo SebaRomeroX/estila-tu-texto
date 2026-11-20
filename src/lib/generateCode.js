@@ -34,18 +34,28 @@ const LAYOUT_FIJO = [
 ]
 
 /**
- * Genera el snippet HTML+CSS a partir del MISMO estado que alimenta el
- * preview. Es la única fuente de verdad: sirve para el <pre> y para copiar.
- *
  * @param {import('../types.js').Texto} texto
- * @param {import('../types.js').Estilos} estilos
- * @returns {string}
+ * @returns {string[]}
  */
-export function generateCode(texto, estilos) {
+function generarArticulo(texto) {
   const { titulo, parrafo1, parrafo2, subtitulo, parrafo3 } = texto
 
-  const enlaceFuente = enlaceGoogleFonts(estilos.family)
+  return [
+    `<article class='texto'>`,
+    `  <h2>${escapeHtml(titulo)}</h2>`,
+    `  <p>${escapeHtml(parrafo1)}</p>`,
+    `  <p>${escapeHtml(parrafo2)}</p>`,
+    `  <h3>${escapeHtml(subtitulo)}</h3>`,
+    `  <p>${escapeHtml(parrafo3)}</p>`,
+    `</article>`,
+  ]
+}
 
+/**
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string[]}
+ */
+function generarCss(estilos) {
   const declaracionesCss = [
     ...Object.entries(estilosToStyleObject(estilos)).map(
       ([propiedad, valor]) => `${camelToKebab(propiedad)}: ${valor};`,
@@ -54,23 +64,6 @@ export function generateCode(texto, estilos) {
   ].map((declaracion) => `    ${declaracion}`)
 
   return [
-    // solo para fuentes web: sin esta hoja el snippet se ve distinto fuera de
-    // la app (el navegador cae al fallback). Las del sistema no la necesitan.
-    ...(enlaceFuente
-      ? [
-          `<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->`,
-          `<link rel="stylesheet" href="${enlaceFuente}">`,
-          ``,
-        ]
-      : []),
-    `<article class='texto'>`,
-    `  <h2>${escapeHtml(titulo)}</h2>`,
-    `  <p>${escapeHtml(parrafo1)}</p>`,
-    `  <p>${escapeHtml(parrafo2)}</p>`,
-    `  <h3>${escapeHtml(subtitulo)}</h3>`,
-    `  <p>${escapeHtml(parrafo3)}</p>`,
-    `</article>`,
-    ``,
     `<style>`,
     `  .texto {`,
     ...declaracionesCss,
@@ -82,5 +75,64 @@ export function generateCode(texto, estilos) {
     `    font-size: ${factorTitulo(estilos.escalaTitulo)}em;`,
     `  }`,
     `</style>`,
+  ]
+}
+
+/**
+ * Genera el snippet HTML+CSS a partir del MISMO estado que alimenta el
+ * preview. Es la única fuente de verdad: sirve para el <pre> y para copiar.
+ *
+ * @param {import('../types.js').Texto} texto
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function generateCode(texto, estilos) {
+  const enlaceFuente = enlaceGoogleFonts(estilos.family)
+
+  return [
+    // solo para fuentes web: sin esta hoja el snippet se ve distinto fuera de
+    // la app (el navegador cae al fallback). Las del sistema no la necesitan.
+    ...(enlaceFuente
+      ? [
+          `<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->`,
+          `<link rel="stylesheet" href="${enlaceFuente}">`,
+          ``,
+        ]
+      : []),
+    ...generarArticulo(texto),
+    ``,
+    ...generarCss(estilos),
+  ].join('\n')
+}
+
+/**
+ * Documento HTML completo y autónomo para descargar: a diferencia del snippet,
+ * el <style> y el <link> de la fuente van en el <head>, como corresponde.
+ *
+ * @param {import('../types.js').Texto} texto
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function generateDocumento(texto, estilos) {
+  const enlaceFuente = enlaceGoogleFonts(estilos.family)
+  const titulo = texto.titulo.trim() || 'Estila tu Texto'
+
+  return [
+    `<!doctype html>`,
+    `<html lang="es">`,
+    `<head>`,
+    `  <meta charset="utf-8">`,
+    `  <meta name="viewport" content="width=device-width, initial-scale=1">`,
+    `  <title>${escapeHtml(titulo)}</title>`,
+    ...(enlaceFuente
+      ? [`  <link rel="stylesheet" href="${enlaceFuente}">`]
+      : []),
+    ...generarCss(estilos).map((linea) => (linea ? `  ${linea}` : '')),
+    `</head>`,
+    `<body>`,
+    ...generarArticulo(texto).map((linea) => `  ${linea}`),
+    `</body>`,
+    `</html>`,
+    ``,
   ].join('\n')
 }

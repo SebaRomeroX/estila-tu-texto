@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { escapeHtml, generateCode } from './generateCode.js'
+import { escapeHtml, generateCode, generateDocumento } from './generateCode.js'
 import {
   estilosToPreviewStyle,
   estilosToStyleObject,
@@ -193,5 +193,48 @@ describe('generateCode', () => {
     const conSistema = generateCode(TEXTO, ESTILOS)
     expect(conSistema).not.toContain('fonts.googleapis.com')
     expect(conSistema).not.toContain('<!-- Fuente web:')
+  })
+})
+
+describe('generateDocumento', () => {
+  it('arma un documento completo con el CSS en el head', () => {
+    const documento = generateDocumento(TEXTO, ESTILOS)
+
+    expect(documento.startsWith('<!doctype html>')).toBe(true)
+    expect(documento).toContain('<html lang="es">')
+    expect(documento).toContain('<title>Titulo de prueba</title>')
+    expect(documento).toContain(`<article class='texto'>`)
+    expect(documento).toContain('font-family: system-ui;')
+    // el <style> va antes de </head>, no dentro del body
+    expect(documento.indexOf('<style>')).toBeLessThan(
+      documento.indexOf('</head>'),
+    )
+    expect(documento).toContain('</body>\n</html>')
+  })
+
+  it('escapa el título y usa uno por defecto si está vacío', () => {
+    expect(
+      generateDocumento({ ...TEXTO, titulo: '<b>x</b>' }, ESTILOS),
+    ).toContain('<title>&lt;b&gt;x&lt;/b&gt;</title>')
+
+    expect(generateDocumento({ ...TEXTO, titulo: '   ' }, ESTILOS)).toContain(
+      '<title>Estila tu Texto</title>',
+    )
+  })
+
+  it('pone la hoja de Google Fonts en el head solo para fuentes web', () => {
+    const conWeb = generateDocumento(TEXTO, {
+      ...ESTILOS,
+      family: 'Roboto, sans-serif',
+    })
+    const head = conWeb.slice(0, conWeb.indexOf('</head>'))
+
+    expect(head).toContain(
+      'https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap',
+    )
+
+    expect(generateDocumento(TEXTO, ESTILOS)).not.toContain(
+      'fonts.googleapis.com',
+    )
   })
 })

@@ -1,7 +1,8 @@
 import { useContext, useMemo } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
 import { crearEnlace } from '../lib/compartir.js'
-import { generateCode } from '../lib/generateCode.js'
+import { descargarHtml } from '../lib/descargar.js'
+import { generateCode, generateDocumento } from '../lib/generateCode.js'
 import { resaltarCodigo } from '../lib/resaltar.js'
 import { CodigoResaltado } from './CodigoResaltado.jsx'
 import { useCopiar } from './useCopiar.js'
@@ -46,6 +47,11 @@ export const SalidaCodigo = ({ texto }) => {
     enlace.copiar(crearEnlace(texto, estilos, window.location.href))
   }
 
+  function descargar() {
+    // documento completo: se puede abrir en el navegador sin esta app
+    descargarHtml(generateDocumento(texto, estilos))
+  }
+
   return (
     <section className='seccion'>
       <article className='salida-codigo'>
@@ -55,6 +61,9 @@ export const SalidaCodigo = ({ texto }) => {
             <span className='codigo-lenguaje'>HTML + CSS</span>
           </div>
           <div className='salida-codigo-acciones'>
+            <button type='button' onClick={descargar}>
+              Descargar .html <span aria-hidden='true'>⤓</span>
+            </button>
             <button type='button' onClick={compartir}>
               Compartir <span aria-hidden='true'>{emojiEnlace}</span>
               <span className='sr-only' role='status' aria-live='polite'>
