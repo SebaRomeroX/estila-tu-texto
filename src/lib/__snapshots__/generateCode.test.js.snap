@@ -29,5 +29,9 @@ exports[`generateCode > genera el snippet con los valores por defecto (snapshot)
     padding: 30px 60px;
     margin-inline: auto;
   }
+
+  .texto h2 {
+    font-size: 1.5em;
+  }
 </style>"
 `;

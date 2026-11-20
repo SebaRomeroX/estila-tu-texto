@@ -65,6 +65,13 @@ export const InputsNumberParams = {
     max: 90,
     step: 5,
   },
+  escalaTitulo: {
+    label: 'Tamaño titulo (%)',
+    campo: 'escalaTitulo',
+    min: 100,
+    max: 200,
+    step: 5,
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */

@@ -54,6 +54,7 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.altura} />
         <InputNumber elemento={InputsNumberParams.espacio} />
         <InputNumber elemento={InputsNumberParams.ancho} />
+        <InputNumber elemento={InputsNumberParams.escalaTitulo} />
       </div>
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.transform} />

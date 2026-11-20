@@ -1,4 +1,4 @@
-import { estilosToStyleObject } from './estilos.js'
+import { estilosToStyleObject, factorTitulo } from './estilos.js'
 
 /**
  * Escapa texto del usuario para inyectarlo seguro dentro del HTML del snippet.
@@ -62,6 +62,12 @@ export function generateCode(texto, estilos) {
     `<style>`,
     `  .texto {`,
     ...declaracionesCss,
+    `  }`,
+    ``,
+    // regla explícita del título: sin esto depende del UA y se rompe con
+    // cualquier reset (Tailwind preflight, normalize...)
+    `  .texto h2 {`,
+    `    font-size: ${factorTitulo(estilos.escalaTitulo)}em;`,
     `  }`,
     `</style>`,
   ].join('\n')

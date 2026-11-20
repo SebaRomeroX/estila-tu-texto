@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { escapeHtml, generateCode } from './generateCode.js'
-import { estilosToStyleObject } from './estilos.js'
+import {
+  estilosToPreviewStyle,
+  estilosToStyleObject,
+  factorTitulo,
+} from './estilos.js'
 
 const ESTILOS = {
   color: '#F0F8FF',
@@ -16,6 +20,7 @@ const ESTILOS = {
   transform: 'none',
   decoracion: 'none',
   estiloLetra: 'normal',
+  escalaTitulo: '150',
 }
 
 const TEXTO = {
@@ -88,6 +93,31 @@ describe('estilosToStyleObject', () => {
   })
 })
 
+describe('factorTitulo', () => {
+  it('convierte el porcentaje en factor', () => {
+    expect(factorTitulo('150')).toBe(1.5)
+    expect(factorTitulo('100')).toBe(1)
+  })
+
+  it('cae a 1.5 si el valor no es un número positivo', () => {
+    expect(factorTitulo('abc')).toBe(1.5)
+    expect(factorTitulo('0')).toBe(1.5)
+    expect(factorTitulo('-20')).toBe(1.5)
+  })
+})
+
+describe('estilosToPreviewStyle', () => {
+  it('agrega la variable de la escala del título sin tocar el resto', () => {
+    const estilo = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({ ...ESTILOS, escalaTitulo: '180' })
+    )
+
+    expect(estilo['--escala-titulo']).toBe('1.8')
+    expect(estilo.fontSize).toBe('1.2em')
+    expect(estilo).not.toHaveProperty('escalaTitulo')
+  })
+})
+
 describe('generateCode', () => {
   it('genera el snippet con los valores por defecto (snapshot)', () => {
     expect(generateCode(TEXTO, ESTILOS)).toMatchSnapshot()
@@ -140,5 +170,12 @@ describe('generateCode', () => {
     expect(codigo).toContain('text-transform: capitalize;')
     expect(codigo).toContain('text-decoration: line-through;')
     expect(codigo).toContain('font-style: italic;')
+  })
+
+  it('emite una regla explícita para el título con la escala elegida', () => {
+    const codigo = generateCode(TEXTO, { ...ESTILOS, escalaTitulo: '180' })
+
+    expect(codigo).toContain('.texto h2 {')
+    expect(codigo).toContain('font-size: 1.8em;')
   })
 })

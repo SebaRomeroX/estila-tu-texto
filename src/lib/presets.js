@@ -31,6 +31,7 @@ export const PRESETS = [
       transform: 'none',
       decoracion: 'none',
       estiloLetra: 'normal',
+      escalaTitulo: '150',
     },
   },
   {
@@ -50,6 +51,7 @@ export const PRESETS = [
       transform: 'none',
       decoracion: 'none',
       estiloLetra: 'normal',
+      escalaTitulo: '140',
     },
   },
   {
@@ -69,6 +71,7 @@ export const PRESETS = [
       transform: 'uppercase',
       decoracion: 'none',
       estiloLetra: 'normal',
+      escalaTitulo: '180',
     },
   },
 ]

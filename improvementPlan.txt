@@ -406,12 +406,27 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (59/59 ramas) · build OK · axe 0.
 
-[ ] P2-25 Escala del título (h2) sin rediseñar el modelo  → M
-  - Limitación conocida: un solo bloque de estilos para título y párrafos.
-    El 80% del valor se logra con un multiplicador del título.
-  Acción: campo escalaTitulo (100-200%, default 150 = tamaño actual del UA)
-          + regla .texto h2 explícita en el snippet (hoy depende del UA y se
-          rompe con cualquier reset) + variable CSS en el preview.
+[x] P2-25 Escala del título (h2) sin rediseñar el modelo  ✔ 2026-11-18
+  Verificado (2026-11-18):
+    - Campo escalaTitulo (100-200%, step 5, default 150) en el modelo y en el
+      editor ("Tamaño titulo (%)").
+    - lib/estilos.js: factorTitulo() convierte el porcentaje en factor (150 ->
+      1.5) y cae a 1.5 si el valor guardado no es un número positivo (storage
+      o enlace editado a mano) → el CSS nunca queda inválido.
+    - estilosToPreviewStyle(): estilosToStyleObject + la variable
+      --escala-titulo; va aparte para que la variable no termine en el snippet.
+    - Preview: .visualizador h2 { font-size: calc(1em * var(--escala-titulo)) }.
+    - Snippet: regla explícita ".texto h2 { font-size: 1.5em; }" → deja de
+      depender del estilo del navegador y sobrevive a cualquier reset
+      (Tailwind preflight, normalize...). Default 150 = tamaño actual, así que
+      no cambia el resultado visual por defecto.
+    - Presets con escala coherente: Clásico/Editorial 150, Consola 140,
+      Impacto 180 (claves incluidas para presetActivo).
+    - Tests: 4 unit nuevos (factorTitulo válido y fallback, preview style,
+      regla del snippet) + 1 de integración (variable y snippet al cambiar a
+      200%) → 93/93; snapshot actualizado.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (63/63 ramas) · build OK · axe 0.
 
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
@@ -589,7 +604,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                      P2-14c ✔  → FASE 4 COMPLETA 2026-10-30
   Post-plan (ideas detectadas al cerrar): P2-17 ✔, P2-18 ✔, P2-19 ✔, P2-20 ✔
   Tanda "más estilos" (2026-11-18):       P2-21 ✔, P2-22 ✔, P2-23 ✔, P2-24 ✔,
-                                          P2-25 (top 5 de la sección 7)
+                                          P2-25 ✔ → TANDA COMPLETA 2026-11-18
+                                          (top 5 del catálogo de la sección 7)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -891,6 +907,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Hook useCopiar compartido por Copiar y Compartir (role=status, reset 3s).
     - Tests: 8 unit + 3 de integración → 88/88 · coverage 59/59 ramas.
 
+2026-11-18 · Post-plan · P2-25 COMPLETADO — "feat(estilos): escala del
+  titulo independiente del resto del bloque"
+    - Campo escalaTitulo (100-200%, default 150) + factorTitulo() defensivo.
+    - Preview por variable CSS; snippet con regla .texto h2 explícita (ya no
+      depende del UA ni de resets).
+    - Tests: 5 nuevos → 93/93 · snapshot actualizado · coverage 63/63 ramas.
+
+  TANDA "MÁS ESTILOS" COMPLETA: P2-21 a P2-25 (5 commits, 93 tests, lib 100%).
+  Queda en la sección 7 el resto del catálogo para elegir próximos pasos.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -899,8 +925,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 88 tests · cobertura 100% de la
-        lógica pura (59/59 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 93 tests · cobertura 100% de la
+        lógica pura (63/63 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -934,24 +960,33 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 27/27 resueltos (P2-13 y P2-14 se cerraron por vías
-  distintas a las sugeridas, documentadas arriba; 2 features diferidas por el
-  usuario y anotadas como ideas en el README).
+  Estado de los issues: 28/28 resueltos (P2-13 y P2-14 se cerraron por vías
+  distintas a las sugeridas, documentadas arriba; las 2 features que el
+  usuario había diferido —text-transform/decoration— quedaron implementadas
+  en P2-23; sigue diferido copiar HTML y CSS por separado).
 
-  Próximo paso natural (fuera de este plan): push de los commits de P2-19 y
-  P2-20 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
-  CI y Netlify publiquen el editor y el fix de contraste.
+  Actualización 2026-11-18 (post-plan): P2-21..P2-25 agregaron contraste WCAG
+  en vivo, ancho de línea + line-height unitless, transform/decoration/
+  cursiva, compartir por URL y escala del título. De la lista de "qué separa
+  del 9-10", el punto 6 queda reducido a copiar HTML/CSS por separado; el
+  resto (TS estricto, verificación visual real, E2E/performance, screenshot
+  desactualizada, og:image) sigue vigente.
+
+  Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
+  P2-25 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  CI y Netlify publiquen el editor, el fix de contraste y la tanda de estilos.
 ================================================================================
 
 --------------------------------------------------------------------------------
 7. CATÁLOGO DE IDEAS (backlog, 2026-11-18)
 --------------------------------------------------------------------------------
 
-Contexto: el modelo Estilos es un bloque plano de 9 campos. Agregar una
+Contexto: el modelo Estilos es un bloque plano de campos string. Agregar una
 propiedad CSS cuesta 3 archivos (types.js, lib/estilos.js, InputsParams.js) y
 el snippet se actualiza solo, porque generateCode itera estilosToStyleObject.
 La persistencia ya tolera campos nuevos (merge con defaults del mismo typeof),
 así que no hace falta migración mientras los campos sigan siendo strings.
+(Tras la tanda P2-21..P2-25 el bloque pasó de 9 a 14 campos.)
 
 A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
   - text-transform (ninguna/MAYÚSCULAS/minúsculas/Capitalizar)   S
@@ -1009,7 +1044,7 @@ E) CALIDAD TÉCNICA
   - Code splitting (bundle ~197 KB JS)                           S
   - i18n                                                         L
 
-TOP 5 ELEGIDOS (esta tanda, en este orden):
+TOP 5 ELEGIDOS (esta tanda, en este orden) — IMPLEMENTADOS 2026-11-18:
   1. P2-21 contraste WCAG en vivo — convierte el bug de P2-20 en una clase
      de bug imposible y es un diferenciador real.
   2. P2-22 ancho de línea + line-height unitless — el snippet pasa de demo a

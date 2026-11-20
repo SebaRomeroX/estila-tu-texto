@@ -17,6 +17,7 @@
  * @property {string} transform
  * @property {string} decoracion
  * @property {string} estiloLetra
+ * @property {string} escalaTitulo
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

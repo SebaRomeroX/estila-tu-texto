@@ -16,7 +16,36 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   transform: 'none',
   decoracion: 'none',
   estiloLetra: 'normal',
+  escalaTitulo: '150',
 })
+
+/**
+ * Factor de la escala del título (150 -> 1.5). Si el valor guardado no es un
+ * número positivo (storage o enlace editado a mano), cae al 1.5 por defecto:
+ * el CSS generado nunca queda inválido.
+ *
+ * @param {string} escalaTitulo
+ * @returns {number}
+ */
+export function factorTitulo(escalaTitulo) {
+  const escala = Number(escalaTitulo)
+  return Number.isFinite(escala) && escala > 0 ? escala / 100 : 1.5
+}
+
+/**
+ * Estilo del bloque para el preview: lo mismo que estilosToStyleObject más la
+ * variable CSS de la escala del título. Va aparte porque es una variable, no
+ * una propiedad del bloque, y no debe terminar en el snippet generado.
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {import('react').CSSProperties}
+ */
+export function estilosToPreviewStyle(estilos) {
+  return /** @type {import('react').CSSProperties} */ ({
+    ...estilosToStyleObject(estilos),
+    '--escala-titulo': String(factorTitulo(estilos.escalaTitulo)),
+  })
+}
 
 /**
  * Fuente ÚNICA de la traducción estilos -> propiedades CSS con unidades.

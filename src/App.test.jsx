@@ -114,6 +114,20 @@ describe('preview y snippet compartidos', () => {
     expect(pre).toHaveTextContent('font-style: italic;')
   })
 
+  it('la escala del título llega al preview y al snippet', () => {
+    // la variable CSS alimenta la regla .visualizador h2 del preview
+    expect(preview.style.getPropertyValue('--escala-titulo')).toBe('1.5')
+    expect(pre).toHaveTextContent('.texto h2 {')
+    expect(pre).toHaveTextContent('font-size: 1.5em;')
+
+    fireEvent.change(screen.getByLabelText('Tamaño titulo (%)'), {
+      target: { value: '200' },
+    })
+
+    expect(preview.style.getPropertyValue('--escala-titulo')).toBe('2')
+    expect(pre).toHaveTextContent('font-size: 2em;')
+  })
+
   it('el título "Vista previa" usa el mismo color que el texto', () => {
     const tituloVista = screen.getByRole('heading', { name: /vista previa/i })
 

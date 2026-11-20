@@ -58,6 +58,7 @@
 - **Lectura cómoda:** ancho de línea en `ch` y `line-height` sin unidad
 - **Énfasis:** mayúsculas, capitalizar, subrayado, tachado y cursiva
 - **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
+- **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**
