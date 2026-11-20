@@ -60,7 +60,6 @@
  * @typedef {Object} Opcion
  * @property {string} nombre
  * @property {string | number} contenido
- * @property {string} [grupo] etiqueta del <optgroup> (si se agrupa)
  *
  * @typedef {Object} Fuente
  * @property {string} nombre

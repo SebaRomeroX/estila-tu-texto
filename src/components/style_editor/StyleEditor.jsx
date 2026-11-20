@@ -12,6 +12,7 @@ import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'
 import { IndicadorContraste } from './IndicadorContraste.jsx'
 import { AvisoFuente } from './AvisoFuente.jsx'
+import { SelectorFuente } from './SelectorFuente.jsx'
 
 export const StyleEditor = () => {
   const { estilos, aplicarEstilos } = useContext(EstilosContext)
@@ -41,6 +42,8 @@ export const StyleEditor = () => {
           Restablecer estilos <span aria-hidden='true'>↺</span>
         </button>
       </div>
+      <SelectorFuente />
+      <AvisoFuente />
       <div className='inputs-configuracion'>
         <InputNumber elemento={InputsNumberParams.gap} />
         <InputSelect elemento={InputsSelectsParams.align} />
@@ -49,7 +52,6 @@ export const StyleEditor = () => {
       </div>
       <IndicadorContraste />
       <div className='inputs-configuracion'>
-        <InputSelect elemento={InputsSelectsParams.fuente} />
         <InputSelect elemento={InputsSelectsParams.peso} />
         <InputNumber elemento={InputsNumberParams.tamaño} />
         <InputNumber elemento={InputsNumberParams.altura} />
@@ -57,7 +59,6 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.ancho} />
         <InputNumber elemento={InputsNumberParams.escalaTitulo} />
       </div>
-      <AvisoFuente />
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.transform} />
         <InputSelect elemento={InputsSelectsParams.decoracion} />

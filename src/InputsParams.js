@@ -1,5 +1,3 @@
-import { FUENTES } from './lib/fuentes.js'
-
 /**
  * Fichas de configuración de cada input. Tipadas como ElementoInput para que
  * `campo` sea CampoEstilo (no string suelto) y el compilador valide los rangos.
@@ -60,11 +58,6 @@ export const InputsSelectsParams = {
       { nombre: 'inicio', contenido: 'left' },
       { nombre: 'centrado', contenido: 'center' },
     ],
-  },
-  fuente: {
-    label: 'Fuente',
-    campo: 'family',
-    opciones: FUENTES,
   },
   peso: {
     label: 'Ancho letra',

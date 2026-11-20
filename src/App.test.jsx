@@ -63,34 +63,40 @@ describe('preview y snippet compartidos', () => {
   })
 
   it('cambiar la fuente actualiza el preview Y el snippet', () => {
-    fireEvent.change(screen.getByLabelText('Fuente'), {
-      target: { value: 'Arial, Helvetica, sans-serif' },
-    })
+    fireEvent.click(screen.getByRole('button', { name: /^Arial/ }))
 
     expect(preview.style.fontFamily).toBe('Arial, Helvetica, sans-serif')
     expect(pre).toHaveTextContent('font-family: Arial, Helvetica, sans-serif;')
+    expect(screen.getByRole('button', { name: /^Arial/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
   })
 
-  it('agrupa las fuentes en optgroups honestos', () => {
-    const select = screen.getByLabelText('Fuente')
-    const grupos = [...select.querySelectorAll('optgroup')].map(
-      (grupo) => grupo.label,
-    )
+  it('muestra las fuentes agrupadas y cada una con su tipografía', () => {
+    const grupos = screen
+      .getAllByRole('heading', { level: 4 })
+      .map((titulo) => titulo.textContent)
 
     expect(grupos).toEqual([
       'Cargadas (siempre iguales)',
       'Del sistema (según tu equipo)',
       'Genéricas (siempre disponibles)',
     ])
-    expect(
-      within(select).getByRole('option', { name: 'Roboto' }),
-    ).toBeInTheDocument()
+
+    const roboto = screen.getByRole('button', { name: /^Roboto/ })
+    expect(roboto.style.fontFamily).toBe('Roboto, sans-serif')
+    expect(roboto).toHaveTextContent('cargada')
+
+    // la fuente por defecto aparece marcada
+    expect(screen.getByRole('button', { name: /^System UI/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
   })
 
   it('una fuente web llega al preview y el snippet trae la hoja para replicarla', () => {
-    fireEvent.change(screen.getByLabelText('Fuente'), {
-      target: { value: 'Roboto, sans-serif' },
-    })
+    fireEvent.click(screen.getByRole('button', { name: /^Roboto/ }))
 
     expect(preview.style.fontFamily).toBe('Roboto, sans-serif')
     expect(pre).toHaveTextContent('font-family: Roboto, sans-serif;')
@@ -105,9 +111,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => false) },
     })
 
-    fireEvent.change(screen.getByLabelText('Fuente'), {
-      target: { value: 'Georgia, serif' },
-    })
+    fireEvent.click(screen.getByRole('button', { name: /^Georgia/ }))
 
     expect(screen.getByText(/«Georgia» no está instalada/i)).toBeInTheDocument()
   })
@@ -118,9 +122,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => true) },
     })
 
-    fireEvent.change(screen.getByLabelText('Fuente'), {
-      target: { value: 'Georgia, serif' },
-    })
+    fireEvent.click(screen.getByRole('button', { name: /^Georgia/ }))
 
     expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
@@ -131,9 +133,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => false) },
     })
 
-    fireEvent.change(screen.getByLabelText('Fuente'), {
-      target: { value: 'Open Sans, sans-serif' },
-    })
+    fireEvent.click(screen.getByRole('button', { name: /^Open Sans/ }))
 
     expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
