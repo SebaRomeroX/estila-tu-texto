@@ -74,6 +74,12 @@ function generarCss(estilos) {
     `  .texto h2 {`,
     `    font-size: ${factorTitulo(estilos.escalaTitulo)}em;`,
     `  }`,
+    ``,
+    // sangría solo en párrafos: text-indent se hereda y en el contenedor
+    // también indentaría los títulos
+    `  .texto p {`,
+    `    text-indent: ${estilos.sangria}em;`,
+    `  }`,
     `</style>`,
   ]
 }

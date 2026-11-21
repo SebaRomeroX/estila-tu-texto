@@ -513,6 +513,26 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (102/102 ramas) · build OK · axe 0.
 
+[x] P2-30 Más estilos de texto (sangría, versalitas y corte de línea)  ✔ 2026-11-20
+  Verificado (2026-11-20):
+    - 4 campos nuevos: sangria (0-4em), espacioPalabras (0-0.5em),
+      versalitas (none/small-caps) y corteLinea (wrap/balance/pretty).
+    - letter-spacing ahora acepta negativos (mínimo -0.1) y el select de peso
+      suma 300/700/800/900 a los 100/400/600 existentes.
+    - La sangría se emite solo en .texto p: text-indent es heredable y en el
+      contenedor también indentaría los títulos. El preview usa --sangria +
+      regla .visualizador p; snippet y documento usan .texto p.
+    - Presets no-default ahora parten de { ...ESTILOS_POR_DEFECTO, ... }: los
+      campos nuevos heredan el neutro y presetActivo sigue funcionando; se
+      agrega un test que exige todas las claves del dominio en cada tema.
+    - text-wrap, font-variant y word-spacing se aplican al bloque y se
+      heredan (el título conserva solo su escala).
+    - Snapshot actualizado a conciencia: nuevas declaraciones en .texto y la
+      regla .texto p.
+    - Tests: 10 nuevos → 150/150.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (102/102 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -695,6 +715,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-27 ✔ (selector visual de fuentes),
                                           P2-28 ✔ (descargar .html),
                                           P2-29 ✔ (temas propios locales)
+  Post-plan (2026-11-20):                 P2-30 ✔ (más estilos de texto:
+                                          sangría, espacio palabras,
+                                          versalitas y corte de línea)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1040,6 +1063,17 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       evento. La galería pública sigue diferida (necesita backend).
     - Tests: 23 nuevos → 140/140 · coverage 102/102 ramas · build OK · axe 0.
 
+2026-11-20 · Post-plan · P2-30 COMPLETADO — "feat(estilos): sangría, espacio
+  entre palabras, versalitas y corte de línea"
+    - Cuatro controles nuevos (sangría 0-4em, espacio palabras 0-0.5em,
+      versalitas y text-wrap wrap/balance/pretty) + tracking negativo y pesos
+      300/700/800/900.
+    - La sangría va solo a los párrafos (variable --sangria en el preview,
+      regla .texto p en el snippet) para no indentar los títulos.
+    - Presets no-default con spread de defaults: los campos nuevos no rompen
+      presetActivo ni obligan a repetir neutros.
+    - Tests: 10 nuevos → 150/150 · coverage 102/102 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1048,7 +1082,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 140 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 150 tests · cobertura 100% de la
         lógica pura (102/102 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -1083,7 +1117,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 32/32 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 33/33 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23; sigue diferido copiar HTML y CSS por separado).
@@ -1103,10 +1137,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   navegador (la galería pública sigue diferida). El punto 7 (un solo bloque de
   estilos) sigue vigente, mitigado por la escala del título de P2-25.
 
+  Actualización 2026-11-20 (post-plan): P2-30 suma sangría de primera línea,
+  espacio entre palabras, versalitas, corte de línea (text-wrap), tracking
+  negativo y pesos 300/700/800/900. La sangría se limita a los párrafos para
+  no indentar los títulos.
+
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-29 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-30 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
-  las webfonts, el selector visual, la descarga y los temas propios.
+  las webfonts, el selector visual, la descarga, los temas propios y los
+  nuevos controles tipográficos.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1124,22 +1164,22 @@ A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
   - text-transform (ninguna/MAYÚSCULAS/minúsculas/Capitalizar)   S
   - text-decoration (ninguna/subrayado/tachado) + color          S
   - font-style (cursiva)                                         S
-  - text-indent (sangría de primera línea)                       S
-  - word-spacing                                                 S
-  - font-variant: small-caps                                     S
+  - text-indent (sangría de primera línea)                       S  → P2-30
+  - word-spacing                                                 S  → P2-30
+  - font-variant: small-caps                                     S  → P2-30
   - opacity                                                      S
   - text-align: justify (hoy solo left/center)                   S
   - color de ::selection                                         S
   - text-shadow (x, y, blur + color)                             M
   - hyphens: auto + lang                                         M
-  - text-wrap: balance/pretty                                    S
+  - text-wrap: balance/pretty                                    S  → P2-30
 
 B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
   - Ancho de línea (max-width en ch)                             S  → P2-22
   - line-height sin unidad (hoy 1.4em se multiplica)             S  → P2-22
   - font-size en rem/px (opcional)                               S
-  - letter-spacing negativo (hoy min 0)                          S
-  - pesos 300/700/800/900 (hoy 100/400/600)                      S
+  - letter-spacing negativo (hoy min 0)                          S  → P2-30
+  - pesos 300/700/800/900 (hoy 100/400/600)                      S  → P2-30
   - padding del bloque configurable (hoy 30px 60px fijo)         S
   - border, border-radius, fondo transparente                    M
 

@@ -208,6 +208,55 @@ describe('preview y snippet compartidos', () => {
     expect(pre).toHaveTextContent('font-size: 2em;')
   })
 
+  it('la sangría de primera línea solo afecta a los párrafos', () => {
+    expect(preview.style.getPropertyValue('--sangria')).toBe('0em')
+    expect(pre).toHaveTextContent('.texto p {')
+    expect(pre).toHaveTextContent('text-indent: 0em;')
+
+    fireEvent.change(screen.getByLabelText('Sangría primera línea (em)'), {
+      target: { value: '1.5' },
+    })
+
+    expect(preview.style.getPropertyValue('--sangria')).toBe('1.5em')
+    expect(pre).toHaveTextContent('text-indent: 1.5em;')
+  })
+
+  it('el espacio entre palabras llega al preview y al snippet', () => {
+    fireEvent.change(screen.getByLabelText('Espacio palabras (em)'), {
+      target: { value: '0.2' },
+    })
+
+    expect(preview.style.wordSpacing).toBe('0.2em')
+    expect(pre).toHaveTextContent('word-spacing: 0.2em;')
+  })
+
+  it('las versalitas y el corte de línea llegan al preview y al snippet', () => {
+    fireEvent.change(screen.getByLabelText('Versalitas'), {
+      target: { value: 'small-caps' },
+    })
+    expect(preview.style.fontVariant).toBe('small-caps')
+    expect(pre).toHaveTextContent('font-variant: small-caps;')
+
+    fireEvent.change(screen.getByLabelText('Corte de línea'), {
+      target: { value: 'balance' },
+    })
+    expect(pre).toHaveTextContent('text-wrap: balance;')
+  })
+
+  it('acepta tracking negativo y pesos altos', () => {
+    fireEvent.change(screen.getByLabelText('Espacio letras'), {
+      target: { value: '-0.05' },
+    })
+    expect(preview.style.letterSpacing).toBe('-0.05em')
+    expect(pre).toHaveTextContent('letter-spacing: -0.05em;')
+
+    fireEvent.change(screen.getByLabelText('Ancho letra'), {
+      target: { value: '800' },
+    })
+    expect(preview.style.fontWeight).toBe('800')
+    expect(pre).toHaveTextContent('font-weight: 800;')
+  })
+
   it('el título "Vista previa" usa el mismo color que el texto', () => {
     const tituloVista = screen.getByRole('heading', { name: /vista previa/i })
 

@@ -18,6 +18,10 @@
  * @property {string} decoracion
  * @property {string} estiloLetra
  * @property {string} escalaTitulo
+ * @property {string} sangria
+ * @property {string} espacioPalabras
+ * @property {string} versalitas
+ * @property {string} corteLinea
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

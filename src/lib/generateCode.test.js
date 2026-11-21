@@ -21,6 +21,10 @@ const ESTILOS = {
   decoracion: 'none',
   estiloLetra: 'normal',
   escalaTitulo: '150',
+  sangria: '0',
+  espacioPalabras: '0',
+  versalitas: 'none',
+  corteLinea: 'wrap',
 }
 
 const TEXTO = {
@@ -57,7 +61,9 @@ describe('estilosToStyleObject', () => {
       fontSize: '1.2em',
       fontWeight: '400',
       fontStyle: 'normal',
+      fontVariant: 'none',
       letterSpacing: '0.04em',
+      wordSpacing: '0em',
       // line-height va sin unidad: no se acumula con la herencia
       lineHeight: '1.4',
       gap: '1em',
@@ -65,6 +71,7 @@ describe('estilosToStyleObject', () => {
       textAlign: 'left',
       textTransform: 'none',
       textDecoration: 'none',
+      textWrap: 'wrap',
     })
   })
 
@@ -91,6 +98,25 @@ describe('estilosToStyleObject', () => {
     expect(estilo.textDecoration).toBe('underline')
     expect(estilo.fontStyle).toBe('italic')
   })
+
+  it('traduce espacio entre palabras, versalitas y corte de línea', () => {
+    const estilo = estilosToStyleObject({
+      ...ESTILOS,
+      espacioPalabras: '0.2',
+      versalitas: 'small-caps',
+      corteLinea: 'balance',
+    })
+
+    expect(estilo.wordSpacing).toBe('0.2em')
+    expect(estilo.fontVariant).toBe('small-caps')
+    expect(estilo.textWrap).toBe('balance')
+  })
+
+  it('acepta letter-spacing negativo', () => {
+    expect(
+      estilosToStyleObject({ ...ESTILOS, spacing: '-0.05' }).letterSpacing,
+    ).toBe('-0.05em')
+  })
 })
 
 describe('factorTitulo', () => {
@@ -115,6 +141,17 @@ describe('estilosToPreviewStyle', () => {
     expect(estilo['--escala-titulo']).toBe('1.8')
     expect(estilo.fontSize).toBe('1.2em')
     expect(estilo).not.toHaveProperty('escalaTitulo')
+  })
+
+  it('agrega la variable de la sangría', () => {
+    const estilo = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({ ...ESTILOS, sangria: '1.5' })
+    )
+
+    expect(estilo['--sangria']).toBe('1.5em')
+    // la sangría no va al bloque: indentaría también los títulos
+    expect(estilo).not.toHaveProperty('sangria')
+    expect(estilo).not.toHaveProperty('textIndent')
   })
 })
 
@@ -177,6 +214,30 @@ describe('generateCode', () => {
 
     expect(codigo).toContain('.texto h2 {')
     expect(codigo).toContain('font-size: 1.8em;')
+  })
+
+  it('emite la sangría solo en párrafos, no en el bloque', () => {
+    const codigo = generateCode(TEXTO, { ...ESTILOS, sangria: '1.5' })
+
+    expect(codigo).toContain('.texto p {')
+    expect(codigo).toContain('text-indent: 1.5em;')
+    // si estuviera en .texto, los títulos también se indentarían
+    expect(codigo).not.toContain('  .texto {\n    text-indent')
+  })
+
+  it('emite espacio entre palabras, versalitas y corte de línea', () => {
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      espacioPalabras: '0.2',
+      versalitas: 'small-caps',
+      corteLinea: 'balance',
+      spacing: '-0.05',
+    })
+
+    expect(codigo).toContain('word-spacing: 0.2em;')
+    expect(codigo).toContain('font-variant: small-caps;')
+    expect(codigo).toContain('text-wrap: balance;')
+    expect(codigo).toContain('letter-spacing: -0.05em;')
   })
 
   it('agrega la hoja de Google Fonts solo para fuentes web', () => {

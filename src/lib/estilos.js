@@ -17,6 +17,10 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   decoracion: 'none',
   estiloLetra: 'normal',
   escalaTitulo: '150',
+  sangria: '0',
+  espacioPalabras: '0',
+  versalitas: 'none',
+  corteLinea: 'wrap',
 })
 
 /**
@@ -44,6 +48,7 @@ export function estilosToPreviewStyle(estilos) {
   return /** @type {import('react').CSSProperties} */ ({
     ...estilosToStyleObject(estilos),
     '--escala-titulo': String(factorTitulo(estilos.escalaTitulo)),
+    '--sangria': `${estilos.sangria}em`,
   })
 }
 
@@ -71,6 +76,9 @@ export function estilosToStyleObject(estilos) {
     transform,
     decoracion,
     estiloLetra,
+    espacioPalabras,
+    versalitas,
+    corteLinea,
   } = estilos
 
   return {
@@ -83,7 +91,11 @@ export function estilosToStyleObject(estilos) {
     fontStyle: /** @type {import('react').CSSProperties['fontStyle']} */ (
       estiloLetra
     ),
+    fontVariant: /** @type {import('react').CSSProperties['fontVariant']} */ (
+      versalitas
+    ),
     letterSpacing: `${spacing}em`,
+    wordSpacing: `${espacioPalabras}em`,
     // sin unidad: se multiplica por el tamaño de fuente del contexto y no se
     // acumula con la herencia (con "em" un 1.4 dentro de otro 1.4 da 1.96)
     lineHeight: height,
@@ -100,5 +112,9 @@ export function estilosToStyleObject(estilos) {
       /** @type {import('react').CSSProperties['textDecoration']} */ (
         decoracion
       ),
+    // text-wrap llega como string libre del select; en CSS es una unión
+    textWrap: /** @type {import('react').CSSProperties['textWrap']} */ (
+      corteLinea
+    ),
   }
 }

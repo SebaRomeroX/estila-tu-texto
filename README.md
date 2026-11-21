@@ -29,10 +29,12 @@
 
 - ✅ **Familia tipográfica** (select con opciones)
 - ✅ **Tamaño** (number input)
-- ✅ **Peso**
+- ✅ **Peso** (100-900)
 - ✅ **Color** (color picker)
 - ✅ **Interlineado (line-height)**
-- ✅ **Espaciado entre letras (letter-spacing)**
+- ✅ **Espaciado entre letras (letter-spacing)**, incluido tracking negativo
+- ✅ **Espacio entre palabras y sangría de primera línea**
+- ✅ **Versalitas y corte de línea** (normal, balanceado, pretty)
 - ✅ **Alineación del texto**
 - ✅ **Temas predefinidos** (Clásico, Editorial, Consola, Impacto), **temas propios guardados en este navegador** y restablecer estilos
 - ✅ Las propiedades tipográficas esenciales, sin CSS a mano

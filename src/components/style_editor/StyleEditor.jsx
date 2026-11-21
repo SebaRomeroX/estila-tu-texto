@@ -160,6 +160,12 @@ export const StyleEditor = () => {
         <InputSelect elemento={InputsSelectsParams.decoracion} />
         <InputSelect elemento={InputsSelectsParams.estiloLetra} />
       </div>
+      <div className='inputs-configuracion'>
+        <InputNumber elemento={InputsNumberParams.sangria} />
+        <InputNumber elemento={InputsNumberParams.espacioPalabras} />
+        <InputSelect elemento={InputsSelectsParams.versalitas} />
+        <InputSelect elemento={InputsSelectsParams.corteLinea} />
+      </div>
     </section>
   )
 }

@@ -29,6 +29,14 @@ describe('esMismoEstilo', () => {
 })
 
 describe('presetActivo', () => {
+  it('cada preset define todas las claves del dominio', () => {
+    const claves = Object.keys(ESTILOS_POR_DEFECTO).sort()
+
+    for (const preset of PRESETS) {
+      expect(Object.keys(preset.estilos).sort()).toEqual(claves)
+    }
+  })
+
   it('reconoce los defaults como el tema Clásico', () => {
     expect(presetActivo({ ...ESTILOS_POR_DEFECTO })).toBe('clasico')
   })
