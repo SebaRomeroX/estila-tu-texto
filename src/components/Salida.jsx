@@ -2,7 +2,12 @@ import { useContext, useMemo } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
 import { crearEnlace } from '../lib/compartir.js'
 import { descargarHtml } from '../lib/descargar.js'
-import { generateCode, generateDocumento } from '../lib/generateCode.js'
+import {
+  generateCode,
+  generateCss,
+  generateDocumento,
+  generateHtml,
+} from '../lib/generateCode.js'
 import { resaltarCodigo } from '../lib/resaltar.js'
 import { CodigoResaltado } from './CodigoResaltado.jsx'
 import { useCopiar } from './useCopiar.js'
@@ -13,6 +18,20 @@ const ESTADOS_COPIA = {
   espera: { emoji: '📝', mensaje: '' },
   ok: { emoji: '✔', mensaje: 'Código copiado al portapapeles' },
   error: { emoji: '❗', mensaje: 'Error al copiar el código' },
+}
+
+/** @type {Record<string, { emoji: string, mensaje: string }>} */
+const ESTADOS_HTML = {
+  espera: { emoji: '📝', mensaje: '' },
+  ok: { emoji: '✔', mensaje: 'HTML copiado al portapapeles' },
+  error: { emoji: '❗', mensaje: 'Error al copiar el HTML' },
+}
+
+/** @type {Record<string, { emoji: string, mensaje: string }>} */
+const ESTADOS_CSS = {
+  espera: { emoji: '📝', mensaje: '' },
+  ok: { emoji: '✔', mensaje: 'CSS copiado al portapapeles' },
+  error: { emoji: '❗', mensaje: 'Error al copiar el CSS' },
 }
 
 /** @type {Record<string, { emoji: string, mensaje: string }>} */
@@ -28,6 +47,8 @@ const ESTADOS_ENLACE = {
 export const SalidaCodigo = ({ texto }) => {
   const { estilos } = useContext(EstilosContext)
   const copia = useCopiar()
+  const copiaHtml = useCopiar()
+  const copiaCss = useCopiar()
   const enlace = useCopiar()
 
   // misma función para mostrar y para copiar → no pueden divergir
@@ -35,11 +56,22 @@ export const SalidaCodigo = ({ texto }) => {
   // el resaltado es solo de presentación: parte del mismo string
   const lineas = useMemo(() => resaltarCodigo(codigo), [codigo])
   const { emoji, mensaje } = ESTADOS_COPIA[copia.estado]
+  const { emoji: emojiHtml, mensaje: mensajeHtml } =
+    ESTADOS_HTML[copiaHtml.estado]
+  const { emoji: emojiCss, mensaje: mensajeCss } = ESTADOS_CSS[copiaCss.estado]
   const { emoji: emojiEnlace, mensaje: mensajeEnlace } =
     ESTADOS_ENLACE[enlace.estado]
 
   function copiarCodigo() {
     copia.copiar(codigo)
+  }
+
+  function copiarHtml() {
+    copiaHtml.copiar(generateHtml(texto, estilos))
+  }
+
+  function copiarCss() {
+    copiaCss.copiar(generateCss(estilos))
   }
 
   function compartir() {
@@ -70,8 +102,24 @@ export const SalidaCodigo = ({ texto }) => {
                 {mensajeEnlace}
               </span>
             </button>
-            <button type='button' onClick={copiarCodigo}>
-              Copiar <span aria-hidden='true'>{emoji}</span>
+            <button type='button' aria-label='Copiar HTML' onClick={copiarHtml}>
+              HTML <span aria-hidden='true'>{emojiHtml}</span>
+              <span className='sr-only' role='status' aria-live='polite'>
+                {mensajeHtml}
+              </span>
+            </button>
+            <button type='button' aria-label='Copiar CSS' onClick={copiarCss}>
+              CSS <span aria-hidden='true'>{emojiCss}</span>
+              <span className='sr-only' role='status' aria-live='polite'>
+                {mensajeCss}
+              </span>
+            </button>
+            <button
+              type='button'
+              aria-label='Copiar HTML y CSS'
+              onClick={copiarCodigo}
+            >
+              Copiar todo <span aria-hidden='true'>{emoji}</span>
               <span className='sr-only' role='status' aria-live='polite'>
                 {mensaje}
               </span>

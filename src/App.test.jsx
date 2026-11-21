@@ -429,15 +429,38 @@ describe('temas predefinidos', () => {
   })
 })
 
-describe('botón copiar', () => {
-  it('copia exactamente el string que muestra el snippet', async () => {
+describe('botones copiar', () => {
+  it('copiar todo copia exactamente el string que muestra el snippet', async () => {
     // fireEvent en vez de user-event: setup() de user-event secuestra el
     // navigator.clipboard y rompería el espía
-    fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copiar HTML y CSS' }))
 
     await screen.findByText('✔')
     expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(pre.textContent)
+  })
+
+  it('copiar HTML copia el artículo sin el bloque de estilos', async () => {
+    fireEvent.click(screen.getByRole('button', { name: 'Copiar HTML' }))
+
+    await screen.findByText('HTML copiado al portapapeles')
+    const copiado = vi.mocked(navigator.clipboard.writeText).mock.calls[0][0]
+
+    expect(copiado).toContain(`<article class='texto'>`)
+    expect(copiado).toContain('<h2>Texto de Ejemplo</h2>')
+    expect(copiado).not.toContain('<style>')
+  })
+
+  it('copiar CSS copia las reglas sin HTML ni etiquetas style', async () => {
+    fireEvent.click(screen.getByRole('button', { name: 'Copiar CSS' }))
+
+    await screen.findByText('CSS copiado al portapapeles')
+    const copiado = vi.mocked(navigator.clipboard.writeText).mock.calls[0][0]
+
+    expect(copiado).toContain('.texto {')
+    expect(copiado).toContain('font-family: system-ui;')
+    expect(copiado).not.toContain('<style>')
+    expect(copiado).not.toContain('<article')
   })
 
   it('feedbacka error si el clipboard falla', async () => {
@@ -445,7 +468,7 @@ describe('botón copiar', () => {
       new Error('denegado'),
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /copiar/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copiar HTML y CSS' }))
 
     await screen.findByText('❗')
   })

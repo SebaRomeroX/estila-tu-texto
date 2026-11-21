@@ -52,10 +52,12 @@ function generarArticulo(texto) {
 }
 
 /**
+ * Reglas CSS interiores del snippet (sin las etiquetas <style>).
+ *
  * @param {import('../types.js').Estilos} estilos
  * @returns {string[]}
  */
-function generarCss(estilos) {
+function generarCssReglas(estilos) {
   const declaracionesCss = [
     ...Object.entries(estilosToStyleObject(estilos)).map(
       ([propiedad, valor]) => `${camelToKebab(propiedad)}: ${valor};`,
@@ -64,7 +66,6 @@ function generarCss(estilos) {
   ].map((declaracion) => `    ${declaracion}`)
 
   return [
-    `<style>`,
     `  .texto {`,
     ...declaracionesCss,
     `  }`,
@@ -80,19 +81,27 @@ function generarCss(estilos) {
     `  .texto p {`,
     `    text-indent: ${estilos.sangria}em;`,
     `  }`,
-    `</style>`,
   ]
 }
 
 /**
- * Genera el snippet HTML+CSS a partir del MISMO estado que alimenta el
- * preview. Es la única fuente de verdad: sirve para el <pre> y para copiar.
+ * Bloque <style> completo (reglas envueltas), para el snippet y el documento.
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string[]}
+ */
+function generarCss(estilos) {
+  return [`<style>`, ...generarCssReglas(estilos), `</style>`]
+}
+
+/**
+ * Parte HTML del snippet, con la hoja de la fuente web si corresponde.
  *
  * @param {import('../types.js').Texto} texto
  * @param {import('../types.js').Estilos} estilos
- * @returns {string}
+ * @returns {string[]}
  */
-export function generateCode(texto, estilos) {
+function generarHtmlConFuente(texto, estilos) {
   const enlaceFuente = enlaceGoogleFonts(estilos.family)
 
   return [
@@ -106,6 +115,41 @@ export function generateCode(texto, estilos) {
         ]
       : []),
     ...generarArticulo(texto),
+  ]
+}
+
+/**
+ * HTML del snippet listo para copiar por separado (sin el <style>).
+ *
+ * @param {import('../types.js').Texto} texto
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function generateHtml(texto, estilos) {
+  return generarHtmlConFuente(texto, estilos).join('\n')
+}
+
+/**
+ * CSS del snippet listo para copiar por separado (sin las etiquetas <style>).
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function generateCss(estilos) {
+  return generarCssReglas(estilos).join('\n')
+}
+
+/**
+ * Genera el snippet HTML+CSS a partir del MISMO estado que alimenta el
+ * preview. Es la única fuente de verdad: sirve para el <pre> y para copiar.
+ *
+ * @param {import('../types.js').Texto} texto
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function generateCode(texto, estilos) {
+  return [
+    ...generarHtmlConFuente(texto, estilos),
     ``,
     ...generarCss(estilos),
   ].join('\n')

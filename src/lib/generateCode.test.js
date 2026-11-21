@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { escapeHtml, generateCode, generateDocumento } from './generateCode.js'
+import {
+  escapeHtml,
+  generateCode,
+  generateCss,
+  generateDocumento,
+  generateHtml,
+} from './generateCode.js'
 import {
   estilosToPreviewStyle,
   estilosToStyleObject,
@@ -254,6 +260,46 @@ describe('generateCode', () => {
     const conSistema = generateCode(TEXTO, ESTILOS)
     expect(conSistema).not.toContain('fonts.googleapis.com')
     expect(conSistema).not.toContain('<!-- Fuente web:')
+  })
+})
+
+describe('generateHtml y generateCss', () => {
+  it('el HTML no incluye el bloque de estilos', () => {
+    const html = generateHtml(TEXTO, ESTILOS)
+
+    expect(html).toContain(`<article class='texto'>`)
+    expect(html).toContain('<h2>Titulo de prueba</h2>')
+    expect(html).not.toContain('<style>')
+    expect(html).not.toContain('font-size:')
+  })
+
+  it('el CSS no incluye el artículo ni las etiquetas style', () => {
+    const css = generateCss(ESTILOS)
+
+    expect(css).toContain('.texto {')
+    expect(css).toContain('font-family: system-ui;')
+    expect(css).toContain('.texto p {')
+    expect(css).not.toContain('<style>')
+    expect(css).not.toContain('<article')
+  })
+
+  it('las dos partes reconstruyen exactamente el snippet', () => {
+    expect(
+      `${generateHtml(TEXTO, ESTILOS)}\n\n<style>\n${generateCss(ESTILOS)}\n</style>`,
+    ).toBe(generateCode(TEXTO, ESTILOS))
+  })
+
+  it('el HTML lleva la hoja de Google Fonts solo para fuentes web', () => {
+    const conWeb = generateHtml(TEXTO, {
+      ...ESTILOS,
+      family: 'Roboto, sans-serif',
+    })
+
+    expect(conWeb).toContain(
+      'https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap',
+    )
+    expect(conWeb).toContain('<!-- Fuente web:')
+    expect(generateHtml(TEXTO, ESTILOS)).not.toContain('fonts.googleapis.com')
   })
 })
 

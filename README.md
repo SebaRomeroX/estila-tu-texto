@@ -47,7 +47,7 @@
 
 ### 📋 **Código Listo para Usar**
 
-- Botón **"Copiar código"** con un click
+- Botón **"Copiar código"** con un click, o **copiar HTML y CSS por separado**
 - Vista de **editor**: resaltado de sintaxis HTML/CSS y números de línea
 - Formato limpio y legible
 - HTML semántico con tu texto
