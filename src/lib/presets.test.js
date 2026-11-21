@@ -1,6 +1,32 @@
 import { describe, expect, it } from 'vitest'
 import { ESTILOS_POR_DEFECTO } from './estilos.js'
-import { PRESETS, presetActivo } from './presets.js'
+import { PRESETS, esMismoEstilo, presetActivo } from './presets.js'
+
+describe('esMismoEstilo', () => {
+  it('es true con los mismos valores en todas las claves', () => {
+    expect(esMismoEstilo({ ...ESTILOS_POR_DEFECTO }, PRESETS[0].estilos)).toBe(
+      true,
+    )
+  })
+
+  it('es false si cambia cualquier clave del dominio', () => {
+    expect(
+      esMismoEstilo(
+        { ...ESTILOS_POR_DEFECTO, escalaTitulo: '200' },
+        ESTILOS_POR_DEFECTO,
+      ),
+    ).toBe(false)
+  })
+
+  it('ignora claves que no son del dominio', () => {
+    const conIntruso = /** @type {import('../types.js').Estilos} */ ({
+      ...ESTILOS_POR_DEFECTO,
+      intruso: 'x',
+    })
+
+    expect(esMismoEstilo(conIntruso, ESTILOS_POR_DEFECTO)).toBe(true)
+  })
+})
 
 describe('presetActivo', () => {
   it('reconoce los defaults como el tema Clásico', () => {

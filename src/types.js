@@ -40,6 +40,10 @@
  * @property {string} nombre
  * @property {Estilos} estilos
  *
+ * @typedef {Object} PresetPropio
+ * @property {string} nombre clave única (sin distinguir mayúsculas)
+ * @property {Estilos} estilos
+ *
  * @typedef {'etiqueta' | 'atributo' | 'valor-html' | 'texto' | 'selector' | 'propiedad' | 'valor-css' | 'puntuacion'} TipoToken
  *
  * @typedef {Object} Token

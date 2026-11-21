@@ -6,7 +6,11 @@ import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
 import { codificarEstado, decodificarEstado } from './lib/compartir.js'
 import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
-import { CLAVE_ESTILOS, CLAVE_TEXTO } from './lib/persistencia.js'
+import {
+  CLAVE_ESTILOS,
+  CLAVE_PRESETS,
+  CLAVE_TEXTO,
+} from './lib/persistencia.js'
 import { TEXTO_POR_DEFECTO } from './lib/texto.js'
 
 /** @type {HTMLElement} */
@@ -509,6 +513,113 @@ describe('botón restablecer texto', () => {
     expect(h2).toHaveTextContent('Texto de Ejemplo')
     expect(pre).toHaveTextContent('Texto de Ejemplo')
     expect(pre).not.toHaveTextContent('Editado a mano')
+  })
+})
+
+describe('temas propios', () => {
+  /**
+   * @param {string} nombre
+   */
+  function guardarTema(nombre) {
+    fireEvent.change(screen.getByLabelText('Guardar tema actual'), {
+      target: { value: nombre },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar tema' }))
+  }
+
+  it('guarda el tema actual con nombre y lo persiste', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    guardarTema('Mi tema')
+
+    expect(
+      screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
+    ).toBeInTheDocument()
+    const guardados = JSON.parse(
+      /** @type {string} */ (localStorage.getItem(CLAVE_PRESETS)),
+    )
+    expect(guardados).toHaveLength(1)
+    expect(guardados[0].nombre).toBe('Mi tema')
+    expect(guardados[0].estilos.color).toBe('#123456')
+    // el formulario se limpia y anuncia el guardado para lectores de pantalla
+    expect(screen.getByLabelText('Guardar tema actual')).toHaveValue('')
+    expect(screen.getByText('Tema «Mi tema» guardado')).toBeInTheDocument()
+  })
+
+  it('aplica un tema propio y lo marca como activo', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    guardarTema('Mi tema')
+    // edición a mano: deja de coincidir con el tema guardado
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#654321' },
+    })
+
+    expect(
+      screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
+    ).toHaveAttribute('aria-pressed', 'false')
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
+    )
+
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+    expect(
+      screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
+    ).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('elimina un tema propio del estado y del storage', () => {
+    guardarTema('Mi tema')
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Eliminar tema propio Mi tema' }),
+    )
+
+    expect(
+      screen.queryByRole('button', { name: 'Aplicar tema propio Mi tema' }),
+    ).not.toBeInTheDocument()
+    expect(localStorage.getItem(CLAVE_PRESETS)).toBe('[]')
+    expect(screen.getByText('Tema «Mi tema» eliminado')).toBeInTheDocument()
+  })
+
+  it('los temas propios sobreviven a un remount', () => {
+    guardarTema('Persistente')
+
+    app.unmount()
+    renderApp()
+
+    expect(
+      screen.getByRole('button', { name: 'Aplicar tema propio Persistente' }),
+    ).toBeInTheDocument()
+  })
+
+  it('no deja guardar sin nombre', () => {
+    const boton = screen.getByRole('button', { name: 'Guardar tema' })
+
+    expect(boton).toBeDisabled()
+
+    fireEvent.change(screen.getByLabelText('Guardar tema actual'), {
+      target: { value: '   ' },
+    })
+
+    expect(boton).toBeDisabled()
+  })
+
+  it('"Borrar datos guardados" también elimina los temas propios', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    guardarTema('Se va')
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /borrar datos guardados/i }),
+    )
+
+    expect(
+      screen.queryByRole('button', { name: 'Aplicar tema propio Se va' }),
+    ).not.toBeInTheDocument()
+    expect(localStorage.getItem(CLAVE_PRESETS)).toBeNull()
   })
 })
 

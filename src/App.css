@@ -74,6 +74,46 @@ body {
   margin-left: auto;
 }
 
+/* tema propio: aplicar + borrar pegados, pero como dos botones separados */
+.tema-propio {
+  display: inline-flex;
+}
+
+.tema-propio > button:first-child {
+  border-radius: 0.6em 0 0 0.6em;
+}
+
+.tema-propio .tema-propio-borrar {
+  border-left: none;
+  border-radius: 0 0.6em 0.6em 0;
+  padding-inline: 0.55em;
+}
+
+.tema-propio-borrar:hover {
+  color: #ff9b9b;
+}
+
+/* guardar el tema actual */
+.guardar-tema {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5em;
+  padding: 0 2em 1em;
+  font-size: 0.95em;
+}
+
+.guardar-tema label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.guardar-tema button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ------------------------- SELECTOR DE FUENTE ------------------------- */
 
 .selector-fuente {
@@ -195,7 +235,8 @@ body {
 }
 
 .inputs-configuracion input,
-.inputs-configuracion select {
+.inputs-configuracion select,
+.guardar-tema input {
   color: var(--color-texto);
   background-color: var(--color-superficie);
   font-size: 1em;
@@ -218,7 +259,8 @@ body {
 }
 
 .visualizador-header button,
-.temas button {
+.temas button,
+.guardar-tema button {
   background-color: var(--color-superficie);
   color: var(--color-texto);
   border: 1px solid var(--color-borde);
@@ -228,13 +270,15 @@ body {
 }
 
 .visualizador-header button:hover,
-.temas button:hover {
+.temas button:hover,
+.guardar-tema button:hover {
   cursor: pointer;
   background-color: var(--color-superficie-hover);
 }
 
 .visualizador-header button:active,
-.temas button:active {
+.temas button:active,
+.guardar-tema button:active {
   background-color: var(--color-superficie-active);
 }
 
@@ -465,6 +509,10 @@ body {
 
   .temas-reset {
     margin-left: 0;
+  }
+
+  .guardar-tema {
+    padding: 0 0 1em;
   }
 
   .selector-fuente {

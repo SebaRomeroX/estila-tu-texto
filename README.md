@@ -34,7 +34,7 @@
 - ✅ **Interlineado (line-height)**
 - ✅ **Espaciado entre letras (letter-spacing)**
 - ✅ **Alineación del texto**
-- ✅ **Temas predefinidos** (Clásico, Editorial, Consola, Impacto) y restablecer estilos
+- ✅ **Temas predefinidos** (Clásico, Editorial, Consola, Impacto), **temas propios guardados en este navegador** y restablecer estilos
 - ✅ Las propiedades tipográficas esenciales, sin CSS a mano
 
 ### ⚡ **Experiencia en Tiempo Real**
@@ -61,6 +61,7 @@
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
+- **Temas propios:** guarda la combinación actual con un nombre y reaplícala cuando quieras (se queda en este navegador)
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

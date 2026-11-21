@@ -83,6 +83,17 @@ const CAMPOS = /** @type {Array<keyof import('../types.js').Estilos>} */ (
 )
 
 /**
+ * ¿Dos bloques de estilos son idénticos en TODAS las claves del dominio?
+ *
+ * @param {import('../types.js').Estilos} a
+ * @param {import('../types.js').Estilos} b
+ * @returns {boolean}
+ */
+export function esMismoEstilo(a, b) {
+  return CAMPOS.every((campo) => a[campo] === b[campo])
+}
+
+/**
  * Devuelve el id del preset cuyos valores coinciden EXACTAMENTE con los
  * estilos actuales, o null si el usuario editó algo a mano (ya no es un tema).
  *
@@ -91,7 +102,7 @@ const CAMPOS = /** @type {Array<keyof import('../types.js').Estilos>} */ (
  */
 export function presetActivo(estilos) {
   const preset = PRESETS.find(({ estilos: candidato }) =>
-    CAMPOS.every((campo) => candidato[campo] === estilos[campo]),
+    esMismoEstilo(estilos, candidato),
   )
 
   return preset ? preset.id : null

@@ -3,6 +3,10 @@
 
 export const CLAVE_ESTILOS = 'estila-tu-texto:estilos'
 export const CLAVE_TEXTO = 'estila-tu-texto:texto'
+export const CLAVE_PRESETS = 'estila-tu-texto:presets'
+
+// evento para que la UI recargue lo que dependa del storage tras un borrado
+export const EVENTO_DATOS_BORRADOS = 'estila-tu-texto:datos-borrados'
 
 /**
  * Sanea un objeto desconocido (JSON de storage o de un enlace compartido):
@@ -71,14 +75,18 @@ export function guardarObjeto(clave, valor) {
 }
 
 /**
- * Borra los datos persistidos (texto y estilos). Lo usa el botón "Borrar
- * datos guardados"; igual que el resto, nunca lanza.
+ * Borra los datos persistidos (texto, estilos y temas propios). Lo usa el
+ * botón "Borrar datos guardados"; igual que el resto, nunca lanza. Avisa por
+ * evento para que la UI recargue lo que tenga en memoria (temas propios).
  */
 export function borrarDatos() {
   try {
     localStorage.removeItem(CLAVE_ESTILOS)
     localStorage.removeItem(CLAVE_TEXTO)
+    localStorage.removeItem(CLAVE_PRESETS)
   } catch {
     // storage bloqueado: no hay nada que borrar
   }
+
+  window.dispatchEvent(new Event(EVENTO_DATOS_BORRADOS))
 }

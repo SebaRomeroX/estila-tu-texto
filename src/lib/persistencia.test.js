@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   CLAVE_ESTILOS,
+  CLAVE_PRESETS,
   CLAVE_TEXTO,
+  EVENTO_DATOS_BORRADOS,
   borrarDatos,
   cargarObjeto,
   guardarObjeto,
@@ -91,21 +93,38 @@ describe('guardarObjeto', () => {
 })
 
 describe('borrarDatos', () => {
-  it('elimina texto y estilos guardados', () => {
+  it('elimina texto, estilos y temas propios guardados', () => {
     localStorage.setItem(CLAVE_ESTILOS, '{"color":"#111111"}')
     localStorage.setItem(CLAVE_TEXTO, '{"titulo":"algo"}')
+    localStorage.setItem(CLAVE_PRESETS, '[{"nombre":"Uno"}]')
 
     borrarDatos()
 
     expect(localStorage.getItem(CLAVE_ESTILOS)).toBeNull()
     expect(localStorage.getItem(CLAVE_TEXTO)).toBeNull()
+    expect(localStorage.getItem(CLAVE_PRESETS)).toBeNull()
   })
 
-  it('si localStorage falla al borrar, no lanza', () => {
+  it('avisa por evento para que la UI recargue los temas propios', () => {
+    const escucha = vi.fn()
+    window.addEventListener(EVENTO_DATOS_BORRADOS, escucha)
+
+    borrarDatos()
+
+    window.removeEventListener(EVENTO_DATOS_BORRADOS, escucha)
+    expect(escucha).toHaveBeenCalledTimes(1)
+  })
+
+  it('si localStorage falla al borrar, no lanza y avisa igual', () => {
+    const escucha = vi.fn()
+    window.addEventListener(EVENTO_DATOS_BORRADOS, escucha)
     vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
       throw new Error('bloqueado')
     })
 
     expect(() => borrarDatos()).not.toThrow()
+
+    window.removeEventListener(EVENTO_DATOS_BORRADOS, escucha)
+    expect(escucha).toHaveBeenCalledTimes(1)
   })
 })

@@ -490,6 +490,29 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (86/86 ramas) · build OK · axe 0.
 
+[x] P2-29 Guardar presets propios (temas en este navegador)  ✔ 2026-11-19
+  Verificado (2026-11-19):
+    - lib/presetsPropios.js: cargar/guardar/agregar/quitar sobre
+      CLAVE_PRESETS ('estila-tu-texto:presets'), tope MAX_PRESETS = 50 y
+      saneo entrada por entrada con sanearObjeto (JSON roto, storage
+      bloqueado o formas inválidas caen a []). El nombre es la clave única
+      sin distinguir mayúsculas y los estilos se copian al guardar.
+    - StyleEditor: guardar el tema actual desde un formulario (nombre de
+      hasta 40 caracteres, submit deshabilitado si está vacío), lista "Mis
+      temas" con aplicar (aria-pressed) y eliminar, y mensajes role=status.
+    - borrarDatos() ahora también elimina los temas propios y avisa por
+      EVENTO_DATOS_BORRADOS; StyleEditor escucha y recarga la lista.
+    - esMismoEstilo() en lib/presets.js: comparación de todo el dominio,
+      reutilizada por presetActivo y por el estado activo de los temas
+      propios (ignora claves ajenas).
+    - Galería pública: sigue diferida (esto guarda solo en este navegador,
+      sin backend ni compartición de temas).
+    - Tests: 13 unit de presetsPropios + 3 de esMismoEstilo + 1 de
+      persistencia (evento y borrado) + 6 de integración (guardar, aplicar,
+      eliminar, remount, nombre vacío, borrar datos) → 140/140.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (102/102 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -670,7 +693,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           (top 5 del catálogo de la sección 7)
   Post-plan (2026-11-19):                 P2-26 ✔ (webfonts self-hosteadas),
                                           P2-27 ✔ (selector visual de fuentes),
-                                          P2-28 ✔ (descargar .html)
+                                          P2-28 ✔ (descargar .html),
+                                          P2-29 ✔ (temas propios locales)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1007,6 +1031,15 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - lib/descargar.js sin dependencias (Blob + <a download> temporal).
     - Tests: 6 nuevos → 117/117 · coverage 86/86 ramas · build OK · axe 0.
 
+2026-11-19 · Post-plan · P2-29 COMPLETADO — "feat(temas): guardar y aplicar
+  temas propios"
+    - Temas propios en localStorage (máx. 50, nombre único sin distinguir
+      mayúsculas, saneo defensivo entrada por entrada).
+    - Guardar el tema actual, aplicar/eliminar con aria-pressed y mensajes
+      role=status; "Borrar datos guardados" también los elimina y avisa por
+      evento. La galería pública sigue diferida (necesita backend).
+    - Tests: 23 nuevos → 140/140 · coverage 102/102 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1015,8 +1048,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 117 tests · cobertura 100% de la
-        lógica pura (86/86 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 140 tests · cobertura 100% de la
+        lógica pura (102/102 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1050,7 +1083,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 31/31 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 32/32 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23; sigue diferido copiar HTML y CSS por separado).
@@ -1065,14 +1098,15 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   Actualización 2026-11-19 (post-plan): P2-26 self-hostea Roboto y Open Sans
   (el preview deja de mentir con las fuentes) y avisa cuando una fuente del
   sistema no está instalada. P2-27 convierte la elección de fuente en visual
-  (cada opción se ve en su tipografía) y P2-28 agrega la descarga de un
-  documento .html autónomo. El punto 7 (un solo bloque de estilos) sigue
-  vigente, mitigado por la escala del título de P2-25.
+  (cada opción se ve en su tipografía), P2-28 agrega la descarga de un
+  documento .html autónomo y P2-29 permite guardar temas propios en este
+  navegador (la galería pública sigue diferida). El punto 7 (un solo bloque de
+  estilos) sigue vigente, mitigado por la escala del título de P2-25.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-28 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-29 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
-  las webfonts, el selector visual y la descarga.
+  las webfonts, el selector visual, la descarga y los temas propios.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1123,7 +1157,9 @@ D) FUNCIONES DE PRODUCTO
   - Descargar .html / copiar HTML y CSS por separado             S/M → P2-28
     (P2-28 implementa la descarga; copiar HTML/CSS por separado sigue
      diferido)
-  - Guardar presets propios + galería                            M
+  - Guardar presets propios + galería                            M  → P2-29
+    (P2-29 implementa los temas propios en este navegador; la galería
+     pública/compartida sigue diferida, requiere backend)
   - Undo/redo + historial                                        M
   - Selector de fuente visual (con preview)                      S  → P2-27
   - Cargar webfonts o marcar "si está instalada"                 M  → P2-26
