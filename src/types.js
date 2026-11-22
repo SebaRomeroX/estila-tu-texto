@@ -23,6 +23,7 @@
  * @property {string} versalitas
  * @property {string} corteLinea
  * @property {string} letraCapitular
+ * @property {string} sombra
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

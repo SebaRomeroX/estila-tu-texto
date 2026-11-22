@@ -374,6 +374,19 @@ describe('letra capitular', () => {
   })
 })
 
+describe('sombra de texto', () => {
+  it('aplica la sombra en el preview y en el snippet', () => {
+    expect(pre).not.toHaveTextContent('text-shadow')
+
+    fireEvent.change(screen.getByLabelText('Sombra'), {
+      target: { value: 'resplandor' },
+    })
+
+    expect(preview.style.textShadow).toContain('0.4em')
+    expect(pre).toHaveTextContent('text-shadow: 0 0 0.4em currentColor;')
+  })
+})
+
 describe('temas predefinidos', () => {
   it('aplicar un tema cambia el preview Y el snippet', () => {
     fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))

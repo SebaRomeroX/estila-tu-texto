@@ -67,6 +67,7 @@
 - **Deshacer y rehacer:** historial de la sesión con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control
 - **Letra capitular:** la primera letra del primer párrafo con tamaño editorial, en el preview y en el snippet
 - **Plantillas de texto:** ensayo, blog, cuento y carta para arrancar sin escribir; avisa antes de reemplazar tu texto
+- **Sombra de texto:** presets suave y resplandor para dar profundidad o un halo del color del texto
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

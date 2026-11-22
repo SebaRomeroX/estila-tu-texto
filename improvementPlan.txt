@@ -592,6 +592,18 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (106/106 ramas) · build OK · axe 0.
 
+[x] P2-35 Sombra de texto (suave y resplandor)  ✔ 2026-11-21
+  Verificado (2026-11-21):
+    - Campo sombra (none/suave/resplandor) con select "Sombra"; default none.
+    - estilosToStyleObject agrega text-shadow solo cuando está activa:
+      suave = 0 1px 2px rgba(0,0,0,0.45); resplandor = 0 0 0.4em currentColor.
+    - Al ser heredable, una sola declaración cubre título, subtítulo y
+      párrafos, y preview y snippet la comparten sin reglas nuevas.
+    - Con none no se emite la propiedad: snapshot y CSS por defecto intactos.
+    - Tests: 2 unit + 1 de integración → 174/174.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (110/110 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -783,7 +795,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           historial de la sesión),
                                           P2-33 ✔ (letra capitular en el
                                           primer párrafo),
-                                          P2-34 ✔ (plantillas de texto)
+                                          P2-34 ✔ (plantillas de texto),
+                                          P2-35 ✔ (sombra de texto: suave y
+                                          resplandor)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1176,6 +1190,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       molesta. La carga se persiste y actualiza preview y snippet juntos.
     - Tests: 6 nuevos → 171/171 · coverage 106/106 ramas · build OK · axe 0.
 
+2026-11-21 · Post-plan · P2-35 COMPLETADO — "feat(estilos): sombra de texto"
+    - Tres estados (ninguna/suave/resplandor) con una sola declaración
+      text-shadow heredable; apagada por defecto para no alterar el CSS.
+    - Suave busca relieve en fondos claros; resplandor usa currentColor para
+      un halo del propio color, pensado para fondos oscuros.
+    - Preview y snippet comparten la propiedad; el snapshot no cambia.
+    - Tests: 3 nuevos → 174/174 · coverage 110/110 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1184,8 +1206,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 171 tests · cobertura 100% de la
-        lógica pura (106/106 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 174 tests · cobertura 100% de la
+        lógica pura (110/110 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1220,7 +1242,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 36/36 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 37/37 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1253,12 +1275,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   el CSS por defecto. P2-34 suma plantillas de texto (ensayo, blog, cuento y
   carta) con confirmación antes de reemplazar texto editado.
 
+  Actualización 2026-11-22 (post-plan): P2-35 suma sombra de texto con dos
+  presets (suave y resplandor), apagada por defecto para no alterar el CSS
+  generado.
+
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-34 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-35 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
-  capitular y las plantillas.
+  capitular, las plantillas y la sombra de texto.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1282,7 +1308,9 @@ A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
   - opacity                                                      S
   - text-align: justify (hoy solo left/center)                   S
   - color de ::selection                                         S
-  - text-shadow (x, y, blur + color)                             M
+  - text-shadow (x, y, blur + color)                             M  → P2-35
+    (P2-35 agrega presets suave/resplandor; los ejes y el color libres
+     siguen diferidos)
   - hyphens: auto + lang                                         M
   - text-wrap: balance/pretty                                    S  → P2-30
 

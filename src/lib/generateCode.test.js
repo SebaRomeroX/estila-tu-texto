@@ -32,6 +32,7 @@ const ESTILOS = {
   versalitas: 'none',
   corteLinea: 'wrap',
   letraCapitular: 'none',
+  sombra: 'none',
 }
 
 const TEXTO = {
@@ -123,6 +124,17 @@ describe('estilosToStyleObject', () => {
     expect(
       estilosToStyleObject({ ...ESTILOS, spacing: '-0.05' }).letterSpacing,
     ).toBe('-0.05em')
+  })
+
+  it('solo agrega text-shadow cuando la sombra está activa', () => {
+    expect(estilosToStyleObject(ESTILOS)).not.toHaveProperty('textShadow')
+
+    expect(
+      estilosToStyleObject({ ...ESTILOS, sombra: 'suave' }).textShadow,
+    ).toBe('0 1px 2px rgba(0, 0, 0, 0.45)')
+    expect(
+      estilosToStyleObject({ ...ESTILOS, sombra: 'resplandor' }).textShadow,
+    ).toBe('0 0 0.4em currentColor')
   })
 })
 
@@ -259,6 +271,17 @@ describe('generateCode', () => {
     expect(conCapitular).toContain('    float: left;')
     expect(conCapitular).toContain('    font-size: 3.2em;')
     expect(conCapitular).toContain('    line-height: 0.9;')
+  })
+
+  it('emite la sombra de texto solo cuando está activa', () => {
+    expect(generateCode(TEXTO, ESTILOS)).not.toContain('text-shadow:')
+
+    expect(generateCode(TEXTO, { ...ESTILOS, sombra: 'suave' })).toContain(
+      'text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);',
+    )
+    expect(generateCode(TEXTO, { ...ESTILOS, sombra: 'resplandor' })).toContain(
+      'text-shadow: 0 0 0.4em currentColor;',
+    )
   })
 
   it('agrega la hoja de Google Fonts solo para fuentes web', () => {

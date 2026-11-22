@@ -138,6 +138,15 @@ export const InputsSelectsParams = {
       { nombre: 'sí (primer párrafo)', contenido: 'primera' },
     ],
   },
+  sombra: {
+    label: 'Sombra',
+    campo: 'sombra',
+    opciones: [
+      { nombre: 'ninguna', contenido: 'none' },
+      { nombre: 'suave', contenido: 'suave' },
+      { nombre: 'resplandor', contenido: 'resplandor' },
+    ],
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */

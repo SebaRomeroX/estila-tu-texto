@@ -22,6 +22,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   versalitas: 'none',
   corteLinea: 'wrap',
   letraCapitular: 'none',
+  sombra: 'none',
 })
 
 /**
@@ -80,6 +81,7 @@ export function estilosToStyleObject(estilos) {
     espacioPalabras,
     versalitas,
     corteLinea,
+    sombra,
   } = estilos
 
   return {
@@ -117,5 +119,15 @@ export function estilosToStyleObject(estilos) {
     textWrap: /** @type {import('react').CSSProperties['textWrap']} */ (
       corteLinea
     ),
+    // sombra apagada = no se emite la propiedad: el CSS por defecto queda
+    // intacto. Es heredable, así que cubre título, subtítulo y párrafos.
+    ...(sombra === 'none'
+      ? {}
+      : {
+          textShadow:
+            sombra === 'suave'
+              ? '0 1px 2px rgba(0, 0, 0, 0.45)'
+              : '0 0 0.4em currentColor',
+        }),
   }
 }
