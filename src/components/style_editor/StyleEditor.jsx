@@ -21,8 +21,29 @@ import { IndicadorContraste } from './IndicadorContraste.jsx'
 import { AvisoFuente } from './AvisoFuente.jsx'
 import { SelectorFuente } from './SelectorFuente.jsx'
 
+/**
+ * Resumen corto de un estado para el selector de historial.
+ *
+ * @param {import('../../types.js').Estilos} estilos
+ * @returns {string}
+ */
+function resumenEstilos(estilos) {
+  const fuente = estilos.family.split(',')[0].trim()
+  return `${estilos.color} / ${estilos.background} · ${fuente} · ${estilos.size}em`
+}
+
 export const StyleEditor = () => {
-  const { estilos, aplicarEstilos } = useContext(EstilosContext)
+  const {
+    estilos,
+    aplicarEstilos,
+    historial,
+    indiceHistorial,
+    puedeDeshacer,
+    puedeRehacer,
+    deshacer,
+    rehacer,
+    irAHistorial,
+  } = useContext(EstilosContext)
   const activo = presetActivo(estilos)
 
   // temas propios: estado local + localStorage. "Borrar datos guardados" los
@@ -89,6 +110,29 @@ export const StyleEditor = () => {
         >
           Restablecer estilos <span aria-hidden='true'>↺</span>
         </button>
+      </div>
+
+      <div className='historial'>
+        <button type='button' onClick={deshacer} disabled={!puedeDeshacer}>
+          <span aria-hidden='true'>↶</span> Deshacer
+        </button>
+        <button type='button' onClick={rehacer} disabled={!puedeRehacer}>
+          <span aria-hidden='true'>↷</span> Rehacer
+        </button>
+        <label className='historial-selector'>
+          <span>Historial</span>
+          <select
+            value={indiceHistorial}
+            onChange={(e) => irAHistorial(Number(e.target.value))}
+          >
+            {historial.map((estado, indice) => (
+              <option key={indice} value={indice}>
+                {indice + 1}. {resumenEstilos(estado)}
+                {indice === indiceHistorial ? ' (actual)' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       {presetsPropios.length > 0 && (

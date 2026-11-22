@@ -38,6 +38,14 @@
  * @property {Estilos} estilos
  * @property {(campo: CampoEstilo, valor: string) => void} actualizarEstilos
  * @property {(nuevos: Estilos) => void} aplicarEstilos
+ * @property {Estilos[]} historial estados de la sesión (incluye el actual)
+ * @property {number} indiceHistorial posición del estado actual
+ * @property {boolean} puedeDeshacer
+ * @property {boolean} puedeRehacer
+ * @property {() => void} deshacer
+ * @property {() => void} rehacer
+ * @property {(indice: number) => void} irAHistorial
+ * @property {() => void} limpiarHistorial deja solo el estado actual
  *
  * @typedef {Object} Preset
  * @property {string} id

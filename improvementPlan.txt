@@ -548,6 +548,23 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (102/102 ramas) · build OK · axe 0.
 
+[x] P2-32 Deshacer, rehacer e historial de la sesión  ✔ 2026-11-20
+  Verificado (2026-11-20):
+    - El estado de estilos vive ahora en un historial (máx. 50 entradas) con
+      índice: estilos = entradas[indice]. Deshacer/rehacer y volver a cualquier
+      paso desde un <select> "Historial" con un resumen corto de cada estado.
+    - Los cambios seguidos sobre un mismo campo dentro de 700 ms se funden en
+      una sola entrada (arrastrar un color no llena el historial); aplicar un
+      preset o restablecer siempre es una entrada propia.
+    - Atajos Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z y Ctrl+Y, ignorados dentro de
+      input/textarea/select/contentEditable para no pisar el undo nativo.
+    - El historial es solo de la sesión: no se persiste y "Borrar datos
+      guardados" lo limpia junto con el resto.
+    - Tests: 6 de integración nuevos (deshacer/rehacer, coalescencia, select,
+      presets, atajos, borrado) → 162/162.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (102/102 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -734,7 +751,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           sangría, espacio palabras,
                                           versalitas y corte de línea),
                                           P2-31 ✔ (copiar HTML y CSS por
-                                          separado)
+                                          separado),
+                                          P2-32 ✔ (deshacer, rehacer e
+                                          historial de la sesión)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1099,6 +1118,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       propio; el HTML conserva la hoja de fuente web y el CSS va sin <style>.
     - Tests: 6 nuevos → 156/156 · coverage 102/102 ramas · build OK · axe 0.
 
+2026-11-20 · Post-plan · P2-32 COMPLETADO — "feat(estilos): deshacer, rehacer e
+  historial de la sesión"
+    - Historial de hasta 50 estados con índice; botones Deshacer/Rehacer y un
+      selector con el resumen de cada paso. No se persiste: es de la sesión.
+    - Coalescencia de 700 ms por campo para que arrastrar un control no llene
+      el historial; presets y resets son entradas propias.
+    - Atajos Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z y Ctrl+Y, ignorados en campos
+      editables. "Borrar datos guardados" también limpia el historial.
+    - Tests: 6 nuevos → 162/162 · coverage 102/102 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1107,7 +1136,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 156 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 162 tests · cobertura 100% de la
         lógica pura (102/102 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -1138,14 +1167,15 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     4. `public/vista_previa.png` desactualizada (previa al rediseño CSS).
     5. Sin og:image (requiere asset 1200x630) → previews sociales pobres.
     6. Funciones diferidas por decisión del usuario: text-transform/
-       text-decoration y copiar HTML/CSS por separado.
+       text-decoration y copiar HTML/CSS por separado (ambas resueltas
+       después: P2-23 y P2-31).
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 34/34 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 35/35 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
-  en P2-23; sigue diferido copiar HTML y CSS por separado).
+  en P2-23).
 
   Actualización 2026-11-18 (post-plan): P2-21..P2-25 agregaron contraste WCAG
   en vivo, ancho de línea + line-height unitless, transform/decoration/
@@ -1166,13 +1196,15 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   espacio entre palabras, versalitas, corte de línea (text-wrap), tracking
   negativo y pesos 300/700/800/900. La sangría se limita a los párrafos para
   no indentar los títulos. P2-31 agrega copiar HTML y CSS por separado sin
-  duplicar la generación del snippet.
+  duplicar la generación del snippet. P2-32 suma deshacer/rehacer e historial
+  de la sesión (sin persistir) con atajos de teclado y coalescencia de cambios
+  seguidos.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-31 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-32 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
-  controles tipográficos y el copiado por separado.
+  controles tipográficos, el copiado por separado y el historial.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1226,7 +1258,7 @@ D) FUNCIONES DE PRODUCTO
   - Guardar presets propios + galería                            M  → P2-29
     (P2-29 implementa los temas propios en este navegador; la galería
      pública/compartida sigue diferida, requiere backend)
-  - Undo/redo + historial                                        M
+  - Undo/redo + historial                                        M  → P2-32
   - Selector de fuente visual (con preview)                      S  → P2-27
   - Cargar webfonts o marcar "si está instalada"                 M  → P2-26
     (Roboto, Open Sans, Garamond... no se cargan: el preview miente

@@ -429,6 +429,100 @@ describe('temas predefinidos', () => {
   })
 })
 
+describe('deshacer, rehacer e historial', () => {
+  it('deshace y rehace un cambio de estilo', () => {
+    const deshacer = screen.getByRole('button', { name: 'Deshacer' })
+    const rehacer = screen.getByRole('button', { name: 'Rehacer' })
+
+    expect(deshacer).toBeDisabled()
+    expect(rehacer).toBeDisabled()
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+    expect(deshacer).toBeEnabled()
+
+    fireEvent.click(deshacer)
+    expect(preview.style.color).toBe('rgb(240, 248, 255)')
+    expect(rehacer).toBeEnabled()
+
+    fireEvent.click(rehacer)
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+  })
+
+  it('funde cambios seguidos del mismo campo en una sola entrada', () => {
+    const color = screen.getByLabelText('Color letra')
+
+    fireEvent.change(color, { target: { value: '#111111' } })
+    fireEvent.change(color, { target: { value: '#222222' } })
+    expect(preview.style.color).toBe('rgb(34, 34, 34)')
+
+    // el undo vuelve al valor anterior a la ráfaga, no al paso intermedio
+    fireEvent.click(screen.getByRole('button', { name: 'Deshacer' }))
+    expect(preview.style.color).toBe('rgb(240, 248, 255)')
+  })
+
+  it('el historial lista los estados y permite volver a uno anterior', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    fireEvent.change(screen.getByLabelText('Tamaño'), {
+      target: { value: '1.5' },
+    })
+
+    const historial = screen.getByLabelText('Historial')
+    expect(historial).toHaveValue('2')
+    expect(within(historial).getAllByRole('option')).toHaveLength(3)
+
+    fireEvent.change(historial, { target: { value: '0' } })
+
+    expect(preview.style.color).toBe('rgb(240, 248, 255)')
+    expect(preview.style.fontSize).toBe('1.2em')
+    expect(screen.getByRole('button', { name: 'Rehacer' })).toBeEnabled()
+  })
+
+  it('aplicar un tema también entra al historial', () => {
+    fireEvent.click(screen.getByRole('button', { name: /tema Editorial/i }))
+    expect(preview.style.fontFamily).toBe('Georgia, serif')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Deshacer' }))
+    expect(preview.style.fontFamily).toBe('system-ui')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Rehacer' }))
+    expect(preview.style.fontFamily).toBe('Georgia, serif')
+  })
+
+  it('responde a Ctrl+Z y Ctrl+Shift+Z fuera de campos editables', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    fireEvent.keyDown(window, { key: 'z', ctrlKey: true })
+    expect(preview.style.color).toBe('rgb(240, 248, 255)')
+
+    fireEvent.keyDown(window, { key: 'z', ctrlKey: true, shiftKey: true })
+    expect(preview.style.color).toBe('rgb(18, 52, 86)')
+  })
+
+  it('"Borrar datos guardados" limpia el historial', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /borrar datos guardados/i }),
+    )
+
+    expect(screen.getByRole('button', { name: 'Deshacer' })).toBeDisabled()
+    expect(
+      within(screen.getByLabelText('Historial')).getAllByRole('option'),
+    ).toHaveLength(1)
+  })
+})
+
 describe('botones copiar', () => {
   it('copiar todo copia exactamente el string que muestra el snippet', async () => {
     // fireEvent en vez de user-event: setup() de user-event secuestra el

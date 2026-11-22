@@ -15,7 +15,7 @@ import {
 import { TEXTO_POR_DEFECTO } from './lib/texto.js'
 
 const App = () => {
-  const { aplicarEstilos } = useContext(EstilosContext)
+  const { aplicarEstilos, limpiarHistorial } = useContext(EstilosContext)
   const [mensajeBorrado, setMensajeBorrado] = useState('')
 
   // init lazy: un enlace compartido gana; si no hay, la sesión anterior (si
@@ -62,6 +62,8 @@ const App = () => {
     borrarDatos()
     restablecerTexto()
     aplicarEstilos(ESTILOS_POR_DEFECTO)
+    // el historial es de la sesión: si se borran los datos, no queda rastro
+    limpiarHistorial()
     setMensajeBorrado('Datos guardados borrados')
   }
 
