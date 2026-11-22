@@ -27,6 +27,7 @@ export const Visualizador = ({
 }) => {
   const { estilos } = useContext(EstilosContext)
   const conCapitular = estilos.letraCapitular === 'primera'
+  const conSeleccion = estilos.seleccion === 'personalizada'
   const activa = plantillaActiva(texto)
 
   /**
@@ -91,9 +92,9 @@ export const Visualizador = ({
 
         <article
           className={
-            conCapitular
-              ? 'visualizador visualizador-capitular'
-              : 'visualizador'
+            'visualizador' +
+            (conCapitular ? ' visualizador-capitular' : '') +
+            (conSeleccion ? ' visualizador-seleccion' : '')
           }
           spellCheck='false'
           style={estilosToPreviewStyle(estilos)}

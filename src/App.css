@@ -372,6 +372,13 @@ body {
   padding-right: 0.08em;
 }
 
+/* selección personalizada: las variables las pone Visualizador desde el
+   estado, igual que la regla .texto ::selection del snippet generado */
+.visualizador.visualizador-seleccion ::selection {
+  background-color: var(--seleccion-fondo);
+  color: var(--seleccion-texto);
+}
+
 /* el foco de mouse ya se feedbacka con el caret del texto,
    pero la navegación por teclado SIEMPRE debe mostrar anillo */
 .visualizador *:focus {

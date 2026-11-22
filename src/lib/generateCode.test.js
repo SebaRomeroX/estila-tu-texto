@@ -33,6 +33,9 @@ const ESTILOS = {
   corteLinea: 'wrap',
   letraCapitular: 'none',
   sombra: 'none',
+  seleccion: 'none',
+  seleccionFondo: '#2F4F6F',
+  seleccionTexto: '#FFFFFF',
 }
 
 const TEXTO = {
@@ -172,6 +175,19 @@ describe('estilosToPreviewStyle', () => {
     expect(estilo).not.toHaveProperty('sangria')
     expect(estilo).not.toHaveProperty('textIndent')
   })
+
+  it('agrega las variables de la selección personalizada', () => {
+    const estilo = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({
+        ...ESTILOS,
+        seleccionFondo: '#123456',
+        seleccionTexto: '#abcdef',
+      })
+    )
+
+    expect(estilo['--seleccion-fondo']).toBe('#123456')
+    expect(estilo['--seleccion-texto']).toBe('#abcdef')
+  })
 })
 
 describe('generateCode', () => {
@@ -282,6 +298,21 @@ describe('generateCode', () => {
     expect(generateCode(TEXTO, { ...ESTILOS, sombra: 'resplandor' })).toContain(
       'text-shadow: 0 0 0.4em currentColor;',
     )
+  })
+
+  it('emite la selección personalizada solo cuando está activa', () => {
+    expect(generateCode(TEXTO, ESTILOS)).not.toContain('::selection')
+
+    const conSeleccion = generateCode(TEXTO, {
+      ...ESTILOS,
+      seleccion: 'personalizada',
+      seleccionFondo: '#123456',
+      seleccionTexto: '#abcdef',
+    })
+
+    expect(conSeleccion).toContain('  .texto ::selection {')
+    expect(conSeleccion).toContain('    background-color: #123456;')
+    expect(conSeleccion).toContain('    color: #abcdef;')
   })
 
   it('agrega la hoja de Google Fonts solo para fuentes web', () => {

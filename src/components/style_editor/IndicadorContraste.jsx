@@ -23,3 +23,28 @@ export const IndicadorContraste = () => {
     </p>
   )
 }
+
+/**
+ * Mismo control para la selección personalizada. Solo se muestra cuando está
+ * activa: si está apagada no hay colores propios que evaluar.
+ */
+export const IndicadorContrasteSeleccion = () => {
+  const { estilos } = useContext(EstilosContext)
+  if (estilos.seleccion === 'none') return null
+
+  const resultado = evaluarContraste(
+    estilos.seleccionTexto,
+    estilos.seleccionFondo,
+  )
+
+  if (!resultado) return null
+
+  return (
+    <p className='contraste'>
+      <span className='contraste-etiqueta'>Contraste selección</span>
+      <strong>{resultado.ratio.toFixed(2)}:1</strong>
+      <span aria-hidden='true'>·</span>
+      {resultado.nivel}
+    </p>
+  )
+}

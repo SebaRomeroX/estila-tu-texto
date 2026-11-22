@@ -94,6 +94,16 @@ function generarCssReglas(estilos) {
           `  }`,
         ]
       : []),
+    // selección personalizada: solo se emite si el usuario la activó
+    ...(estilos.seleccion === 'personalizada'
+      ? [
+          ``,
+          `  .texto ::selection {`,
+          `    background-color: ${estilos.seleccionFondo};`,
+          `    color: ${estilos.seleccionTexto};`,
+          `  }`,
+        ]
+      : []),
   ]
 }
 

@@ -23,6 +23,9 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   corteLinea: 'wrap',
   letraCapitular: 'none',
   sombra: 'none',
+  seleccion: 'none',
+  seleccionFondo: '#2F4F6F',
+  seleccionTexto: '#FFFFFF',
 })
 
 /**
@@ -51,6 +54,8 @@ export function estilosToPreviewStyle(estilos) {
     ...estilosToStyleObject(estilos),
     '--escala-titulo': String(factorTitulo(estilos.escalaTitulo)),
     '--sangria': `${estilos.sangria}em`,
+    '--seleccion-fondo': estilos.seleccionFondo,
+    '--seleccion-texto': estilos.seleccionTexto,
   })
 }
 

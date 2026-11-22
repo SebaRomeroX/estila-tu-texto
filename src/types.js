@@ -24,6 +24,9 @@
  * @property {string} corteLinea
  * @property {string} letraCapitular
  * @property {string} sombra
+ * @property {string} seleccion
+ * @property {string} seleccionFondo
+ * @property {string} seleccionTexto
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

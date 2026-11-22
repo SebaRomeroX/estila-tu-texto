@@ -147,6 +147,14 @@ export const InputsSelectsParams = {
       { nombre: 'resplandor', contenido: 'resplandor' },
     ],
   },
+  seleccion: {
+    label: 'Selección de texto',
+    campo: 'seleccion',
+    opciones: [
+      { nombre: 'predeterminada', contenido: 'none' },
+      { nombre: 'personalizada', contenido: 'personalizada' },
+    ],
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */
@@ -158,5 +166,13 @@ export const InputsColorParams = {
   fondo: {
     label: 'Color fondo',
     campo: 'background',
+  },
+  seleccionFondo: {
+    label: 'Fondo selección',
+    campo: 'seleccionFondo',
+  },
+  seleccionTexto: {
+    label: 'Texto seleccionado',
+    campo: 'seleccionTexto',
   },
 }

@@ -604,6 +604,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (110/110 ramas) · build OK · axe 0.
 
+[x] P2-36 Color de selección personalizado  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - Campos seleccion (none/personalizada), seleccionFondo y seleccionTexto;
+      default apagado y colores por defecto accesibles (#2F4F6F / #FFFFFF).
+    - Preview: variables --seleccion-fondo/--seleccion-texto + clase
+      visualizador-seleccion; snippet: regla .texto ::selection condicional.
+    - Los dos inputs de color aparecen solo con la selección personalizada y
+      se agrega "Contraste selección" reutilizando el verificador WCAG.
+    - Con none no se emite la regla: snapshot y CSS por defecto intactos.
+    - Tests: 3 unit + 2 de integración → 178/178.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (112/112 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -797,7 +810,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           primer párrafo),
                                           P2-34 ✔ (plantillas de texto),
                                           P2-35 ✔ (sombra de texto: suave y
-                                          resplandor)
+                                          resplandor),
+                                          P2-36 ✔ (color de selección)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1198,6 +1212,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Preview y snippet comparten la propiedad; el snapshot no cambia.
     - Tests: 3 nuevos → 174/174 · coverage 110/110 ramas · build OK · axe 0.
 
+2026-11-22 · Post-plan · P2-36 COMPLETADO — "feat(estilos): color de selección
+  personalizado"
+    - Interruptor predeterminada/personalizada + dos colores; el default no
+      emite CSS y los inputs de color solo aparecen al activarla.
+    - Preview con variables CSS y snippet con .texto ::selection; se suma el
+      indicador de contraste WCAG de la selección.
+    - Tests: 5 nuevos → 178/178 · coverage 112/112 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1206,8 +1228,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 174 tests · cobertura 100% de la
-        lógica pura (110/110 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 178 tests · cobertura 100% de la
+        lógica pura (112/112 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1242,7 +1264,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 37/37 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 38/38 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1277,14 +1299,15 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Actualización 2026-11-22 (post-plan): P2-35 suma sombra de texto con dos
   presets (suave y resplandor), apagada por defecto para no alterar el CSS
-  generado.
+  generado. P2-36 agrega selección personalizada (fondo + color de texto) con
+  aviso de contraste WCAG, también apagada por defecto.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-35 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-36 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
-  capitular, las plantillas y la sombra de texto.
+  capitular, las plantillas, la sombra de texto y la selección personalizada.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1307,7 +1330,7 @@ A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
   - font-variant: small-caps                                     S  → P2-30
   - opacity                                                      S
   - text-align: justify (hoy solo left/center)                   S
-  - color de ::selection                                         S
+  - color de ::selection                                         S  → P2-36
   - text-shadow (x, y, blur + color)                             M  → P2-35
     (P2-35 agrega presets suave/resplandor; los ejes y el color libres
      siguen diferidos)

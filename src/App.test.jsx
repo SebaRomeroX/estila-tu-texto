@@ -387,6 +387,44 @@ describe('sombra de texto', () => {
   })
 })
 
+describe('color de selección', () => {
+  it('solo emite ::selection y muestra los colores cuando está personalizada', () => {
+    expect(pre).not.toHaveTextContent('::selection')
+    expect(screen.queryByLabelText('Fondo selección')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Selección de texto'), {
+      target: { value: 'personalizada' },
+    })
+
+    expect(preview).toHaveClass('visualizador-seleccion')
+    expect(pre).toHaveTextContent('.texto ::selection')
+    expect(pre).toHaveTextContent('background-color: #2F4F6F;')
+    expect(pre).toHaveTextContent('color: #FFFFFF;')
+    expect(screen.getByText('Contraste selección')).toBeInTheDocument()
+  })
+
+  it('actualiza la regla al cambiar los colores y la quita al desactivar', () => {
+    const selector = screen.getByLabelText('Selección de texto')
+    fireEvent.change(selector, { target: { value: 'personalizada' } })
+
+    fireEvent.change(screen.getByLabelText('Fondo selección'), {
+      target: { value: '#123456' },
+    })
+    fireEvent.change(screen.getByLabelText('Texto seleccionado'), {
+      target: { value: '#abcdef' },
+    })
+
+    expect(pre).toHaveTextContent('background-color: #123456;')
+    expect(pre).toHaveTextContent('color: #abcdef;')
+
+    fireEvent.change(selector, { target: { value: 'none' } })
+
+    expect(preview).not.toHaveClass('visualizador-seleccion')
+    expect(pre).not.toHaveTextContent('::selection')
+    expect(screen.queryByText('Contraste selección')).not.toBeInTheDocument()
+  })
+})
+
 describe('temas predefinidos', () => {
   it('aplicar un tema cambia el preview Y el snippet', () => {
     fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))
