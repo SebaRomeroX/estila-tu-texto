@@ -81,6 +81,19 @@ function generarCssReglas(estilos) {
     `  .texto p {`,
     `    text-indent: ${estilos.sangria}em;`,
     `  }`,
+    // capitular editorial: solo la primera letra del primer párrafo. Con
+    // "none" no se emite nada y el snapshot por defecto no cambia.
+    ...(estilos.letraCapitular === 'primera'
+      ? [
+          ``,
+          `  .texto p:first-of-type::first-letter {`,
+          `    float: left;`,
+          `    font-size: 3.2em;`,
+          `    line-height: 0.9;`,
+          `    padding-right: 0.08em;`,
+          `  }`,
+        ]
+      : []),
   ]
 }
 

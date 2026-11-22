@@ -348,6 +348,32 @@ describe('vista de editor de código', () => {
   })
 })
 
+describe('letra capitular', () => {
+  it('aplica la clase al preview y emite la regla en el snippet', () => {
+    const selector = screen.getByLabelText('Letra capitular')
+
+    expect(preview.className).toBe('visualizador')
+    expect(pre).not.toHaveTextContent('::first-letter')
+
+    fireEvent.change(selector, { target: { value: 'primera' } })
+
+    expect(preview).toHaveClass('visualizador-capitular')
+    expect(pre).toHaveTextContent('.texto p:first-of-type::first-letter')
+    expect(pre).toHaveTextContent('float: left;')
+    expect(pre).toHaveTextContent('font-size: 3.2em;')
+  })
+
+  it('se puede desactivar y vuelve al estado sin regla', () => {
+    const selector = screen.getByLabelText('Letra capitular')
+
+    fireEvent.change(selector, { target: { value: 'primera' } })
+    fireEvent.change(selector, { target: { value: 'none' } })
+
+    expect(preview).not.toHaveClass('visualizador-capitular')
+    expect(pre).not.toHaveTextContent('::first-letter')
+  })
+})
+
 describe('temas predefinidos', () => {
   it('aplicar un tema cambia el preview Y el snippet', () => {
     fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))

@@ -209,6 +209,7 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.espacioPalabras} />
         <InputSelect elemento={InputsSelectsParams.versalitas} />
         <InputSelect elemento={InputsSelectsParams.corteLinea} />
+        <InputSelect elemento={InputsSelectsParams.letraCapitular} />
       </div>
     </section>
   )

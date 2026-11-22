@@ -22,6 +22,7 @@
  * @property {string} espacioPalabras
  * @property {string} versalitas
  * @property {string} corteLinea
+ * @property {string} letraCapitular
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

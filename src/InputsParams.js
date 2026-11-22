@@ -130,6 +130,14 @@ export const InputsSelectsParams = {
       { nombre: 'pretty', contenido: 'pretty' },
     ],
   },
+  letraCapitular: {
+    label: 'Letra capitular',
+    campo: 'letraCapitular',
+    opciones: [
+      { nombre: 'no', contenido: 'none' },
+      { nombre: 'sí (primer párrafo)', contenido: 'primera' },
+    ],
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */

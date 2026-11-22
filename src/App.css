@@ -344,6 +344,16 @@ body {
   text-indent: var(--sangria, 0);
 }
 
+/* capitular editorial: solo la primera letra del primer párrafo. La clase la
+   pone Visualizador desde el estado, igual que la regla .texto p:first-of-type
+   del snippet generado. */
+.visualizador.visualizador-capitular p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.2em;
+  line-height: 0.9;
+  padding-right: 0.08em;
+}
+
 /* el foco de mouse ya se feedbacka con el caret del texto,
    pero la navegación por teclado SIEMPRE debe mostrar anillo */
 .visualizador *:focus {

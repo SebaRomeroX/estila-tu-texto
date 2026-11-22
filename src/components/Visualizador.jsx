@@ -19,6 +19,7 @@ const CAMPOS = [
  */
 export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
   const { estilos } = useContext(EstilosContext)
+  const conCapitular = estilos.letraCapitular === 'primera'
 
   return (
     // el encabezado del preview vive sobre el fondo del usuario: debe usar
@@ -34,7 +35,11 @@ export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
         </div>
 
         <article
-          className='visualizador'
+          className={
+            conCapitular
+              ? 'visualizador visualizador-capitular'
+              : 'visualizador'
+          }
           spellCheck='false'
           style={estilosToPreviewStyle(estilos)}
         >

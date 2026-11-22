@@ -65,6 +65,7 @@
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
 - **Temas propios:** guarda la combinación actual con un nombre y reaplícala cuando quieras (se queda en este navegador)
 - **Deshacer y rehacer:** historial de la sesión con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control
+- **Letra capitular:** la primera letra del primer párrafo con tamaño editorial, en el preview y en el snippet
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

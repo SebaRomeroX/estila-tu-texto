@@ -31,6 +31,7 @@ const ESTILOS = {
   espacioPalabras: '0',
   versalitas: 'none',
   corteLinea: 'wrap',
+  letraCapitular: 'none',
 }
 
 const TEXTO = {
@@ -244,6 +245,20 @@ describe('generateCode', () => {
     expect(codigo).toContain('font-variant: small-caps;')
     expect(codigo).toContain('text-wrap: balance;')
     expect(codigo).toContain('letter-spacing: -0.05em;')
+  })
+
+  it('emite la letra capitular solo cuando está activa', () => {
+    expect(generateCode(TEXTO, ESTILOS)).not.toContain('::first-letter')
+
+    const conCapitular = generateCode(TEXTO, {
+      ...ESTILOS,
+      letraCapitular: 'primera',
+    })
+
+    expect(conCapitular).toContain('  .texto p:first-of-type::first-letter {')
+    expect(conCapitular).toContain('    float: left;')
+    expect(conCapitular).toContain('    font-size: 3.2em;')
+    expect(conCapitular).toContain('    line-height: 0.9;')
   })
 
   it('agrega la hoja de Google Fonts solo para fuentes web', () => {

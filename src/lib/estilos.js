@@ -21,6 +21,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   espacioPalabras: '0',
   versalitas: 'none',
   corteLinea: 'wrap',
+  letraCapitular: 'none',
 })
 
 /**

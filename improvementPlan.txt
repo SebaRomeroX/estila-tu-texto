@@ -565,6 +565,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (102/102 ramas) · build OK · axe 0.
 
+[x] P2-33 Letra capitular en el primer párrafo  ✔ 2026-11-21
+  Verificado (2026-11-21):
+    - Campo nuevo letraCapitular (none/primera) con select "Letra capitular";
+      por defecto none, así que el snippet y el snapshot actuales no cambian.
+    - El preview usa la clase condicional .visualizador-capitular y el snippet
+      emite .texto p:first-of-type::first-letter; ambos con el mismo tamaño
+      (3.2em), line-height 0.9 y padding-right 0.08em.
+    - Solo afecta al primer párrafo (uso editorial clásico), no a los títulos.
+    - Tests: 1 unit (regla condicional) + 2 de integración (activar/desactivar)
+      → 165/165.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (102/102 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -753,7 +766,9 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-31 ✔ (copiar HTML y CSS por
                                           separado),
                                           P2-32 ✔ (deshacer, rehacer e
-                                          historial de la sesión)
+                                          historial de la sesión),
+                                          P2-33 ✔ (letra capitular en el
+                                          primer párrafo)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1128,6 +1143,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       editables. "Borrar datos guardados" también limpia el historial.
     - Tests: 6 nuevos → 162/162 · coverage 102/102 ramas · build OK · axe 0.
 
+2026-11-21 · Post-plan · P2-33 COMPLETADO — "feat(estilos): letra capitular en
+  el primer párrafo"
+    - Campo letraCapitular (none/primera) con select; default none para no
+      alterar el snippet ni el snapshot existentes.
+    - Preview con clase .visualizador-capitular y snippet con
+      .texto p:first-of-type::first-letter, ambos con las mismas medidas.
+    - Solo el primer párrafo: uso editorial clásico, sin repetir el efecto en
+      todos los párrafos ni tocar los títulos.
+    - Tests: 3 nuevos → 165/165 · coverage 102/102 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1136,7 +1161,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 162 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 165 tests · cobertura 100% de la
         lógica pura (102/102 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -1200,11 +1225,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   de la sesión (sin persistir) con atajos de teclado y coalescencia de cambios
   seguidos.
 
+  Actualización 2026-11-21 (post-plan): P2-33 agrega letra capitular opcional
+  en el primer párrafo, con la misma regla en preview y snippet y sin alterar
+  el CSS por defecto.
+
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-32 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-33 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
-  controles tipográficos, el copiado por separado y el historial.
+  controles tipográficos, el copiado por separado, el historial y la letra
+  capitular.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1243,7 +1273,7 @@ B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
 
 C) EFECTOS "WOW" (diferenciadores visuales)
   - texto con degradado (background-clip: text)                  S
-  - drop cap (::first-letter)                                    S
+  - drop cap (::first-letter)                                    S  → P2-33
   - contorno (-webkit-text-stroke) y neón (text-shadow)          M
   - dos columnas (columns)                                       S
   - animación de entrada con prefers-reduced-motion              M
