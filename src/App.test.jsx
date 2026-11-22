@@ -708,6 +708,59 @@ describe('botón restablecer texto', () => {
   })
 })
 
+describe('plantillas de texto', () => {
+  it('carga una plantilla sin confirmar si el texto sigue siendo el de ejemplo', () => {
+    const confirmar = vi.spyOn(window, 'confirm')
+
+    fireEvent.change(screen.getByLabelText('Plantilla'), {
+      target: { value: 'ensayo' },
+    })
+
+    expect(confirmar).not.toHaveBeenCalled()
+    expect(screen.getByLabelText('Plantilla')).toHaveValue('ensayo')
+    expect(
+      within(preview).getByText('Elogio de la lectura lenta'),
+    ).toBeInTheDocument()
+    expect(pre).toHaveTextContent('<h2>Elogio de la lectura lenta</h2>')
+  })
+
+  it('no reemplaza texto editado si se cancela la confirmación', () => {
+    const h2 = within(preview).getByText('Texto de Ejemplo')
+    h2.textContent = 'Mi texto'
+    fireEvent.input(h2)
+    const confirmar = vi.spyOn(window, 'confirm').mockReturnValue(false)
+
+    fireEvent.change(screen.getByLabelText('Plantilla'), {
+      target: { value: 'cuento' },
+    })
+
+    expect(confirmar).toHaveBeenCalledTimes(1)
+    expect(pre).toHaveTextContent('Mi texto')
+    expect(pre).not.toHaveTextContent('La casa junto al mar')
+    // el select vuelve al placeholder porque el texto no coincide con ninguna
+    expect(screen.getByLabelText('Plantilla')).toHaveValue('')
+  })
+
+  it('reemplaza y persiste el texto si se confirma', () => {
+    const h2 = within(preview).getByText('Texto de Ejemplo')
+    h2.textContent = 'Mi texto'
+    fireEvent.input(h2)
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+
+    fireEvent.change(screen.getByLabelText('Plantilla'), {
+      target: { value: 'carta' },
+    })
+
+    expect(
+      within(preview).getByText('Carta a quien empieza'),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Plantilla')).toHaveValue('carta')
+    expect(JSON.parse(localStorage.getItem(CLAVE_TEXTO) ?? '{}')).toMatchObject(
+      { titulo: 'Carta a quien empieza' },
+    )
+  })
+})
+
 describe('temas propios', () => {
   /**
    * @param {string} nombre

@@ -576,7 +576,21 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Tests: 1 unit (regla condicional) + 2 de integración (activar/desactivar)
       → 165/165.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
-      (102/102 ramas) · build OK · axe 0.
+      (104/104 ramas) · build OK · axe 0.
+
+[x] P2-34 Plantillas de texto (ensayo, blog, cuento y carta)  ✔ 2026-11-21
+  Verificado (2026-11-21):
+    - lib/plantillas.js reúne 4 plantillas que completan todos los campos de
+      Texto; plantillaActiva() detecta cuál coincide exactamente (o null).
+    - Select "Plantilla" en el header del preview: carga el texto completo y
+      queda marcado el nombre de la plantilla activa.
+    - Si el texto fue editado, pide confirmación antes de reemplazarlo; con el
+      texto de ejemplo (o la misma plantilla) no molesta.
+    - La carga usa el mismo cargarTexto del App, así que se persiste y se
+      refleja en preview y snippet a la vez.
+    - Tests: 3 unit + 3 de integración → 171/171.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (106/106 ramas) · build OK · axe 0.
 
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
@@ -768,7 +782,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-32 ✔ (deshacer, rehacer e
                                           historial de la sesión),
                                           P2-33 ✔ (letra capitular en el
-                                          primer párrafo)
+                                          primer párrafo),
+                                          P2-34 ✔ (plantillas de texto)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1151,7 +1166,15 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       .texto p:first-of-type::first-letter, ambos con las mismas medidas.
     - Solo el primer párrafo: uso editorial clásico, sin repetir el efecto en
       todos los párrafos ni tocar los títulos.
-    - Tests: 3 nuevos → 165/165 · coverage 102/102 ramas · build OK · axe 0.
+    - Tests: 3 nuevos → 165/165 · coverage 104/104 ramas · build OK · axe 0.
+
+2026-11-21 · Post-plan · P2-34 COMPLETADO — "feat(texto): plantillas de texto"
+    - Cuatro plantillas (ensayo, blog, cuento y carta) con todos los campos de
+      Texto; el select muestra cuál está activa y vuelve al placeholder al
+      editar cualquier campo.
+    - Reemplazar texto editado pide confirmación; con el texto de ejemplo no
+      molesta. La carga se persiste y actualiza preview y snippet juntos.
+    - Tests: 6 nuevos → 171/171 · coverage 106/106 ramas · build OK · axe 0.
 
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
@@ -1161,8 +1184,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 165 tests · cobertura 100% de la
-        lógica pura (102/102 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 171 tests · cobertura 100% de la
+        lógica pura (106/106 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1197,7 +1220,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 35/35 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 36/36 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1227,14 +1250,15 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Actualización 2026-11-21 (post-plan): P2-33 agrega letra capitular opcional
   en el primer párrafo, con la misma regla en preview y snippet y sin alterar
-  el CSS por defecto.
+  el CSS por defecto. P2-34 suma plantillas de texto (ensayo, blog, cuento y
+  carta) con confirmación antes de reemplazar texto editado.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-33 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-34 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
-  controles tipográficos, el copiado por separado, el historial y la letra
-  capitular.
+  controles tipográficos, el copiado por separado, el historial, la letra
+  capitular y las plantillas.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1295,7 +1319,7 @@ D) FUNCIONES DE PRODUCTO
      en equipos que no las tienen)
   - Escala/peso del título (título != párrafo)                   M  → P2-25
   - Contador de palabras / tiempo de lectura                     S
-  - Plantillas de texto                                          S
+  - Plantillas de texto                                          S  → P2-34
   - Export a Tailwind                                            M
   - Modo claro/oscuro de la app                                  M
   - PWA / offline                                                M

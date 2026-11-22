@@ -1,6 +1,8 @@
 import { useContext } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
 import { estilosToPreviewStyle } from '../lib/estilos.js'
+import { PLANTILLAS, plantillaActiva } from '../lib/plantillas.js'
+import { TEXTO_POR_DEFECTO } from '../lib/texto.js'
 import { EditableText } from './EditableText.jsx'
 
 // estructura del preview: qué campo edita, con qué etiqueta HTML y cómo
@@ -17,9 +19,45 @@ const CAMPOS = [
 /**
  * @param {import('../types.js').ParametrosVisualizador} props
  */
-export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
+export const Visualizador = ({
+  texto,
+  actualizarTexto,
+  restablecerTexto,
+  cargarTexto,
+}) => {
   const { estilos } = useContext(EstilosContext)
   const conCapitular = estilos.letraCapitular === 'primera'
+  const activa = plantillaActiva(texto)
+
+  /**
+   * Aplica una plantilla. No pisa texto editado sin confirmación; si el texto
+   * ya es el de la plantilla, no hace nada (evita un confirm inútil).
+   *
+   * @param {string} id
+   */
+  function aplicarPlantilla(id) {
+    const plantilla = PLANTILLAS.find((candidata) => candidata.id === id)
+    if (!plantilla) return
+
+    const yaEsLaPlantilla = CAMPOS.every(
+      ({ campo }) => texto[campo] === plantilla.texto[campo],
+    )
+    if (yaEsLaPlantilla) return
+
+    const esElTextoPorDefecto = CAMPOS.every(
+      ({ campo }) => texto[campo] === TEXTO_POR_DEFECTO[campo],
+    )
+    if (
+      !esElTextoPorDefecto &&
+      !window.confirm(
+        `Se reemplazará el texto actual por la plantilla "${plantilla.nombre}". ¿Continuar?`,
+      )
+    ) {
+      return
+    }
+
+    cargarTexto(plantilla.texto)
+  }
 
   return (
     // el encabezado del preview vive sobre el fondo del usuario: debe usar
@@ -29,9 +67,26 @@ export const Visualizador = ({ texto, actualizarTexto, restablecerTexto }) => {
       <div className='seccion'>
         <div className='visualizador-header'>
           <h2 className='titulo'>Vista previa</h2>
-          <button type='button' onClick={restablecerTexto}>
-            Restablecer texto ↺
-          </button>
+          <div className='visualizador-acciones'>
+            <span className='plantilla-selector'>
+              <label htmlFor='plantilla-texto'>Plantilla</label>
+              <select
+                id='plantilla-texto'
+                value={activa ?? ''}
+                onChange={(e) => aplicarPlantilla(e.target.value)}
+              >
+                <option value=''>Elegir plantilla…</option>
+                {PLANTILLAS.map((plantilla) => (
+                  <option key={plantilla.id} value={plantilla.id}>
+                    {plantilla.nombre}
+                  </option>
+                ))}
+              </select>
+            </span>
+            <button type='button' onClick={restablecerTexto}>
+              Restablecer texto ↺
+            </button>
+          </div>
         </div>
 
         <article

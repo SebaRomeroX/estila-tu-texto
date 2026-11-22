@@ -258,7 +258,8 @@ body {
 .inputs-configuracion input,
 .inputs-configuracion select,
 .guardar-tema input,
-.historial select {
+.historial select,
+.plantilla-selector select {
   color: var(--color-texto);
   background-color: var(--color-superficie);
   font-size: 1em;
@@ -275,9 +276,26 @@ body {
 
 .visualizador-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5em;
   padding-bottom: 1em;
+}
+
+.visualizador-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5em;
+}
+
+.plantilla-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.9em;
 }
 
 .visualizador-header button,

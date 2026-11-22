@@ -35,6 +35,11 @@
  *
  * @typedef {keyof Texto} CampoTexto
  *
+ * @typedef {Object} PlantillaTexto
+ * @property {string} id
+ * @property {string} nombre
+ * @property {Texto} texto
+ *
  * @typedef {Object} ContextoEstilos
  * @property {Estilos} estilos
  * @property {(campo: CampoEstilo, valor: string) => void} actualizarEstilos
@@ -106,6 +111,7 @@
  * @property {Texto} texto
  * @property {(campo: CampoTexto, valor: string) => void} actualizarTexto
  * @property {() => void} restablecerTexto
+ * @property {(nuevo: Texto) => void} cargarTexto
  *
  * @typedef {Object} ParametrosSalida
  * @property {Texto} texto

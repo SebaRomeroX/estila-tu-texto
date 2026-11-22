@@ -52,6 +52,15 @@ const App = () => {
     setTexto({ ...TEXTO_POR_DEFECTO })
   }
 
+  /**
+   * Carga un texto completo (plantillas): reemplaza todos los campos de una.
+   *
+   * @param {import('./types.js').Texto} nuevo
+   */
+  function cargarTexto(nuevo) {
+    setTexto({ ...nuevo })
+  }
+
   // acción destructiva: pide confirmación antes de borrar nada
   function borrarDatosGuardados() {
     const confirmado = window.confirm(
@@ -78,6 +87,7 @@ const App = () => {
           actualizarTexto={actualizarTexto}
           texto={texto}
           restablecerTexto={restablecerTexto}
+          cargarTexto={cargarTexto}
         />
         <SalidaCodigo texto={texto} />
       </main>
