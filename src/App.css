@@ -298,6 +298,16 @@ body {
   font-size: 0.9em;
 }
 
+/* mensaje del export a imagen: vacío cuando no hay nada que anunciar */
+.estado-imagen {
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+
+.estado-imagen:empty {
+  display: none;
+}
+
 .visualizador-header button,
 .temas button,
 .guardar-tema button,
@@ -325,9 +335,12 @@ body {
   background-color: var(--color-superficie-active);
 }
 
-/* deshacer/rehacer sin acción disponible: sigue visible, pero inerte */
+/* deshacer/rehacer y descargar imagen sin acción disponible: siguen visibles,
+   pero inertes */
 .historial button:disabled,
-.historial button:disabled:hover {
+.historial button:disabled:hover,
+.visualizador-header button:disabled,
+.visualizador-header button:disabled:hover {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: var(--color-superficie);

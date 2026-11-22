@@ -5,6 +5,7 @@ import axe from 'axe-core'
 import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
 import { codificarEstado, decodificarEstado } from './lib/compartir.js'
+import { descargarImagen } from './lib/descargarImagen.js'
 import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
 import {
   CLAVE_ESTILOS,
@@ -12,6 +13,10 @@ import {
   CLAVE_TEXTO,
 } from './lib/persistencia.js'
 import { TEXTO_POR_DEFECTO } from './lib/texto.js'
+
+// jsdom no puede rasterizar: el wrapper de html-to-image se mockea en la
+// integración y se prueba aparte en descargarImagen.test.js
+vi.mock('./lib/descargarImagen.js', () => ({ descargarImagen: vi.fn() }))
 
 /** @type {HTMLElement} */
 let container
@@ -664,7 +669,7 @@ describe('descargar .html', () => {
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /descargar/i }))
+    fireEvent.click(screen.getByRole('button', { name: /descargar \.html/i }))
 
     expect(URL.createObjectURL).toHaveBeenCalledTimes(1)
     const blob = /** @type {Blob} */ (
@@ -677,6 +682,45 @@ describe('descargar .html', () => {
     expect(documento).toContain('color: #123456;')
     expect(documento).toContain('<style>')
     expect(click).toHaveBeenCalled()
+  })
+})
+
+describe('descargar imagen', () => {
+  it('captura el artículo con el fondo actual y anuncia el éxito', async () => {
+    vi.mocked(descargarImagen).mockResolvedValue(undefined)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Descargar imagen' }))
+
+    await screen.findByText('Imagen descargada.')
+    expect(descargarImagen).toHaveBeenCalledWith(
+      preview,
+      ESTILOS_POR_DEFECTO.background,
+    )
+  })
+
+  it('deshabilita el botón mientras genera y avisa si falla', async () => {
+    /** @type {(error: Error) => void} */
+    let fallar = () => {}
+    vi.mocked(descargarImagen).mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          fallar = reject
+        }),
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Descargar imagen' }))
+
+    expect(screen.getByRole('button', { name: 'Generando…' })).toBeDisabled()
+    expect(
+      /** @type {HTMLElement} */ (container.querySelector('.estado-imagen')),
+    ).toHaveTextContent('Generando imagen…')
+
+    fallar(new Error('no se pudo'))
+
+    await screen.findByText('No se pudo generar la imagen. Intentá de nuevo.')
+    expect(
+      screen.getByRole('button', { name: 'Descargar imagen' }),
+    ).toBeEnabled()
   })
 })
 

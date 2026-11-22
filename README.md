@@ -63,6 +63,7 @@
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
+- **Descargar imagen PNG:** la vista previa tal como se ve (fondo y estilos incluidos) en 2x, ideal para redes
 - **Temas propios:** guarda la combinación actual con un nombre y reaplícala cuando quieras (se queda en este navegador)
 - **Deshacer y rehacer:** historial de la sesión con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control
 - **Letra capitular:** la primera letra del primer párrafo con tamaño editorial, en el preview y en el snippet

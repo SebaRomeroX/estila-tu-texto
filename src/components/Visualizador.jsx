@@ -1,5 +1,6 @@
-import { useContext } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
+import { descargarImagen } from '../lib/descargarImagen.js'
 import { estilosToPreviewStyle } from '../lib/estilos.js'
 import { PLANTILLAS, plantillaActiva } from '../lib/plantillas.js'
 import { TEXTO_POR_DEFECTO } from '../lib/texto.js'
@@ -29,6 +30,24 @@ export const Visualizador = ({
   const conCapitular = estilos.letraCapitular === 'primera'
   const conSeleccion = estilos.seleccion === 'personalizada'
   const activa = plantillaActiva(texto)
+  const articuloRef = useRef(/** @type {HTMLElement | null} */ (null))
+  const [estadoImagen, setEstadoImagen] = useState('idle')
+
+  /**
+   * Captura el artículo tal como se ve (fondo y estilos incluidos) y dispara
+   * la descarga. El estado alimenta el role="status" para lectores de pantalla.
+   */
+  async function descargarVista() {
+    if (!articuloRef.current) return
+
+    setEstadoImagen('generando')
+    try {
+      await descargarImagen(articuloRef.current, estilos.background)
+      setEstadoImagen('listo')
+    } catch {
+      setEstadoImagen('error')
+    }
+  }
 
   /**
    * Aplica una plantilla. No pisa texto editado sin confirmación; si el texto
@@ -84,13 +103,27 @@ export const Visualizador = ({
                 ))}
               </select>
             </span>
+            <button
+              type='button'
+              onClick={descargarVista}
+              disabled={estadoImagen === 'generando'}
+            >
+              {estadoImagen === 'generando' ? 'Generando…' : 'Descargar imagen'}
+            </button>
             <button type='button' onClick={restablecerTexto}>
               Restablecer texto ↺
             </button>
+            <p className='estado-imagen' role='status'>
+              {estadoImagen === 'generando' && 'Generando imagen…'}
+              {estadoImagen === 'listo' && 'Imagen descargada.'}
+              {estadoImagen === 'error' &&
+                'No se pudo generar la imagen. Intentá de nuevo.'}
+            </p>
           </div>
         </div>
 
         <article
+          ref={articuloRef}
           className={
             'visualizador' +
             (conCapitular ? ' visualizador-capitular' : '') +

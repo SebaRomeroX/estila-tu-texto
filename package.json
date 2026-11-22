@@ -16,6 +16,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "html-to-image": "^1.11.13",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

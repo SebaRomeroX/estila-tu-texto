@@ -631,6 +631,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (112/112 ramas) · build OK · axe 0.
 
+[x] P2-38 Descargar la vista como imagen PNG  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - Nueva dependencia html-to-image; lib/descargarImagen.js captura el
+      <article> del preview con toPng (pixelRatio 2, cacheBust y el fondo del
+      usuario) y dispara un <a download> temporal, igual que descargarHtml.
+      La librería se importa dinámicamente: queda en un chunk aparte (~13 KB)
+      y no pesa en la carga inicial.
+    - Botón "Descargar imagen" en el header del preview; se deshabilita y pasa
+      a "Generando…" mientras trabaja.
+    - role="status" anuncia "Generando imagen…", "Imagen descargada." o el
+      error, sin bloquear la app.
+    - El padding del propio bloque evita que la imagen salga pegada al borde;
+      no hace falta padding extra en la captura.
+    - Tests: 2 unit (mock de html-to-image) + 2 de integración (mock del
+      wrapper) → 182/182.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (113/113 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -826,7 +844,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-35 ✔ (sombra de texto: suave y
                                           resplandor),
                                           P2-36 ✔ (color de selección),
-                                          P2-37 ✔ (tamaño de letra en rem)
+                                          P2-37 ✔ (tamaño de letra en rem),
+                                          P2-38 ✔ (descargar imagen PNG)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1243,6 +1262,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       título siguen en em.
     - Snapshot actualizado una vez y aserciones ajustadas; sin tests nuevos.
 
+2026-11-22 · Post-plan · P2-38 COMPLETADO — "feat(salida): descargar la vista
+  como imagen PNG"
+    - html-to-image convierte el <article> real del preview en PNG, así que la
+      imagen incluye fondo, tipografía, capitular y selección tal como se ven.
+    - pixelRatio 2 para pantallas retina y cacheBust para no reusar fuentes
+      cacheadas; el fondo se pasa explícito para no exportar transparencia.
+    - El botón informa con role="status" y se deshabilita durante la captura;
+      un fallo deja el botón listo para reintentar.
+    - Tests: 4 nuevos → 182/182 · coverage 113/113 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1251,8 +1280,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 178 tests · cobertura 100% de la
-        lógica pura (112/112 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 182 tests · cobertura 100% de la
+        lógica pura (113/113 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1287,7 +1316,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 39/39 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 40/40 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1325,14 +1354,15 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   generado. P2-36 agrega selección personalizada (fondo + color de texto) con
   aviso de contraste WCAG, también apagada por defecto. P2-37 pasa el tamaño
   del bloque a rem (sin selector) para no depender del contexto de pegado.
+  P2-38 agrega la descarga del preview como PNG con html-to-image.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-37 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-38 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
-  capitular, las plantillas, la sombra de texto, la selección personalizada y
-  el tamaño en rem.
+  capitular, las plantillas, la sombra de texto, la selección personalizada,
+  el tamaño en rem y la descarga como imagen.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1400,7 +1430,7 @@ D) FUNCIONES DE PRODUCTO
   - Export a Tailwind                                            M
   - Modo claro/oscuro de la app                                  M
   - PWA / offline                                                M
-  - Exportar imagen (redes)                                      M
+  - Exportar imagen (redes)                                      M  → P2-38
   - og:image (diferido en P2-14c)                                M
 
 E) CALIDAD TÉCNICA
