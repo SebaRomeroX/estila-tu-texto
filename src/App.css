@@ -308,6 +308,51 @@ body {
   display: none;
 }
 
+/* ------------------------- VISTA LIMPIA ------------------------- */
+
+/* overlay a pantalla completa: solo el texto estilado sobre el fondo del
+   usuario, sin header ni controles de edición. No toca el snippet generado. */
+.vista-limpia {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+  /* deja libre la esquina del botón de cierre cuando el texto es largo */
+  padding: 4.5em 1.5em 1.5em;
+  box-sizing: border-box;
+}
+
+/* centrado vertical cuando el texto entra en pantalla; si no, scroll normal */
+.vista-limpia .visualizador {
+  margin-block: auto;
+}
+
+.vista-limpia-cerrar {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 1;
+  padding: 0.45em 0.9em;
+  border: 1px solid currentColor;
+  border-radius: 0.6em;
+  background: transparent;
+  color: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.vista-limpia-cerrar:hover {
+  background-color: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.vista-limpia-cerrar:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
 .visualizador-header button,
 .temas button,
 .guardar-tema button,

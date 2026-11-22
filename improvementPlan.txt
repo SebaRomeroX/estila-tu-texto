@@ -649,6 +649,20 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (113/113 ramas) · build OK · axe 0.
 
+[x] P2-39 Vista limpia / pantalla completa  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - Botón "Vista limpia" en el header del preview: overlay fijo con solo el
+      texto estilado sobre el fondo del usuario, sin controles de edición.
+    - Usa el mismo estilosToPreviewStyle y las clases de capitular/selección,
+      así que la vista coincide con el preview y con el snippet.
+    - role="dialog" + aria-modal + nombre accesible; el foco va al cierre al
+      abrir, Tab queda atrapado ahí, Escape cierra y el foco vuelve al botón.
+    - El scroll del body se bloquea mientras está abierta y se restaura al
+      cerrar; el padding superior deja libre la esquina del botón de cierre.
+    - Tests: 3 de integración + 1 de axe con la vista abierta → 186/186.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (113/113 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -845,7 +859,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           resplandor),
                                           P2-36 ✔ (color de selección),
                                           P2-37 ✔ (tamaño de letra en rem),
-                                          P2-38 ✔ (descargar imagen PNG)
+                                          P2-38 ✔ (descargar imagen PNG),
+                                          P2-39 ✔ (vista limpia)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1272,6 +1287,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       un fallo deja el botón listo para reintentar.
     - Tests: 4 nuevos → 182/182 · coverage 113/113 ramas · build OK · axe 0.
 
+2026-11-22 · Post-plan · P2-39 COMPLETADO — "feat(preview): vista limpia a
+  pantalla completa"
+    - Overlay con solo el texto estilado, sin header ni controles: sirve para
+      leer, mostrar en una presentación o capturar la pantalla.
+    - Reutiliza el mismo style object y las clases de capitular/selección, sin
+      tocar el CSS del snippet.
+    - Diálogo accesible: foco al cierre, Tab atrapado, Escape cierra, foco
+      restaurado y scroll del body bloqueado mientras está abierta.
+    - Tests: 4 nuevos → 186/186 · coverage 113/113 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1280,7 +1305,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 182 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 186 tests · cobertura 100% de la
         lógica pura (113/113 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -1316,7 +1341,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 40/40 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 41/41 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1354,15 +1379,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   generado. P2-36 agrega selección personalizada (fondo + color de texto) con
   aviso de contraste WCAG, también apagada por defecto. P2-37 pasa el tamaño
   del bloque a rem (sin selector) para no depender del contexto de pegado.
-  P2-38 agrega la descarga del preview como PNG con html-to-image.
+  P2-38 agrega la descarga del preview como PNG con html-to-image. P2-39 suma
+  una vista limpia a pantalla completa, accesible y sin tocar el snippet.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-38 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-39 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
-  el tamaño en rem y la descarga como imagen.
+  el tamaño en rem, la descarga como imagen y la vista limpia.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1431,12 +1457,13 @@ D) FUNCIONES DE PRODUCTO
   - Modo claro/oscuro de la app                                  M
   - PWA / offline                                                M
   - Exportar imagen (redes)                                      M  → P2-38
+  - Vista limpia / pantalla completa (sin controles)             S  → P2-39
   - og:image (diferido en P2-14c)                                M
 
 E) CALIDAD TÉCNICA
   - TypeScript estricto (hoy JSDoc + strict:false)               L
   - Playwright + snapshots visuales (contraste real)             M
-  - Code splitting (bundle ~197 KB JS)                           S
+  - Code splitting (bundle ~222 KB JS; html-to-image ya va en chunk aparte) S
   - i18n                                                         L
 
 TOP 5 ELEGIDOS (esta tanda, en este orden) — IMPLEMENTADOS 2026-11-18:

@@ -724,6 +724,64 @@ describe('descargar imagen', () => {
   })
 })
 
+describe('vista limpia', () => {
+  it('muestra solo el texto, sin campos editables, sobre los estilos actuales', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
+
+    const dialogo = screen.getByRole('dialog', { name: 'Vista limpia' })
+    expect(within(dialogo).getByText('Texto de Ejemplo')).toBeInTheDocument()
+    expect(dialogo.querySelector('[contenteditable]')).toBeNull()
+    expect(
+      within(dialogo).queryByRole('button', { name: /plantilla/i }),
+    ).toBeNull()
+    // fondo y color del usuario, igual que el preview
+    expect(dialogo.style.background).toBe('rgb(2, 2, 2)')
+    expect(dialogo.style.color).toBe('rgb(18, 52, 86)')
+    // el fondo de la página no scrollea mientras está abierta
+    expect(document.body.style.overflow).toBe('hidden')
+  })
+
+  it('Escape cierra y devuelve el foco y el scroll', () => {
+    const abrir = screen.getByRole('button', { name: /vista limpia/i })
+    abrir.focus()
+    fireEvent.click(abrir)
+
+    const dialogo = screen.getByRole('dialog', { name: 'Vista limpia' })
+    const cerrar = within(dialogo).getByRole('button', {
+      name: /cerrar vista limpia/i,
+    })
+    expect(cerrar).toHaveFocus()
+
+    fireEvent.keyDown(dialogo, { key: 'Escape' })
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(abrir).toHaveFocus()
+    expect(document.body.style.overflow).toBe('')
+  })
+
+  it('atrapa el Tab en el cierre y el botón también cierra', () => {
+    const abrir = screen.getByRole('button', { name: /vista limpia/i })
+    fireEvent.click(abrir)
+
+    const dialogo = screen.getByRole('dialog', { name: 'Vista limpia' })
+    const cerrar = within(dialogo).getByRole('button', {
+      name: /cerrar vista limpia/i,
+    })
+
+    fireEvent.keyDown(dialogo, { key: 'Tab' })
+    expect(cerrar).toHaveFocus()
+
+    fireEvent.click(cerrar)
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(abrir).toHaveFocus()
+  })
+})
+
 describe('compartir por URL', () => {
   it('un enlace compartido gana sobre lo guardado y se limpia el hash', () => {
     const texto = { ...TEXTO_POR_DEFECTO, titulo: 'Texto compartido' }
@@ -779,6 +837,21 @@ describe('accesibilidad', () => {
     })
 
     // aserción estricta: cero violaciones de cualquier impacto
+    expect(
+      violations.map((violacion) => `${violacion.impact}:${violacion.id}`),
+    ).toEqual([])
+  })
+
+  it('la vista limpia tampoco introduce violaciones', async () => {
+    fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
+
+    const { violations } = await axe.run(container, {
+      resultTypes: ['violations'],
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    })
+
     expect(
       violations.map((violacion) => `${violacion.impact}:${violacion.id}`),
     ).toEqual([])

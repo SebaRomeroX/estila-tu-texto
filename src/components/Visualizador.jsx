@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
 import { descargarImagen } from '../lib/descargarImagen.js'
 import { estilosToPreviewStyle } from '../lib/estilos.js'
@@ -18,6 +18,21 @@ const CAMPOS = [
 ]
 
 /**
+ * Texto no editable para la vista limpia: los mismos campos y etiquetas que el
+ * preview, pero sin contentEditable ni nombres accesibles de campo.
+ *
+ * @param {{ texto: import('../types.js').Texto }} props
+ */
+const ContenidoTexto = ({ texto }) => (
+  <>
+    {CAMPOS.map(({ campo, etiqueta }) => {
+      const Tag = /** @type {any} */ (etiqueta)
+      return <Tag key={campo}>{texto[campo]}</Tag>
+    })}
+  </>
+)
+
+/**
  * @param {import('../types.js').ParametrosVisualizador} props
  */
 export const Visualizador = ({
@@ -32,6 +47,48 @@ export const Visualizador = ({
   const activa = plantillaActiva(texto)
   const articuloRef = useRef(/** @type {HTMLElement | null} */ (null))
   const [estadoImagen, setEstadoImagen] = useState('idle')
+  const [vistaLimpia, setVistaLimpia] = useState(false)
+  const botonVistaRef = useRef(/** @type {HTMLButtonElement | null} */ (null))
+  const cerrarVistaRef = useRef(/** @type {HTMLButtonElement | null} */ (null))
+  const clasesVisualizador =
+    'visualizador' +
+    (conCapitular ? ' visualizador-capitular' : '') +
+    (conSeleccion ? ' visualizador-seleccion' : '')
+
+  // la vista limpia bloquea el scroll de la página, lleva el foco al cierre y
+  // lo devuelve al botón que la abrió al salir (Escape o "Cerrar")
+  useEffect(() => {
+    if (!vistaLimpia) return
+
+    const overflowPrevio = document.body.style.overflow
+    const botonQueAbrio = botonVistaRef.current
+    document.body.style.overflow = 'hidden'
+    cerrarVistaRef.current?.focus()
+
+    return () => {
+      document.body.style.overflow = overflowPrevio
+      botonQueAbrio?.focus()
+    }
+  }, [vistaLimpia])
+
+  /**
+   * Con un solo control enfocable, el Tab se queda en el cierre: es un foco
+   * atrapado real y no depende de que el navegador entienda aria-modal.
+   *
+   * @param {import('react').KeyboardEvent<HTMLDivElement>} e
+   */
+  function manejarTeclaVistaLimpia(e) {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      setVistaLimpia(false)
+      return
+    }
+
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      cerrarVistaRef.current?.focus()
+    }
+  }
 
   /**
    * Captura el artículo tal como se ve (fondo y estilos incluidos) y dispara
@@ -110,6 +167,13 @@ export const Visualizador = ({
             >
               {estadoImagen === 'generando' ? 'Generando…' : 'Descargar imagen'}
             </button>
+            <button
+              type='button'
+              ref={botonVistaRef}
+              onClick={() => setVistaLimpia(true)}
+            >
+              Vista limpia <span aria-hidden='true'>⛶</span>
+            </button>
             <button type='button' onClick={restablecerTexto}>
               Restablecer texto ↺
             </button>
@@ -124,11 +188,7 @@ export const Visualizador = ({
 
         <article
           ref={articuloRef}
-          className={
-            'visualizador' +
-            (conCapitular ? ' visualizador-capitular' : '') +
-            (conSeleccion ? ' visualizador-seleccion' : '')
-          }
+          className={clasesVisualizador}
           spellCheck='false'
           style={estilosToPreviewStyle(estilos)}
         >
@@ -143,6 +203,33 @@ export const Visualizador = ({
           ))}
         </article>
       </div>
+
+      {vistaLimpia && (
+        <div
+          className='vista-limpia'
+          role='dialog'
+          aria-modal='true'
+          aria-label='Vista limpia'
+          style={{ background: estilos.background, color: estilos.color }}
+          onKeyDown={manejarTeclaVistaLimpia}
+        >
+          <button
+            type='button'
+            ref={cerrarVistaRef}
+            className='vista-limpia-cerrar'
+            onClick={() => setVistaLimpia(false)}
+          >
+            Cerrar vista limpia <span aria-hidden='true'>✕</span>
+          </button>
+          <article
+            className={clasesVisualizador}
+            spellCheck='false'
+            style={estilosToPreviewStyle(estilos)}
+          >
+            <ContenidoTexto texto={texto} />
+          </article>
+        </div>
+      )}
     </section>
   )
 }
