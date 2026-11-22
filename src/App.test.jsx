@@ -61,7 +61,7 @@ describe('preview y snippet compartidos', () => {
   it('renderiza el texto por defecto en el preview y en el snippet', () => {
     expect(within(preview).getByText('Texto de Ejemplo')).toBeInTheDocument()
     expect(pre).toHaveTextContent('<h2>Texto de Ejemplo</h2>')
-    expect(pre).toHaveTextContent('font-size: 1.2em;')
+    expect(pre).toHaveTextContent('font-size: 1.2rem;')
   })
 
   it('cambiar el color actualiza el preview Y el snippet', () => {
@@ -150,12 +150,12 @@ describe('preview y snippet compartidos', () => {
   })
 
   it('cambiar el tamaño numérico actualiza el preview Y el snippet', () => {
-    fireEvent.change(screen.getByLabelText('Tamaño'), {
+    fireEvent.change(screen.getByLabelText('Tamaño (rem)'), {
       target: { value: '1.5' },
     })
 
-    expect(preview.style.fontSize).toBe('1.5em')
-    expect(pre).toHaveTextContent('font-size: 1.5em;')
+    expect(preview.style.fontSize).toBe('1.5rem')
+    expect(pre).toHaveTextContent('font-size: 1.5rem;')
   })
 
   it('el ancho de línea y el line-height llegan al preview y al snippet', () => {
@@ -303,29 +303,29 @@ describe('contraste WCAG', () => {
 
 describe('validación de rangos de los inputs numéricos', () => {
   it('un campo vacío no rompe el snippet y se revierte al desenfocar', () => {
-    const tamaño = screen.getByLabelText('Tamaño')
+    const tamaño = screen.getByLabelText('Tamaño (rem)')
     fireEvent.change(tamaño, { target: { value: '1.5' } })
 
     fireEvent.change(tamaño, { target: { value: '' } })
     // el contexto nunca recibió el string vacío
-    expect(pre).toHaveTextContent('font-size: 1.5em;')
+    expect(pre).toHaveTextContent('font-size: 1.5rem;')
 
     fireEvent.blur(tamaño)
     expect(tamaño).toHaveValue(1.5)
-    expect(pre).toHaveTextContent('font-size: 1.5em;')
-    expect(pre).not.toHaveTextContent('font-size: em;')
+    expect(pre).toHaveTextContent('font-size: 1.5rem;')
+    expect(pre).not.toHaveTextContent('font-size: rem;')
   })
 
   it('un valor fuera de rango se clampa en el blur', () => {
-    const tamaño = screen.getByLabelText('Tamaño') // min 1, max 2
+    const tamaño = screen.getByLabelText('Tamaño (rem)') // min 1, max 2
 
     fireEvent.change(tamaño, { target: { value: '99' } })
     // fuera de rango: el contexto se mantiene en el último valor válido
-    expect(pre).toHaveTextContent('font-size: 1.2em;')
+    expect(pre).toHaveTextContent('font-size: 1.2rem;')
 
     fireEvent.blur(tamaño)
     expect(tamaño).toHaveValue(2)
-    expect(pre).toHaveTextContent('font-size: 2em;')
+    expect(pre).toHaveTextContent('font-size: 2rem;')
   })
 })
 
@@ -445,7 +445,7 @@ describe('temas predefinidos', () => {
 
     expect(preview.style.color).toBe('rgb(240, 248, 255)') // #F0F8FF
     expect(preview.style.textAlign).toBe('left')
-    expect(pre).toHaveTextContent('font-size: 1.2em;')
+    expect(pre).toHaveTextContent('font-size: 1.2rem;')
   })
 
   it('restablecer estilos vuelve a los defaults tras editarlos', () => {
@@ -545,7 +545,7 @@ describe('deshacer, rehacer e historial', () => {
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
-    fireEvent.change(screen.getByLabelText('Tamaño'), {
+    fireEvent.change(screen.getByLabelText('Tamaño (rem)'), {
       target: { value: '1.5' },
     })
 
@@ -556,7 +556,7 @@ describe('deshacer, rehacer e historial', () => {
     fireEvent.change(historial, { target: { value: '0' } })
 
     expect(preview.style.color).toBe('rgb(240, 248, 255)')
-    expect(preview.style.fontSize).toBe('1.2em')
+    expect(preview.style.fontSize).toBe('1.2rem')
     expect(screen.getByRole('button', { name: 'Rehacer' })).toBeEnabled()
   })
 

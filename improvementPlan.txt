@@ -617,6 +617,20 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (112/112 ramas) · build OK · axe 0.
 
+[x] P2-37 Tamaño de letra en rem  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - El bloque emite font-size en rem (1.2rem por defecto) en vez de em: el
+      tamaño deja de depender del font-size heredado del contenedor y se ancla
+      al root de la página donde se pegue el snippet.
+    - El label pasa a "Tamaño (rem)"; el rango 1-2 no cambia y los espaciados
+      (letter/word-spacing, sangría, gap) siguen en em, relativos al texto.
+    - Sin selector de unidad, por decisión de producto.
+    - Snapshot actualizado una sola vez; las aserciones de tamaño se ajustaron
+      a rem (la escala del título y la capitular siguen en em).
+    - Tests: sin casos nuevos → 178/178.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (112/112 ramas) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -811,7 +825,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-34 ✔ (plantillas de texto),
                                           P2-35 ✔ (sombra de texto: suave y
                                           resplandor),
-                                          P2-36 ✔ (color de selección)
+                                          P2-36 ✔ (color de selección),
+                                          P2-37 ✔ (tamaño de letra en rem)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1220,6 +1235,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       indicador de contraste WCAG de la selección.
     - Tests: 5 nuevos → 178/178 · coverage 112/112 ramas · build OK · axe 0.
 
+2026-11-22 · Post-plan · P2-37 COMPLETADO — "refactor(estilos): tamaño de letra
+  en rem"
+    - El tamaño del bloque pasa de em a rem para no depender del font-size
+      heredado del contenedor donde se pegue el snippet.
+    - Label "Tamaño (rem)", sin selector de unidad; espaciados y escala del
+      título siguen en em.
+    - Snapshot actualizado una vez y aserciones ajustadas; sin tests nuevos.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1264,7 +1287,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 38/38 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 39/39 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1300,14 +1323,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   Actualización 2026-11-22 (post-plan): P2-35 suma sombra de texto con dos
   presets (suave y resplandor), apagada por defecto para no alterar el CSS
   generado. P2-36 agrega selección personalizada (fondo + color de texto) con
-  aviso de contraste WCAG, también apagada por defecto.
+  aviso de contraste WCAG, también apagada por defecto. P2-37 pasa el tamaño
+  del bloque a rem (sin selector) para no depender del contexto de pegado.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-36 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-37 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
-  capitular, las plantillas, la sombra de texto y la selección personalizada.
+  capitular, las plantillas, la sombra de texto, la selección personalizada y
+  el tamaño en rem.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1340,7 +1365,8 @@ A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
 B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
   - Ancho de línea (max-width en ch)                             S  → P2-22
   - line-height sin unidad (hoy 1.4em se multiplica)             S  → P2-22
-  - font-size en rem/px (opcional)                               S
+  - font-size en rem/px (opcional)                               S  → P2-37
+    (P2-37 fija rem sin selector; px queda diferido)
   - letter-spacing negativo (hoy min 0)                          S  → P2-30
   - pesos 300/700/800/900 (hoy 100/400/600)                      S  → P2-30
   - padding del bloque configurable (hoy 30px 60px fijo)         S

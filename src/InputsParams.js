@@ -13,7 +13,7 @@ export const InputsNumberParams = {
     step: 0.1,
   },
   tamaño: {
-    label: 'Tamaño',
+    label: 'Tamaño (rem)',
     campo: 'size',
     min: 1,
     max: 2,

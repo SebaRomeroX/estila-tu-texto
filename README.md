@@ -57,7 +57,7 @@
 
 - **Texto editable:** usa el default, escribe algo nuevo o pega otro texto
 - **Contraste verificado:** indicador WCAG en vivo (AAA / AA / insuficiente) del par texto/fondo
-- **Lectura cómoda:** ancho de línea en `ch` y `line-height` sin unidad
+- **Lectura cómoda:** tamaño en `rem`, ancho de línea en `ch` y `line-height` sin unidad
 - **Énfasis:** mayúsculas, capitalizar, subrayado, tachado y cursiva
 - **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos

@@ -93,7 +93,7 @@ export function estilosToStyleObject(estilos) {
     color,
     background,
     fontFamily: family,
-    fontSize: `${size}em`,
+    fontSize: `${size}rem`,
     fontWeight: weight,
     // valores libres del dominio (vienen de selects); en CSS son uniones
     fontStyle: /** @type {import('react').CSSProperties['fontStyle']} */ (

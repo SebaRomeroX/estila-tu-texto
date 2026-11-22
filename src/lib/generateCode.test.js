@@ -69,7 +69,7 @@ describe('estilosToStyleObject', () => {
       color: '#F0F8FF',
       background: '#020202',
       fontFamily: 'system-ui',
-      fontSize: '1.2em',
+      fontSize: '1.2rem',
       fontWeight: '400',
       fontStyle: 'normal',
       fontVariant: 'none',
@@ -88,7 +88,7 @@ describe('estilosToStyleObject', () => {
 
   it('refleja cambios de estado en el objeto de estilo', () => {
     const estilo = estilosToStyleObject({ ...ESTILOS, size: '2' })
-    expect(estilo.fontSize).toBe('2em')
+    expect(estilo.fontSize).toBe('2rem')
   })
 
   it('el ancho de línea sale en ch para adaptarse a la fuente', () => {
@@ -161,7 +161,7 @@ describe('estilosToPreviewStyle', () => {
     )
 
     expect(estilo['--escala-titulo']).toBe('1.8')
-    expect(estilo.fontSize).toBe('1.2em')
+    expect(estilo.fontSize).toBe('1.2rem')
     expect(estilo).not.toHaveProperty('escalaTitulo')
   })
 
@@ -210,9 +210,9 @@ describe('generateCode', () => {
       size: '2',
       align: 'center',
     })
-    expect(codigo).toContain('font-size: 2em;')
+    expect(codigo).toContain('font-size: 2rem;')
     expect(codigo).toContain('text-align: center;')
-    expect(codigo).not.toContain('font-size: 1.2em;')
+    expect(codigo).not.toContain('font-size: 1.2rem;')
   })
 
   it('genera el layout fijo del bloque', () => {
