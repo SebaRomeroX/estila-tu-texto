@@ -32,6 +32,7 @@
  * @property {string} tituloColor
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
+ * @property {string} fondoTransparente
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

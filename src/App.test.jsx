@@ -509,6 +509,60 @@ describe('padding del bloque', () => {
   })
 })
 
+describe('fondo transparente', () => {
+  function elegirTransparente() {
+    fireEvent.change(screen.getByLabelText('Fondo del bloque'), {
+      target: { value: 'si' },
+    })
+  }
+
+  it('quita el fondo del preview y muestra el tablero de referencia', () => {
+    expect(preview.style.background).toBe('rgb(2, 2, 2)')
+    expect(container.querySelector('.marco-transparente')).toBeNull()
+
+    elegirTransparente()
+
+    const transparente = /** @type {HTMLElement} */ (
+      container.querySelector('.visualizador')
+    )
+    expect(transparente.style.background).toBe('')
+    expect(transparente.parentElement).toHaveClass('marco-transparente')
+    expect(pre).not.toHaveTextContent('background: #020202;')
+    expect(
+      screen.getByText(/solo se usa como referencia de contraste/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Contraste texto/fondo (referencia)'),
+    ).toBeInTheDocument()
+  })
+
+  it('exporta la imagen sin fondo cuando es transparente', async () => {
+    vi.mocked(descargarImagen).mockResolvedValue(undefined)
+    elegirTransparente()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Descargar imagen' }))
+
+    await screen.findByText('Imagen descargada.')
+    expect(descargarImagen).toHaveBeenCalledWith(
+      container.querySelector('.visualizador'),
+      '',
+    )
+  })
+
+  it('la vista limpia conserva el tablero y el tema de la app', () => {
+    elegirTransparente()
+    fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
+
+    const dialogo = screen.getByRole('dialog', { name: 'Vista limpia' })
+    expect(dialogo.querySelector('.marco-transparente')).not.toBeNull()
+    expect(dialogo.style.background).toBe('var(--color-fondo)')
+    expect(
+      /** @type {HTMLElement} */ (dialogo.querySelector('.visualizador')).style
+        .background,
+    ).toBe('')
+  })
+})
+
 describe('temas predefinidos', () => {
   it('aplicar un tema cambia el preview Y el snippet', () => {
     fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))
@@ -922,6 +976,24 @@ describe('accesibilidad', () => {
   })
 
   it('la vista limpia tampoco introduce violaciones', async () => {
+    fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
+
+    const { violations } = await axe.run(container, {
+      resultTypes: ['violations'],
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    })
+
+    expect(
+      violations.map((violacion) => `${violacion.impact}:${violacion.id}`),
+    ).toEqual([])
+  })
+
+  it('el fondo transparente tampoco introduce violaciones', async () => {
+    fireEvent.change(screen.getByLabelText('Fondo del bloque'), {
+      target: { value: 'si' },
+    })
     fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
 
     const { violations } = await axe.run(container, {

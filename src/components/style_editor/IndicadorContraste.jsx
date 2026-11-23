@@ -14,9 +14,15 @@ export const IndicadorContraste = () => {
   // colores no parseables (storage editado a mano): no hay nada que informar
   if (!resultado) return null
 
+  // con fondo transparente el color guardado no pinta el bloque: el ratio es
+  // una referencia para el fondo donde se vaya a incrustar
+  const referencia = estilos.fondoTransparente === 'si'
+
   return (
     <p className='contraste'>
-      <span className='contraste-etiqueta'>Contraste texto/fondo</span>
+      <span className='contraste-etiqueta'>
+        Contraste texto/fondo{referencia ? ' (referencia)' : ''}
+      </span>
       <strong>{resultado.ratio.toFixed(2)}:1</strong>
       <span aria-hidden='true'>·</span>
       {resultado.nivel}
@@ -60,9 +66,13 @@ export const IndicadorContrasteTitulo = () => {
   const resultado = evaluarContraste(estilos.tituloColor, estilos.background)
   if (!resultado) return null
 
+  const referencia = estilos.fondoTransparente === 'si'
+
   return (
     <p className='contraste'>
-      <span className='contraste-etiqueta'>Contraste título</span>
+      <span className='contraste-etiqueta'>
+        Contraste título{referencia ? ' (referencia)' : ''}
+      </span>
       <strong>{resultado.ratio.toFixed(2)}:1</strong>
       <span aria-hidden='true'>·</span>
       {resultado.nivel}

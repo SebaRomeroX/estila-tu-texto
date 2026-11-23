@@ -42,6 +42,17 @@ describe('descargarImagen', () => {
     expect(document.querySelector('a[download]')).toBeNull()
   })
 
+  it('omite backgroundColor cuando el fondo es transparente', async () => {
+    vi.mocked(toPng).mockResolvedValue('data:image/png;base64,abc')
+
+    await descargarImagen(document.createElement('article'), '')
+
+    expect(toPng).toHaveBeenCalledWith(expect.any(HTMLElement), {
+      cacheBust: true,
+      pixelRatio: 2,
+    })
+  })
+
   it('acepta otro nombre y propaga el error de html-to-image', async () => {
     vi.mocked(toPng).mockResolvedValue('data:image/png;base64,xyz')
 

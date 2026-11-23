@@ -193,8 +193,15 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.gap} />
         <InputSelect elemento={InputsSelectsParams.align} />
         <InputColor elemento={InputsColorParams.color} />
+        <InputSelect elemento={InputsSelectsParams.fondoTransparente} />
         <InputColor elemento={InputsColorParams.fondo} />
       </div>
+      {estilos.fondoTransparente === 'si' && (
+        <p className='aviso-fondo'>
+          Con fondo transparente, «Color fondo» solo se usa como referencia de
+          contraste: el bloque y la imagen se exportan sin fondo.
+        </p>
+      )}
       <IndicadorContraste />
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.peso} />

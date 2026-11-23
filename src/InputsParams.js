@@ -114,6 +114,14 @@ export const InputsSelectsParams = {
       { nombre: 'centrado', contenido: 'center' },
     ],
   },
+  fondoTransparente: {
+    label: 'Fondo del bloque',
+    campo: 'fondoTransparente',
+    opciones: [
+      { nombre: 'color sólido', contenido: 'no' },
+      { nombre: 'transparente', contenido: 'si' },
+    ],
+  },
   peso: {
     label: 'Ancho letra',
     campo: 'weight',

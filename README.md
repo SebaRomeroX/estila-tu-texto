@@ -59,13 +59,14 @@
 - **Contraste verificado:** indicador WCAG en vivo (AAA / AA / insuficiente) del par texto/fondo
 - **Lectura cómoda:** tamaño en `rem`, ancho de línea en `ch` y `line-height` sin unidad
 - **Padding ajustable:** margen interno del bloque en píxeles, igual en preview, snippet e imagen
+- **Fondo transparente:** bloque sin fondo para incrustarlo en cualquier superficie; el preview usa un tablero de referencia y el PNG se exporta transparente
 - **Énfasis:** mayúsculas, capitalizar, subrayado, tachado y cursiva
 - **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Título independiente:** fuente, peso y color propios para el título, sin cambiar los párrafos
 - **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
-- **Descargar imagen PNG:** la vista previa tal como se ve (fondo y estilos incluidos) en 2x, ideal para redes
+- **Descargar imagen PNG:** la vista previa tal como se ve (fondo o transparencia incluidos) en 2x, ideal para redes
 - **Vista limpia:** pantalla completa con solo tu texto estilado, sin controles, para leer o mostrar
 - **Temas propios:** guarda la combinación actual con un nombre y reaplícala cuando quieras (se queda en este navegador)
 - **Deshacer y rehacer:** historial de la sesión con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control

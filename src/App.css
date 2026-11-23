@@ -266,6 +266,15 @@ body {
   font-size: 0.95em;
 }
 
+/* modo transparente: aclara que el color de fondo queda como referencia */
+.aviso-fondo {
+  margin: 0 2em 1em;
+  padding: 0.6em 0.9em;
+  border-left: 3px solid var(--color-foco);
+  background-color: rgba(45, 90, 173, 0.14);
+  font-size: 0.95em;
+}
+
 .inputs-configuracion input,
 .inputs-configuracion select,
 .guardar-tema input,
@@ -416,6 +425,25 @@ body {
   /* el ancho máximo viene del estado (max-width en ch); con esto el bloque
      queda centrado en la sección en vez de pegado a la izquierda */
   margin-inline: auto;
+}
+
+/* tablero de transparencia: va fuera del article para que la exportación
+   capture el texto sin fondo y el tablero no se cuele en el PNG */
+.marco-transparente {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: 0.6em;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.5em;
+  background: repeating-conic-gradient(#e8e8e8 0% 25%, #ffffff 0% 50%) 50% /
+    1.5em 1.5em;
+  box-sizing: border-box;
+}
+
+/* en la vista limpia el marco es el ítem flex que se centra en pantalla */
+.vista-limpia .marco-transparente {
+  margin-block: auto;
 }
 
 /* escala del título: la variable la pone Visualizador desde el estado, igual
@@ -682,6 +710,10 @@ body {
   }
 
   .aviso-fuente {
+    margin: 0 0 1em;
+  }
+
+  .aviso-fondo {
     margin: 0 0 1em;
   }
 

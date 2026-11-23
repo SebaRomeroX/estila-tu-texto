@@ -33,6 +33,20 @@ const ContenidoTexto = ({ texto }) => (
 )
 
 /**
+ * Tablero de referencia detrás del artículo cuando el fondo es transparente.
+ * Va fuera del article a propósito: la exportación captura solo el artículo,
+ * así que el PNG conserva la transparencia y el tablero no se cuela.
+ *
+ * @param {{ transparente: boolean, children: import('react').ReactNode }} props
+ */
+const Marco = ({ transparente, children }) =>
+  transparente ? (
+    <div className='marco-transparente'>{children}</div>
+  ) : (
+    <>{children}</>
+  )
+
+/**
  * @param {import('../types.js').ParametrosVisualizador} props
  */
 export const Visualizador = ({
@@ -44,6 +58,7 @@ export const Visualizador = ({
   const { estilos } = useContext(EstilosContext)
   const conCapitular = estilos.letraCapitular === 'primera'
   const conSeleccion = estilos.seleccion === 'personalizada'
+  const conFondoTransparente = estilos.fondoTransparente === 'si'
   const activa = plantillaActiva(texto)
   const articuloRef = useRef(/** @type {HTMLElement | null} */ (null))
   const [estadoImagen, setEstadoImagen] = useState('idle')
@@ -99,7 +114,12 @@ export const Visualizador = ({
 
     setEstadoImagen('generando')
     try {
-      await descargarImagen(articuloRef.current, estilos.background)
+      // sin fondo el PNG sale transparente: el tablero del preview es solo
+      // una referencia visual y no debe terminar en la imagen
+      await descargarImagen(
+        articuloRef.current,
+        conFondoTransparente ? '' : estilos.background,
+      )
       setEstadoImagen('listo')
     } catch {
       setEstadoImagen('error')
@@ -139,8 +159,16 @@ export const Visualizador = ({
   return (
     // el encabezado del preview vive sobre el fondo del usuario: debe usar
     // también SU color de texto, si no pierde contraste (ej. tema Editorial:
-    // aliceblue sobre beige). La tipografía del header no se toca.
-    <section style={{ background: estilos.background, color: estilos.color }}>
+    // aliceblue sobre beige). La tipografía del header no se toca. Con fondo
+    // transparente no hay color de fondo propio: el header vuelve al tema de
+    // la app para no quedar sobre el tablero.
+    <section
+      style={
+        conFondoTransparente
+          ? undefined
+          : { background: estilos.background, color: estilos.color }
+      }
+    >
       <div className='seccion'>
         <div className='visualizador-header'>
           <h2 className='titulo'>Vista previa</h2>
@@ -186,22 +214,24 @@ export const Visualizador = ({
           </div>
         </div>
 
-        <article
-          ref={articuloRef}
-          className={clasesVisualizador}
-          spellCheck='false'
-          style={estilosToPreviewStyle(estilos)}
-        >
-          {CAMPOS.map(({ campo, etiqueta, nombre }) => (
-            <EditableText
-              key={campo}
-              etiqueta={etiqueta}
-              nombre={nombre}
-              valor={texto[campo]}
-              onCambio={(valor) => actualizarTexto(campo, valor)}
-            />
-          ))}
-        </article>
+        <Marco transparente={conFondoTransparente}>
+          <article
+            ref={articuloRef}
+            className={clasesVisualizador}
+            spellCheck='false'
+            style={estilosToPreviewStyle(estilos)}
+          >
+            {CAMPOS.map(({ campo, etiqueta, nombre }) => (
+              <EditableText
+                key={campo}
+                etiqueta={etiqueta}
+                nombre={nombre}
+                valor={texto[campo]}
+                onCambio={(valor) => actualizarTexto(campo, valor)}
+              />
+            ))}
+          </article>
+        </Marco>
       </div>
 
       {vistaLimpia && (
@@ -210,7 +240,14 @@ export const Visualizador = ({
           role='dialog'
           aria-modal='true'
           aria-label='Vista limpia'
-          style={{ background: estilos.background, color: estilos.color }}
+          style={
+            conFondoTransparente
+              ? {
+                  background: 'var(--color-fondo)',
+                  color: 'var(--color-texto)',
+                }
+              : { background: estilos.background, color: estilos.color }
+          }
           onKeyDown={manejarTeclaVistaLimpia}
         >
           <button
@@ -221,13 +258,15 @@ export const Visualizador = ({
           >
             Cerrar vista limpia <span aria-hidden='true'>✕</span>
           </button>
-          <article
-            className={clasesVisualizador}
-            spellCheck='false'
-            style={estilosToPreviewStyle(estilos)}
-          >
-            <ContenidoTexto texto={texto} />
-          </article>
+          <Marco transparente={conFondoTransparente}>
+            <article
+              className={clasesVisualizador}
+              spellCheck='false'
+              style={estilosToPreviewStyle(estilos)}
+            >
+              <ContenidoTexto texto={texto} />
+            </article>
+          </Marco>
         </div>
       )}
     </section>

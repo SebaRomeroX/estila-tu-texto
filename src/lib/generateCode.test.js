@@ -41,6 +41,7 @@ const ESTILOS = {
   tituloColor: '',
   paddingVertical: '30',
   paddingHorizontal: '60',
+  fondoTransparente: 'no',
 }
 
 const TEXTO = {
@@ -230,6 +231,20 @@ describe('estilosToPreviewStyle', () => {
     )
     expect(propio.padding).toBe('50px 80px')
   })
+
+  it('omite el fondo del preview cuando es transparente', () => {
+    const porDefecto = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle(ESTILOS)
+    )
+    expect(porDefecto.background).toBe('#020202')
+
+    const transparente = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({ ...ESTILOS, fondoTransparente: 'si' })
+    )
+    expect(transparente).not.toHaveProperty('background')
+    // el color de letra no se toca: sigue siendo el del usuario
+    expect(transparente.color).toBe('#F0F8FF')
+  })
 })
 
 describe('generateCode', () => {
@@ -274,6 +289,20 @@ describe('generateCode', () => {
 
     expect(codigo).toContain('padding: 50px 80px;')
     expect(codigo).not.toContain('padding: 30px 60px;')
+  })
+
+  it('omite el fondo del snippet cuando es transparente', () => {
+    expect(generateCode(TEXTO, ESTILOS)).toContain('background: #020202;')
+
+    const transparente = generateCode(TEXTO, {
+      ...ESTILOS,
+      fondoTransparente: 'si',
+    })
+
+    expect(transparente).not.toContain('background: #020202;')
+    expect(transparente).not.toContain('background:')
+    // el resto del bloque sigue intacto
+    expect(transparente).toContain('color: #F0F8FF;')
   })
 
   it('emite el ancho de línea y el line-height sin unidad', () => {

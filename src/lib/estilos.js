@@ -33,6 +33,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   tituloColor: '',
   paddingVertical: '30',
   paddingHorizontal: '60',
+  fondoTransparente: 'no',
 })
 
 /**
@@ -103,6 +104,7 @@ export function estilosToStyleObject(estilos) {
   const {
     color,
     background,
+    fondoTransparente,
     family,
     size,
     weight,
@@ -122,7 +124,10 @@ export function estilosToStyleObject(estilos) {
 
   return {
     color,
-    background,
+    // fondo transparente: no se emite la propiedad (ni en el preview ni en el
+    // CSS). El color guardado queda como referencia de contraste y para
+    // cuando se vuelve al fondo sólido.
+    ...(fondoTransparente === 'si' ? {} : { background }),
     fontFamily: family,
     fontSize: `${size}rem`,
     fontWeight: weight,

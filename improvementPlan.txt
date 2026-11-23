@@ -695,6 +695,26 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (276/276 statements, 131/131 ramas, 68/68 funciones) · build OK · axe 0.
 
+[x] P2-42 Fondo transparente  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - Nuevo campo fondoTransparente ("no" | "si") con select "Fondo del
+      bloque" (color sólido / transparente).
+    - estilosToStyleObject omite background cuando es transparente, así que
+      el preview y el snippet no pintan fondo. Con los defaults el snapshot
+      no cambia.
+    - El preview y la vista limpia envuelven el article en un tablero de
+      transparencia; el marco queda fuera del article para que la exportación
+      PNG no lo capture.
+    - descargarImagen omite backgroundColor cuando recibe un fondo vacío: la
+      imagen sale con transparencia real.
+    - En modo transparente el header del preview y la vista limpia usan el
+      tema de la app (el color del usuario no queda sobre el tablero), y el
+      color de fondo guardado se usa como referencia de contraste: los
+      indicadores lo aclaran con "(referencia)".
+    - Tests: 7 nuevos → 204/204.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (276/276 statements, 135/135 ramas, 68/68 funciones) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -894,7 +914,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-38 ✔ (descargar imagen PNG),
                                           P2-39 ✔ (vista limpia),
                                           P2-40 ✔ (título con estilo propio),
-                                          P2-41 ✔ (padding configurable)
+                                          P2-41 ✔ (padding configurable),
+                                          P2-42 ✔ (fondo transparente)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1348,6 +1369,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - La imagen exportada también respeta el padding al capturar el article.
     - Tests: 3 nuevos → 197/197 · coverage 131/131 ramas · build OK · axe 0.
 
+2026-11-22 · Post-plan · P2-42 COMPLETADO — "feat(estilos): fondo transparente"
+    - El bloque puede salir sin fondo: se omite background en el CSS, el
+      preview usa un tablero de referencia y el PNG se exporta transparente.
+    - El tablero vive fuera del article para no colarse en la imagen; header
+      y vista limpia vuelven al tema de la app, y el contraste se marca como
+      referencia.
+    - Tests: 7 nuevos → 204/204 · coverage 135/135 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1356,8 +1385,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 197 tests · cobertura 100% de la
-        lógica pura (131/131 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 204 tests · cobertura 100% de la
+        lógica pura (135/135 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1392,7 +1421,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 43/43 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 44/44 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1434,15 +1463,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   una vista limpia a pantalla completa, accesible y sin tocar el snippet.
   P2-40 separa fuente, peso y color del título del resto del texto.
   P2-41 hace configurable el padding del bloque y lo unifica con el preview.
+  P2-42 agrega fondo transparente con tablero de referencia y PNG sin fondo.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-41 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-42 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
   el tamaño en rem, la descarga como imagen, la vista limpia, el título con
-  estilo propio y el padding configurable.
+  estilo propio, el padding configurable y el fondo transparente.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1480,7 +1510,9 @@ B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
   - letter-spacing negativo (hoy min 0)                          S  → P2-30
   - pesos 300/700/800/900 (hoy 100/400/600)                      S  → P2-30
   - padding del bloque configurable (hoy 30px 60px fijo)         S  → P2-41
-  - border, border-radius, fondo transparente                    M
+  - border, border-radius, fondo transparente                    M  → P2-42
+    (P2-42 resuelve solo el fondo transparente; borde y radio siguen
+     diferidos)
 
 C) EFECTOS "WOW" (diferenciadores visuales)
   - texto con degradado (background-clip: text)                  S
