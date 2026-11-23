@@ -663,6 +663,25 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (113/113 ramas) · build OK · axe 0.
 
+[x] P2-40 Fuente, peso y color propios del título  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - Tres campos nuevos: tituloFamilia ("heredar" o cualquier fuente del
+      catálogo), tituloPeso ("predeterminada" o 100-900) y tituloColor (vacío =
+      heredar; se activa con "Color propio").
+    - La regla .texto h2 emite font-family, font-weight y color solo cuando el
+      usuario los define; con los defaults no agrega nada y el snapshot no
+      cambia. El subtítulo (h3) sigue el estilo del cuerpo.
+    - Preview con variables --titulo-familia/peso/color; el peso cae en bold
+      cuando no se personaliza, que es el que el navegador le da al h2.
+    - El color muestra el del cuerpo mientras hereda: activarlo no produce un
+      salto de contraste. Se suma "Contraste título".
+    - Las hojas de Google Fonts cubren también la fuente del título, sin
+      duplicar si cuerpo y título comparten la misma web.
+    - AvisoFuente revisa cuerpo y título (mensaje en singular o plural).
+    - Tests: 8 nuevos → 194/194.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (274/274 statements, 131/131 ramas, 66/66 funciones) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -860,7 +879,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-36 ✔ (color de selección),
                                           P2-37 ✔ (tamaño de letra en rem),
                                           P2-38 ✔ (descargar imagen PNG),
-                                          P2-39 ✔ (vista limpia)
+                                          P2-39 ✔ (vista limpia),
+                                          P2-40 ✔ (título con estilo propio)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1297,6 +1317,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       restaurado y scroll del body bloqueado mientras está abierta.
     - Tests: 4 nuevos → 186/186 · coverage 113/113 ramas · build OK · axe 0.
 
+2026-11-22 · Post-plan · P2-40 COMPLETADO — "feat(estilos): fuente, peso y color
+  propios del título"
+    - El h2 deja de heredar todo del cuerpo: puede tener familia, peso y color
+      propios sin afectar párrafos ni subtítulo.
+    - Todo es opcional: con los defaults no se emite CSS nuevo y el snapshot
+      queda intacto; el color propio arranca desde el color del cuerpo.
+    - Las webfonts del título se enlazan en el snippet y el documento, y el
+      aviso de fuentes no instaladas cubre cuerpo y título.
+    - Tests: 8 nuevos → 194/194 · coverage 131/131 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1305,8 +1335,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 186 tests · cobertura 100% de la
-        lógica pura (113/113 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 194 tests · cobertura 100% de la
+        lógica pura (131/131 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1341,7 +1371,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 41/41 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 42/42 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1381,14 +1411,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   del bloque a rem (sin selector) para no depender del contexto de pegado.
   P2-38 agrega la descarga del preview como PNG con html-to-image. P2-39 suma
   una vista limpia a pantalla completa, accesible y sin tocar el snippet.
+  P2-40 separa fuente, peso y color del título del resto del texto.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-39 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-40 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
-  el tamaño en rem, la descarga como imagen y la vista limpia.
+  el tamaño en rem, la descarga como imagen, la vista limpia y el título con
+  estilo propio.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1451,6 +1483,7 @@ D) FUNCIONES DE PRODUCTO
     (Roboto, Open Sans, Garamond... no se cargan: el preview miente
      en equipos que no las tienen)
   - Escala/peso del título (título != párrafo)                   M  → P2-25
+  - Fuente/peso/color del título independientes del cuerpo       M  → P2-40
   - Contador de palabras / tiempo de lectura                     S
   - Plantillas de texto                                          S  → P2-34
   - Export a Tailwind                                            M

@@ -154,6 +154,22 @@ describe('preview y snippet compartidos', () => {
     expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
 
+  it('avisa si la fuente propia del título tampoco está instalada', () => {
+    Object.defineProperty(document, 'fonts', {
+      configurable: true,
+      value: { check: vi.fn(() => false) },
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: /^Georgia/ }))
+    fireEvent.change(screen.getByLabelText('Fuente título'), {
+      target: { value: 'Garamond, serif' },
+    })
+
+    expect(
+      screen.getByText(/«Georgia» y «Garamond» no están instaladas/i),
+    ).toBeInTheDocument()
+  })
+
   it('cambiar el tamaño numérico actualiza el preview Y el snippet', () => {
     fireEvent.change(screen.getByLabelText('Tamaño (rem)'), {
       target: { value: '1.5' },
@@ -427,6 +443,52 @@ describe('color de selección', () => {
     expect(preview).not.toHaveClass('visualizador-seleccion')
     expect(pre).not.toHaveTextContent('::selection')
     expect(screen.queryByText('Contraste selección')).not.toBeInTheDocument()
+  })
+})
+
+describe('estilos propios del título', () => {
+  it('la fuente y el peso del título no tocan el cuerpo', () => {
+    expect(preview.style.getPropertyValue('--titulo-familia')).toBe('')
+    expect(preview.style.getPropertyValue('--titulo-peso')).toBe('')
+
+    fireEvent.change(screen.getByLabelText('Fuente título'), {
+      target: { value: 'Georgia, serif' },
+    })
+    fireEvent.change(screen.getByLabelText('Ancho título'), {
+      target: { value: '900' },
+    })
+
+    expect(preview.style.getPropertyValue('--titulo-familia')).toBe(
+      'Georgia, serif',
+    )
+    expect(preview.style.getPropertyValue('--titulo-peso')).toBe('900')
+    // el bloque sigue con la tipografía del cuerpo
+    expect(preview.style.fontFamily).toBe('system-ui')
+    expect(preview.style.fontWeight).toBe('400')
+    expect(pre).toHaveTextContent('font-family: Georgia, serif;')
+    expect(pre).toHaveTextContent('font-weight: 900;')
+  })
+
+  it('el color propio del título se activa y se hereda al desactivarlo', () => {
+    expect(preview.style.getPropertyValue('--titulo-color')).toBe('')
+    expect(screen.queryByText('Contraste título')).not.toBeInTheDocument()
+
+    const colorTitulo = screen.getByLabelText('Color título')
+    expect(colorTitulo).toHaveValue(ESTILOS_POR_DEFECTO.color.toLowerCase())
+
+    fireEvent.change(colorTitulo, { target: { value: '#123456' } })
+
+    // elegir un color activa "Color propio"
+    expect(screen.getByLabelText('Color propio')).toBeChecked()
+    expect(preview.style.getPropertyValue('--titulo-color')).toBe('#123456')
+    expect(pre).toHaveTextContent('color: #123456;')
+    expect(screen.getByText('Contraste título')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByLabelText('Color propio'))
+
+    expect(preview.style.getPropertyValue('--titulo-color')).toBe('')
+    expect(pre).not.toHaveTextContent('color: #123456;')
+    expect(screen.queryByText('Contraste título')).not.toBeInTheDocument()
   })
 })
 

@@ -27,6 +27,9 @@
  * @property {string} seleccion
  * @property {string} seleccionFondo
  * @property {string} seleccionTexto
+ * @property {string} tituloFamilia
+ * @property {string} tituloPeso
+ * @property {string} tituloColor
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

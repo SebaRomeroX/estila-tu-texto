@@ -1,3 +1,5 @@
+import { FUENTES } from './lib/fuentes.js'
+
 /**
  * Fichas de configuración de cada input. Tipadas como ElementoInput para que
  * `campo` sea CampoEstilo (no string suelto) y el compilador valide los rangos.
@@ -63,6 +65,31 @@ export const InputsNumberParams = {
   },
 }
 
+/** @type {import('./types.js').Opcion[]} */
+const OPCIONES_PESO = [
+  { nombre: '100', contenido: 100 },
+  { nombre: '300', contenido: 300 },
+  { nombre: '400', contenido: 400 },
+  { nombre: '600', contenido: 600 },
+  { nombre: '700', contenido: 700 },
+  { nombre: '800', contenido: 800 },
+  { nombre: '900', contenido: 900 },
+]
+
+// el título puede heredar la fuente del cuerpo o elegir otra del catálogo
+/** @type {import('./types.js').Opcion[]} */
+const OPCIONES_FUENTE_TITULO = [
+  { nombre: 'igual al cuerpo', contenido: 'heredar' },
+  ...FUENTES.map(({ nombre, contenido }) => ({ nombre, contenido })),
+]
+
+// el peso por defecto del h2 es el bold del navegador, no el del cuerpo
+/** @type {import('./types.js').Opcion[]} */
+const OPCIONES_PESO_TITULO = [
+  { nombre: 'predeterminada (negrita)', contenido: 'heredar' },
+  ...OPCIONES_PESO,
+]
+
 /** @type {Record<string, import('./types.js').ElementoInput>} */
 export const InputsSelectsParams = {
   align: {
@@ -76,15 +103,17 @@ export const InputsSelectsParams = {
   peso: {
     label: 'Ancho letra',
     campo: 'weight',
-    opciones: [
-      { nombre: '100', contenido: 100 },
-      { nombre: '300', contenido: 300 },
-      { nombre: '400', contenido: 400 },
-      { nombre: '600', contenido: 600 },
-      { nombre: '700', contenido: 700 },
-      { nombre: '800', contenido: 800 },
-      { nombre: '900', contenido: 900 },
-    ],
+    opciones: OPCIONES_PESO,
+  },
+  tituloFamilia: {
+    label: 'Fuente título',
+    campo: 'tituloFamilia',
+    opciones: OPCIONES_FUENTE_TITULO,
+  },
+  tituloPeso: {
+    label: 'Ancho título',
+    campo: 'tituloPeso',
+    opciones: OPCIONES_PESO_TITULO,
   },
   transform: {
     label: 'Mayusculas',

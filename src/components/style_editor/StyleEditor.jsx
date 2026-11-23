@@ -17,9 +17,11 @@ import {
 import { InputNumber } from './InputNumber.jsx'
 import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'
+import { InputColorTitulo } from './InputColorTitulo.jsx'
 import {
   IndicadorContraste,
   IndicadorContrasteSeleccion,
+  IndicadorContrasteTitulo,
 } from './IndicadorContraste.jsx'
 import { AvisoFuente } from './AvisoFuente.jsx'
 import { SelectorFuente } from './SelectorFuente.jsx'
@@ -202,6 +204,12 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.ancho} />
         <InputNumber elemento={InputsNumberParams.escalaTitulo} />
       </div>
+      <div className='inputs-configuracion'>
+        <InputSelect elemento={InputsSelectsParams.tituloFamilia} />
+        <InputSelect elemento={InputsSelectsParams.tituloPeso} />
+        <InputColorTitulo />
+      </div>
+      <IndicadorContrasteTitulo />
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.transform} />
         <InputSelect elemento={InputsSelectsParams.decoracion} />

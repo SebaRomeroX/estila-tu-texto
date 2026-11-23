@@ -36,6 +36,9 @@ const ESTILOS = {
   seleccion: 'none',
   seleccionFondo: '#2F4F6F',
   seleccionTexto: '#FFFFFF',
+  tituloFamilia: 'heredar',
+  tituloPeso: 'heredar',
+  tituloColor: '',
 }
 
 const TEXTO = {
@@ -188,6 +191,27 @@ describe('estilosToPreviewStyle', () => {
     expect(estilo['--seleccion-fondo']).toBe('#123456')
     expect(estilo['--seleccion-texto']).toBe('#abcdef')
   })
+
+  it('solo agrega las variables del título cuando se personaliza', () => {
+    const porDefecto = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle(ESTILOS)
+    )
+    expect(porDefecto).not.toHaveProperty('--titulo-familia')
+    expect(porDefecto).not.toHaveProperty('--titulo-peso')
+    expect(porDefecto).not.toHaveProperty('--titulo-color')
+
+    const propio = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({
+        ...ESTILOS,
+        tituloFamilia: 'Georgia, serif',
+        tituloPeso: '900',
+        tituloColor: '#123456',
+      })
+    )
+    expect(propio['--titulo-familia']).toBe('Georgia, serif')
+    expect(propio['--titulo-peso']).toBe('900')
+    expect(propio['--titulo-color']).toBe('#123456')
+  })
 })
 
 describe('generateCode', () => {
@@ -315,6 +339,53 @@ describe('generateCode', () => {
     expect(conSeleccion).toContain('    color: #abcdef;')
   })
 
+  it('emite fuente, peso y color del título solo cuando se personalizan', () => {
+    /** @param {import('../types.js').Estilos} estilos */
+    const bloqueTitulo = (estilos) => {
+      const css = generateCss(estilos)
+      return css.slice(css.indexOf('.texto h2 {'), css.indexOf('.texto p {'))
+    }
+
+    const porDefecto = bloqueTitulo(ESTILOS)
+    expect(porDefecto).toContain('font-size: 1.5em;')
+    expect(porDefecto).not.toContain('font-family:')
+    expect(porDefecto).not.toContain('font-weight:')
+    expect(porDefecto).not.toContain('color:')
+
+    const propio = bloqueTitulo({
+      ...ESTILOS,
+      tituloFamilia: 'Georgia, serif',
+      tituloPeso: '900',
+      tituloColor: '#123456',
+    })
+    expect(propio).toContain('font-family: Georgia, serif;')
+    expect(propio).toContain('font-weight: 900;')
+    expect(propio).toContain('color: #123456;')
+  })
+
+  it('agrega la hoja de Google Fonts de la fuente propia del título', () => {
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      family: 'Open Sans, sans-serif',
+      tituloFamilia: 'Roboto, sans-serif',
+    })
+
+    expect(codigo).toContain('family=Open+Sans')
+    expect(codigo).toContain('family=Roboto')
+    expect(codigo).toContain('<!-- Fuentes web:')
+  })
+
+  it('no duplica la hoja si cuerpo y título comparten fuente web', () => {
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      family: 'Roboto, sans-serif',
+      tituloFamilia: 'Roboto, sans-serif',
+    })
+
+    expect(codigo.match(/fonts\.googleapis\.com/g)).toHaveLength(1)
+    expect(codigo).toContain('<!-- Fuente web:')
+  })
+
   it('agrega la hoja de Google Fonts solo para fuentes web', () => {
     const conWeb = generateCode(TEXTO, {
       ...ESTILOS,
@@ -412,5 +483,15 @@ describe('generateDocumento', () => {
     expect(generateDocumento(TEXTO, ESTILOS)).not.toContain(
       'fonts.googleapis.com',
     )
+  })
+
+  it('incluye la fuente propia del título en el head', () => {
+    const documento = generateDocumento(TEXTO, {
+      ...ESTILOS,
+      tituloFamilia: 'Roboto, sans-serif',
+    })
+    const head = documento.slice(0, documento.indexOf('</head>'))
+
+    expect(head).toContain('family=Roboto')
   })
 })

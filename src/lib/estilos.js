@@ -26,6 +26,11 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   seleccion: 'none',
   seleccionFondo: '#2F4F6F',
   seleccionTexto: '#FFFFFF',
+  // "heredar" y "" significan que el título sigue al cuerpo / al color
+  // heredado: con los defaults no se emite ninguna propiedad nueva
+  tituloFamilia: 'heredar',
+  tituloPeso: 'heredar',
+  tituloColor: '',
 })
 
 /**
@@ -56,6 +61,17 @@ export function estilosToPreviewStyle(estilos) {
     '--sangria': `${estilos.sangria}em`,
     '--seleccion-fondo': estilos.seleccionFondo,
     '--seleccion-texto': estilos.seleccionTexto,
+    // solo se emiten las variables del título cuando el usuario las cambió:
+    // con los defaults el preview sigue usando la herencia y el bold del UA
+    ...(estilos.tituloFamilia === 'heredar'
+      ? {}
+      : { '--titulo-familia': estilos.tituloFamilia }),
+    ...(estilos.tituloPeso === 'heredar'
+      ? {}
+      : { '--titulo-peso': estilos.tituloPeso }),
+    ...(estilos.tituloColor === ''
+      ? {}
+      : { '--titulo-color': estilos.tituloColor }),
   })
 }
 

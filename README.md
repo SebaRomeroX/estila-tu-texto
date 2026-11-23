@@ -61,6 +61,7 @@
 - **Énfasis:** mayúsculas, capitalizar, subrayado, tachado y cursiva
 - **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
+- **Título independiente:** fuente, peso y color propios para el título, sin cambiar los párrafos
 - **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
 - **Descargar imagen PNG:** la vista previa tal como se ve (fondo y estilos incluidos) en 2x, ideal para redes

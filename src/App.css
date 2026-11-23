@@ -227,6 +227,17 @@ body {
   font-family: monospace;
 }
 
+/* casilla "Color propio": fila, no columna como el resto de los labels */
+.campo-color label.campo-color-heredar {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.campo-color-heredar input {
+  accent-color: var(--color-foco);
+}
+
 /* ratio de contraste WCAG: texto real, no depende solo del color */
 .contraste {
   display: flex;
@@ -408,9 +419,14 @@ body {
 }
 
 /* escala del título: la variable la pone Visualizador desde el estado, igual
-   que la regla .texto h2 del snippet generado */
+   que la regla .texto h2 del snippet generado. Fuente, peso y color solo
+   cambian si el usuario los definió; si no, heredan como hasta ahora (el peso
+   cae en bold, que es el que el navegador le da a un h2). */
 .visualizador h2 {
   font-size: calc(1em * var(--escala-titulo, 1.5));
+  font-family: var(--titulo-familia, inherit);
+  font-weight: var(--titulo-peso, bold);
+  color: var(--titulo-color, inherit);
 }
 
 /* sangría solo en párrafos: text-indent es heredable y en el contenedor

@@ -48,3 +48,24 @@ export const IndicadorContrasteSeleccion = () => {
     </p>
   )
 }
+
+/**
+ * Contraste del color propio del título contra el fondo. Solo aparece cuando
+ * el título dejó de heredar: si hereda, ya lo cubre el indicador principal.
+ */
+export const IndicadorContrasteTitulo = () => {
+  const { estilos } = useContext(EstilosContext)
+  if (!estilos.tituloColor) return null
+
+  const resultado = evaluarContraste(estilos.tituloColor, estilos.background)
+  if (!resultado) return null
+
+  return (
+    <p className='contraste'>
+      <span className='contraste-etiqueta'>Contraste título</span>
+      <strong>{resultado.ratio.toFixed(2)}:1</strong>
+      <span aria-hidden='true'>·</span>
+      {resultado.nivel}
+    </p>
+  )
+}

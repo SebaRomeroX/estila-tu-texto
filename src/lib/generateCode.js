@@ -52,6 +52,29 @@ function generarArticulo(texto) {
 }
 
 /**
+ * Hojas de Google Fonts necesarias: la del cuerpo y, si el título tiene fuente
+ * propia, también la del título. Sin duplicados si ambos usan la misma web.
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string[]}
+ */
+function enlacesFuente(estilos) {
+  const familias = [estilos.family]
+  if (estilos.tituloFamilia !== 'heredar') {
+    familias.push(estilos.tituloFamilia)
+  }
+
+  /** @type {string[]} */
+  const enlaces = []
+  for (const familia of familias) {
+    const enlace = enlaceGoogleFonts(familia)
+    if (enlace && !enlaces.includes(enlace)) enlaces.push(enlace)
+  }
+
+  return enlaces
+}
+
+/**
  * Reglas CSS interiores del snippet (sin las etiquetas <style>).
  *
  * @param {import('../types.js').Estilos} estilos
@@ -71,9 +94,20 @@ function generarCssReglas(estilos) {
     `  }`,
     ``,
     // regla explícita del título: sin esto depende del UA y se rompe con
-    // cualquier reset (Tailwind preflight, normalize...)
+    // cualquier reset (Tailwind preflight, normalize...). Fuente, peso y color
+    // solo se emiten si el usuario los separó del cuerpo: el snapshot por
+    // defecto no cambia.
     `  .texto h2 {`,
     `    font-size: ${factorTitulo(estilos.escalaTitulo)}em;`,
+    ...(estilos.tituloFamilia === 'heredar'
+      ? []
+      : [`    font-family: ${estilos.tituloFamilia};`]),
+    ...(estilos.tituloPeso === 'heredar'
+      ? []
+      : [`    font-weight: ${estilos.tituloPeso};`]),
+    ...(estilos.tituloColor === ''
+      ? []
+      : [`    color: ${estilos.tituloColor};`]),
     `  }`,
     ``,
     // sangría solo en párrafos: text-indent se hereda y en el contenedor
@@ -125,15 +159,21 @@ function generarCss(estilos) {
  * @returns {string[]}
  */
 function generarHtmlConFuente(texto, estilos) {
-  const enlaceFuente = enlaceGoogleFonts(estilos.family)
+  const enlaces = enlacesFuente(estilos)
+  const comentario =
+    enlaces.length > 1
+      ? `<!-- Fuentes web: carga estas hojas para que el texto se vea igual fuera de la app -->`
+      : `<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->`
 
   return [
     // solo para fuentes web: sin esta hoja el snippet se ve distinto fuera de
     // la app (el navegador cae al fallback). Las del sistema no la necesitan.
-    ...(enlaceFuente
+    ...(enlaces.length > 0
       ? [
-          `<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->`,
-          `<link rel="stylesheet" href="${enlaceFuente}">`,
+          comentario,
+          ...enlaces.map(
+            (enlace) => `<link rel="stylesheet" href="${enlace}">`,
+          ),
           ``,
         ]
       : []),
@@ -187,7 +227,7 @@ export function generateCode(texto, estilos) {
  * @returns {string}
  */
 export function generateDocumento(texto, estilos) {
-  const enlaceFuente = enlaceGoogleFonts(estilos.family)
+  const enlaces = enlacesFuente(estilos)
   const titulo = texto.titulo.trim() || 'Estila tu Texto'
 
   return [
@@ -197,9 +237,7 @@ export function generateDocumento(texto, estilos) {
     `  <meta charset="utf-8">`,
     `  <meta name="viewport" content="width=device-width, initial-scale=1">`,
     `  <title>${escapeHtml(titulo)}</title>`,
-    ...(enlaceFuente
-      ? [`  <link rel="stylesheet" href="${enlaceFuente}">`]
-      : []),
+    ...enlaces.map((enlace) => `  <link rel="stylesheet" href="${enlace}">`),
     ...generarCss(estilos).map((linea) => (linea ? `  ${linea}` : '')),
     `</head>`,
     `<body>`,
