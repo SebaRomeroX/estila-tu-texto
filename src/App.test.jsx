@@ -492,6 +492,23 @@ describe('estilos propios del título', () => {
   })
 })
 
+describe('padding del bloque', () => {
+  it('cambia el margen interno del preview y del snippet', () => {
+    expect(preview.style.padding).toBe('30px 60px')
+
+    fireEvent.change(screen.getByLabelText('Padding vertical (px)'), {
+      target: { value: '50' },
+    })
+    fireEvent.change(screen.getByLabelText('Padding horizontal (px)'), {
+      target: { value: '80' },
+    })
+
+    expect(preview.style.padding).toBe('50px 80px')
+    expect(pre).toHaveTextContent('padding: 50px 80px;')
+    expect(pre).not.toHaveTextContent('padding: 30px 60px;')
+  })
+})
+
 describe('temas predefinidos', () => {
   it('aplicar un tema cambia el preview Y el snippet', () => {
     fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))

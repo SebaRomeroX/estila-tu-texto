@@ -31,6 +31,8 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   tituloFamilia: 'heredar',
   tituloPeso: 'heredar',
   tituloColor: '',
+  paddingVertical: '30',
+  paddingHorizontal: '60',
 })
 
 /**
@@ -47,6 +49,18 @@ export function factorTitulo(escalaTitulo) {
 }
 
 /**
+ * Padding del bloque en píxeles: vertical horizontal, como el atajo CSS.
+ * Vive fuera de estilosToStyleObject porque es parte del layout fijo, pero
+ * ahora es configurable; preview y snippet leen de acá para no divergir.
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function paddingBloque(estilos) {
+  return `${estilos.paddingVertical}px ${estilos.paddingHorizontal}px`
+}
+
+/**
  * Estilo del bloque para el preview: lo mismo que estilosToStyleObject más la
  * variable CSS de la escala del título. Va aparte porque es una variable, no
  * una propiedad del bloque, y no debe terminar en el snippet generado.
@@ -57,6 +71,7 @@ export function factorTitulo(escalaTitulo) {
 export function estilosToPreviewStyle(estilos) {
   return /** @type {import('react').CSSProperties} */ ({
     ...estilosToStyleObject(estilos),
+    padding: paddingBloque(estilos),
     '--escala-titulo': String(factorTitulo(estilos.escalaTitulo)),
     '--sangria': `${estilos.sangria}em`,
     '--seleccion-fondo': estilos.seleccionFondo,

@@ -1,4 +1,4 @@
-import { estilosToStyleObject, factorTitulo } from './estilos.js'
+import { estilosToStyleObject, factorTitulo, paddingBloque } from './estilos.js'
 import { enlaceGoogleFonts } from './fuentes.js'
 
 /**
@@ -26,10 +26,16 @@ const camelToKebab = (propiedad) =>
 
 // Layout fijo del bloque de texto: no es configurable por el usuario, por eso
 // vive acá como boilerplate y no en estilosToStyleObject.
-const LAYOUT_FIJO = [
+// Layout del bloque: la estructura es fija, pero el padding lo elige el
+// usuario. Vivir acá evita que preview y snippet tengan valores distintos.
+/**
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string[]}
+ */
+const layoutFijo = (estilos) => [
   'display: flex;',
   'flex-direction: column;',
-  'padding: 30px 60px;',
+  `padding: ${paddingBloque(estilos)};`,
   'margin-inline: auto;',
 ]
 
@@ -85,7 +91,7 @@ function generarCssReglas(estilos) {
     ...Object.entries(estilosToStyleObject(estilos)).map(
       ([propiedad, valor]) => `${camelToKebab(propiedad)}: ${valor};`,
     ),
-    ...LAYOUT_FIJO,
+    ...layoutFijo(estilos),
   ].map((declaracion) => `    ${declaracion}`)
 
   return [

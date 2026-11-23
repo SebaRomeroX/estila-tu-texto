@@ -39,6 +39,8 @@ const ESTILOS = {
   tituloFamilia: 'heredar',
   tituloPeso: 'heredar',
   tituloColor: '',
+  paddingVertical: '30',
+  paddingHorizontal: '60',
 }
 
 const TEXTO = {
@@ -212,6 +214,22 @@ describe('estilosToPreviewStyle', () => {
     expect(propio['--titulo-peso']).toBe('900')
     expect(propio['--titulo-color']).toBe('#123456')
   })
+
+  it('lleva el padding configurable al preview', () => {
+    const porDefecto = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle(ESTILOS)
+    )
+    expect(porDefecto.padding).toBe('30px 60px')
+
+    const propio = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({
+        ...ESTILOS,
+        paddingVertical: '50',
+        paddingHorizontal: '80',
+      })
+    )
+    expect(propio.padding).toBe('50px 80px')
+  })
 })
 
 describe('generateCode', () => {
@@ -245,6 +263,17 @@ describe('generateCode', () => {
     expect(codigo).toContain('flex-direction: column;')
     expect(codigo).toContain('padding: 30px 60px;')
     expect(codigo).toContain('margin-inline: auto;')
+  })
+
+  it('respeta el padding configurable', () => {
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      paddingVertical: '50',
+      paddingHorizontal: '80',
+    })
+
+    expect(codigo).toContain('padding: 50px 80px;')
+    expect(codigo).not.toContain('padding: 30px 60px;')
   })
 
   it('emite el ancho de línea y el line-height sin unidad', () => {

@@ -63,6 +63,20 @@ export const InputsNumberParams = {
     max: 200,
     step: 5,
   },
+  paddingVertical: {
+    label: 'Padding vertical (px)',
+    campo: 'paddingVertical',
+    min: 0,
+    max: 120,
+    step: 5,
+  },
+  paddingHorizontal: {
+    label: 'Padding horizontal (px)',
+    campo: 'paddingHorizontal',
+    min: 0,
+    max: 200,
+    step: 5,
+  },
 }
 
 /** @type {import('./types.js').Opcion[]} */

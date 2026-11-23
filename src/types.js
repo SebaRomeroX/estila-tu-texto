@@ -30,6 +30,8 @@
  * @property {string} tituloFamilia
  * @property {string} tituloPeso
  * @property {string} tituloColor
+ * @property {string} paddingVertical
+ * @property {string} paddingHorizontal
  *
  * @typedef {keyof Estilos} CampoEstilo
  *

@@ -682,6 +682,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (274/274 statements, 131/131 ramas, 66/66 funciones) · build OK · axe 0.
 
+[x] P2-41 Padding del bloque configurable  ✔ 2026-11-22
+  Verificado (2026-11-22):
+    - Nuevos campos paddingVertical y paddingHorizontal (px), con inputs
+      0-120 y 0-200 paso 5; default 30/60, el mismo layout de antes.
+    - lib/estilos.js expone paddingBloque(); el preview
+      (estilosToPreviewStyle) y el snippet (layout del bloque) leen de ahí,
+      así que la vista previa ahora muestra el padding real del snippet.
+    - Con los defaults el CSS generado es idéntico: el snapshot no cambia.
+    - La imagen exportada respeta el padding porque captura el mismo article.
+    - Tests: 3 nuevos → 197/197.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (276/276 statements, 131/131 ramas, 68/68 funciones) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -880,7 +893,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-37 ✔ (tamaño de letra en rem),
                                           P2-38 ✔ (descargar imagen PNG),
                                           P2-39 ✔ (vista limpia),
-                                          P2-40 ✔ (título con estilo propio)
+                                          P2-40 ✔ (título con estilo propio),
+                                          P2-41 ✔ (padding configurable)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1327,6 +1341,13 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       aviso de fuentes no instaladas cubre cuerpo y título.
     - Tests: 8 nuevos → 194/194 · coverage 131/131 ramas · build OK · axe 0.
 
+2026-11-22 · Post-plan · P2-41 COMPLETADO — "feat(estilos): padding del bloque
+  configurable"
+    - Dos controles en px (vertical/horizontal) con default 30/60; preview y
+      snippet comparten paddingBloque, así que dejan de divergir.
+    - La imagen exportada también respeta el padding al capturar el article.
+    - Tests: 3 nuevos → 197/197 · coverage 131/131 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1335,7 +1356,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 194 tests · cobertura 100% de la
+      - lint 0/0 · typecheck 0 errores · 197 tests · cobertura 100% de la
         lógica pura (131/131 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
@@ -1371,7 +1392,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 42/42 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 43/43 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1412,15 +1433,16 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   P2-38 agrega la descarga del preview como PNG con html-to-image. P2-39 suma
   una vista limpia a pantalla completa, accesible y sin tocar el snippet.
   P2-40 separa fuente, peso y color del título del resto del texto.
+  P2-41 hace configurable el padding del bloque y lo unifica con el preview.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-40 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-41 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
-  el tamaño en rem, la descarga como imagen, la vista limpia y el título con
-  estilo propio.
+  el tamaño en rem, la descarga como imagen, la vista limpia, el título con
+  estilo propio y el padding configurable.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1457,7 +1479,7 @@ B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
     (P2-37 fija rem sin selector; px queda diferido)
   - letter-spacing negativo (hoy min 0)                          S  → P2-30
   - pesos 300/700/800/900 (hoy 100/400/600)                      S  → P2-30
-  - padding del bloque configurable (hoy 30px 60px fijo)         S
+  - padding del bloque configurable (hoy 30px 60px fijo)         S  → P2-41
   - border, border-radius, fondo transparente                    M
 
 C) EFECTOS "WOW" (diferenciadores visuales)
