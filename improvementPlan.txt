@@ -715,6 +715,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (276/276 statements, 135/135 ramas, 68/68 funciones) · build OK · axe 0.
 
+[x] P2-43 Fuente, peso, color y tamaño propios del subtítulo  ✔ 2026-11-23
+  Verificado (2026-11-23):
+    - Cuatro campos nuevos: subtituloFamilia ("heredar" o fuente del catálogo),
+      subtituloPeso ("predeterminada" o 100-900), subtituloColor (vacío =
+      heredar) y escalaSubtitulo (100-200%, default 117 = el 1.17em del h3).
+    - La regla .texto h3 solo se emite cuando el usuario personaliza algo; con
+      los defaults el h3 conserva el tamaño y el bold del navegador y el
+      snapshot no cambia.
+    - Preview con variables --subtitulo-familia/peso/color y
+      --escala-subtitulo; cuerpo y título quedan intactos.
+    - Se agrega "Contraste subtítulo" y el aviso de fuentes no instaladas
+      cubre cuerpo, título y subtítulo con listas de dos o tres nombres.
+    - "Color propio" pasa a "Color propio título" / "Color propio subtítulo"
+      para que los dos checkboxes no compartan nombre accesible.
+    - Tests: 8 nuevos → 212/212.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (282/282 statements, 155/155 ramas, 70/70 funciones) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -915,7 +933,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
                                           P2-39 ✔ (vista limpia),
                                           P2-40 ✔ (título con estilo propio),
                                           P2-41 ✔ (padding configurable),
-                                          P2-42 ✔ (fondo transparente)
+                                          P2-42 ✔ (fondo transparente),
+                                          P2-43 ✔ (subtítulo con estilo propio)
   Fase 5 (tipos y DX):               P2-15 ✔, P2-16 ✔
                                      → FASE 5 COMPLETA 2026-10-29
 
@@ -1377,6 +1396,15 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       referencia.
     - Tests: 7 nuevos → 204/204 · coverage 135/135 ramas · build OK · axe 0.
 
+2026-11-23 · Post-plan · P2-43 COMPLETADO — "feat(estilos): subtítulo con
+  estilo propio"
+    - El h3 deja de seguir siempre al cuerpo: fuente, peso, color y escala
+      propios, con defaults que respetan el 1.17em y el bold del navegador.
+    - Sin personalización no se emite la regla .texto h3, así que el snapshot
+      por defecto queda intacto; las webfonts y el aviso de fuentes cubren
+      también al subtítulo.
+    - Tests: 8 nuevos → 212/212 · coverage 155/155 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1385,8 +1413,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 204 tests · cobertura 100% de la
-        lógica pura (135/135 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 212 tests · cobertura 100% de la
+        lógica pura (155/155 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1421,7 +1449,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 44/44 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 45/45 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1464,15 +1492,17 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   P2-40 separa fuente, peso y color del título del resto del texto.
   P2-41 hace configurable el padding del bloque y lo unifica con el preview.
   P2-42 agrega fondo transparente con tablero de referencia y PNG sin fondo.
+  P2-43 separa fuente, peso, color y escala del subtítulo.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-42 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-43 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
   el tamaño en rem, la descarga como imagen, la vista limpia, el título con
-  estilo propio, el padding configurable y el fondo transparente.
+  estilo propio, el padding configurable, el fondo transparente y el subtítulo
+  con estilo propio.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1538,6 +1568,7 @@ D) FUNCIONES DE PRODUCTO
      en equipos que no las tienen)
   - Escala/peso del título (título != párrafo)                   M  → P2-25
   - Fuente/peso/color del título independientes del cuerpo       M  → P2-40
+  - Fuente/peso/color/escala del subtítulo independientes       M  → P2-43
   - Contador de palabras / tiempo de lectura                     S
   - Plantillas de texto                                          S  → P2-34
   - Export a Tailwind                                            M

@@ -31,22 +31,47 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   tituloFamilia: 'heredar',
   tituloPeso: 'heredar',
   tituloColor: '',
+  // el subtítulo parte de lo que el navegador le da a un h3 (1.17em y bold);
+  // con estos defaults no se emite ninguna regla nueva en el snippet
+  subtituloFamilia: 'heredar',
+  subtituloPeso: 'heredar',
+  subtituloColor: '',
+  escalaSubtitulo: '117',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
 })
 
 /**
- * Factor de la escala del título (150 -> 1.5). Si el valor guardado no es un
- * número positivo (storage o enlace editado a mano), cae al 1.5 por defecto:
+ * Factor de una escala porcentual (150 -> 1.5). Si el valor guardado no es un
+ * número positivo (storage o enlace editado a mano), cae al valor por defecto:
  * el CSS generado nunca queda inválido.
  *
+ * @param {string} escala
+ * @param {number} porDefecto
+ * @returns {number}
+ */
+function factorEscala(escala, porDefecto) {
+  const numero = Number(escala)
+  return Number.isFinite(numero) && numero > 0 ? numero / 100 : porDefecto
+}
+
+/**
  * @param {string} escalaTitulo
  * @returns {number}
  */
 export function factorTitulo(escalaTitulo) {
-  const escala = Number(escalaTitulo)
-  return Number.isFinite(escala) && escala > 0 ? escala / 100 : 1.5
+  return factorEscala(escalaTitulo, 1.5)
+}
+
+/**
+ * El h3 del navegador mide 1.17em; ese es el valor de partida.
+ *
+ * @param {string} escalaSubtitulo
+ * @returns {number}
+ */
+export function factorSubtitulo(escalaSubtitulo) {
+  return factorEscala(escalaSubtitulo, 1.17)
 }
 
 /**
@@ -74,6 +99,7 @@ export function estilosToPreviewStyle(estilos) {
     ...estilosToStyleObject(estilos),
     padding: paddingBloque(estilos),
     '--escala-titulo': String(factorTitulo(estilos.escalaTitulo)),
+    '--escala-subtitulo': String(factorSubtitulo(estilos.escalaSubtitulo)),
     '--sangria': `${estilos.sangria}em`,
     '--seleccion-fondo': estilos.seleccionFondo,
     '--seleccion-texto': estilos.seleccionTexto,
@@ -88,6 +114,16 @@ export function estilosToPreviewStyle(estilos) {
     ...(estilos.tituloColor === ''
       ? {}
       : { '--titulo-color': estilos.tituloColor }),
+    // ídem para el subtítulo
+    ...(estilos.subtituloFamilia === 'heredar'
+      ? {}
+      : { '--subtitulo-familia': estilos.subtituloFamilia }),
+    ...(estilos.subtituloPeso === 'heredar'
+      ? {}
+      : { '--subtitulo-peso': estilos.subtituloPeso }),
+    ...(estilos.subtituloColor === ''
+      ? {}
+      : { '--subtitulo-color': estilos.subtituloColor }),
   })
 }
 

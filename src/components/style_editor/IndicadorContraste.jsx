@@ -3,30 +3,41 @@ import { EstilosContext } from '../../context/estilosContext.js'
 import { evaluarContraste } from '../../lib/contraste.js'
 
 /**
- * Ratio de contraste texto/fondo con su nivel WCAG. Es texto real (no solo
- * color) y sin aria-live: el input de color emite en cada movimiento y
- * anunciarlo sería ruido para lectores de pantalla.
+ * Ratio de contraste con su nivel WCAG. Es texto real (no solo color) y sin
+ * aria-live: el input de color emite en cada movimiento y anunciarlo sería
+ * ruido para lectores de pantalla.
+ *
+ * @param {{ etiqueta: string, color: string, fondo: string }} props
  */
-export const IndicadorContraste = () => {
-  const { estilos } = useContext(EstilosContext)
-  const resultado = evaluarContraste(estilos.color, estilos.background)
+const IndicadorContrastePar = ({ etiqueta, color, fondo }) => {
+  const resultado = evaluarContraste(color, fondo)
 
   // colores no parseables (storage editado a mano): no hay nada que informar
   if (!resultado) return null
 
-  // con fondo transparente el color guardado no pinta el bloque: el ratio es
-  // una referencia para el fondo donde se vaya a incrustar
-  const referencia = estilos.fondoTransparente === 'si'
-
   return (
     <p className='contraste'>
-      <span className='contraste-etiqueta'>
-        Contraste texto/fondo{referencia ? ' (referencia)' : ''}
-      </span>
+      <span className='contraste-etiqueta'>{etiqueta}</span>
       <strong>{resultado.ratio.toFixed(2)}:1</strong>
       <span aria-hidden='true'>·</span>
       {resultado.nivel}
     </p>
+  )
+}
+
+export const IndicadorContraste = () => {
+  const { estilos } = useContext(EstilosContext)
+
+  // con fondo transparente el color guardado no pinta el bloque: el ratio es
+  // una referencia para el fondo donde se vaya a incrustar
+  const referencia = estilos.fondoTransparente === 'si' ? ' (referencia)' : ''
+
+  return (
+    <IndicadorContrastePar
+      etiqueta={`Contraste texto/fondo${referencia}`}
+      color={estilos.color}
+      fondo={estilos.background}
+    />
   )
 }
 
@@ -38,20 +49,12 @@ export const IndicadorContrasteSeleccion = () => {
   const { estilos } = useContext(EstilosContext)
   if (estilos.seleccion === 'none') return null
 
-  const resultado = evaluarContraste(
-    estilos.seleccionTexto,
-    estilos.seleccionFondo,
-  )
-
-  if (!resultado) return null
-
   return (
-    <p className='contraste'>
-      <span className='contraste-etiqueta'>Contraste selección</span>
-      <strong>{resultado.ratio.toFixed(2)}:1</strong>
-      <span aria-hidden='true'>·</span>
-      {resultado.nivel}
-    </p>
+    <IndicadorContrastePar
+      etiqueta='Contraste selección'
+      color={estilos.seleccionTexto}
+      fondo={estilos.seleccionFondo}
+    />
   )
 }
 
@@ -63,19 +66,31 @@ export const IndicadorContrasteTitulo = () => {
   const { estilos } = useContext(EstilosContext)
   if (!estilos.tituloColor) return null
 
-  const resultado = evaluarContraste(estilos.tituloColor, estilos.background)
-  if (!resultado) return null
-
-  const referencia = estilos.fondoTransparente === 'si'
+  const referencia = estilos.fondoTransparente === 'si' ? ' (referencia)' : ''
 
   return (
-    <p className='contraste'>
-      <span className='contraste-etiqueta'>
-        Contraste título{referencia ? ' (referencia)' : ''}
-      </span>
-      <strong>{resultado.ratio.toFixed(2)}:1</strong>
-      <span aria-hidden='true'>·</span>
-      {resultado.nivel}
-    </p>
+    <IndicadorContrastePar
+      etiqueta={`Contraste título${referencia}`}
+      color={estilos.tituloColor}
+      fondo={estilos.background}
+    />
+  )
+}
+
+/**
+ * Ídem para el color propio del subtítulo.
+ */
+export const IndicadorContrasteSubtitulo = () => {
+  const { estilos } = useContext(EstilosContext)
+  if (!estilos.subtituloColor) return null
+
+  const referencia = estilos.fondoTransparente === 'si' ? ' (referencia)' : ''
+
+  return (
+    <IndicadorContrastePar
+      etiqueta={`Contraste subtítulo${referencia}`}
+      color={estilos.subtituloColor}
+      fondo={estilos.background}
+    />
   )
 }

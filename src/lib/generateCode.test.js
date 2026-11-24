@@ -9,6 +9,7 @@ import {
 import {
   estilosToPreviewStyle,
   estilosToStyleObject,
+  factorSubtitulo,
   factorTitulo,
 } from './estilos.js'
 
@@ -39,6 +40,10 @@ const ESTILOS = {
   tituloFamilia: 'heredar',
   tituloPeso: 'heredar',
   tituloColor: '',
+  subtituloFamilia: 'heredar',
+  subtituloPeso: 'heredar',
+  subtituloColor: '',
+  escalaSubtitulo: '117',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -160,6 +165,18 @@ describe('factorTitulo', () => {
   })
 })
 
+describe('factorSubtitulo', () => {
+  it('convierte el porcentaje en factor y parte del 1.17 del h3', () => {
+    expect(factorSubtitulo('140')).toBe(1.4)
+    expect(factorSubtitulo('117')).toBe(1.17)
+  })
+
+  it('cae a 1.17 si el valor no es un número positivo', () => {
+    expect(factorSubtitulo('abc')).toBe(1.17)
+    expect(factorSubtitulo('0')).toBe(1.17)
+  })
+})
+
 describe('estilosToPreviewStyle', () => {
   it('agrega la variable de la escala del título sin tocar el resto', () => {
     const estilo = /** @type {Record<string, unknown>} */ (
@@ -214,6 +231,30 @@ describe('estilosToPreviewStyle', () => {
     expect(propio['--titulo-familia']).toBe('Georgia, serif')
     expect(propio['--titulo-peso']).toBe('900')
     expect(propio['--titulo-color']).toBe('#123456')
+  })
+
+  it('solo agrega las variables del subtítulo cuando se personaliza', () => {
+    const porDefecto = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle(ESTILOS)
+    )
+    expect(porDefecto['--escala-subtitulo']).toBe('1.17')
+    expect(porDefecto).not.toHaveProperty('--subtitulo-familia')
+    expect(porDefecto).not.toHaveProperty('--subtitulo-peso')
+    expect(porDefecto).not.toHaveProperty('--subtitulo-color')
+
+    const propio = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({
+        ...ESTILOS,
+        subtituloFamilia: 'Georgia, serif',
+        subtituloPeso: '700',
+        subtituloColor: '#123456',
+        escalaSubtitulo: '140',
+      })
+    )
+    expect(propio['--escala-subtitulo']).toBe('1.4')
+    expect(propio['--subtitulo-familia']).toBe('Georgia, serif')
+    expect(propio['--subtitulo-peso']).toBe('700')
+    expect(propio['--subtitulo-color']).toBe('#123456')
   })
 
   it('lleva el padding configurable al preview', () => {
@@ -421,6 +462,43 @@ describe('generateCode', () => {
     expect(propio).toContain('color: #123456;')
   })
 
+  it('emite el bloque del subtítulo solo cuando se personaliza', () => {
+    /** @param {import('../types.js').Estilos} estilos */
+    const bloqueSubtitulo = (estilos) => {
+      const css = generateCss(estilos)
+      const inicio = css.indexOf('.texto h3 {')
+      return inicio === -1 ? '' : css.slice(inicio, css.indexOf('.texto p {'))
+    }
+
+    expect(bloqueSubtitulo(ESTILOS)).toBe('')
+
+    const soloColor = bloqueSubtitulo({
+      ...ESTILOS,
+      subtituloColor: '#abcdef',
+    })
+    expect(soloColor).toContain('color: #abcdef;')
+    // al emitir la regla se fija el tamaño de partida: un reset no lo cambia
+    expect(soloColor).toContain('font-size: 1.17em;')
+
+    const soloEscala = bloqueSubtitulo({
+      ...ESTILOS,
+      escalaSubtitulo: '140',
+    })
+    expect(soloEscala).toContain('font-size: 1.4em;')
+
+    const propio = bloqueSubtitulo({
+      ...ESTILOS,
+      subtituloFamilia: 'Georgia, serif',
+      subtituloPeso: '700',
+      subtituloColor: '#123456',
+      escalaSubtitulo: '140',
+    })
+    expect(propio).toContain('font-size: 1.4em;')
+    expect(propio).toContain('font-family: Georgia, serif;')
+    expect(propio).toContain('font-weight: 700;')
+    expect(propio).toContain('color: #123456;')
+  })
+
   it('agrega la hoja de Google Fonts de la fuente propia del título', () => {
     const codigo = generateCode(TEXTO, {
       ...ESTILOS,
@@ -433,11 +511,24 @@ describe('generateCode', () => {
     expect(codigo).toContain('<!-- Fuentes web:')
   })
 
-  it('no duplica la hoja si cuerpo y título comparten fuente web', () => {
+  it('agrega la hoja de Google Fonts de la fuente propia del subtítulo', () => {
+    const codigo = generateCode(TEXTO, {
+      ...ESTILOS,
+      family: 'Open Sans, sans-serif',
+      subtituloFamilia: 'Roboto, sans-serif',
+    })
+
+    expect(codigo).toContain('family=Open+Sans')
+    expect(codigo).toContain('family=Roboto')
+    expect(codigo).toContain('<!-- Fuentes web:')
+  })
+
+  it('no duplica la hoja si cuerpo, título y subtítulo comparten fuente web', () => {
     const codigo = generateCode(TEXTO, {
       ...ESTILOS,
       family: 'Roboto, sans-serif',
       tituloFamilia: 'Roboto, sans-serif',
+      subtituloFamilia: 'Roboto, sans-serif',
     })
 
     expect(codigo.match(/fonts\.googleapis\.com/g)).toHaveLength(1)
@@ -551,5 +642,15 @@ describe('generateDocumento', () => {
     const head = documento.slice(0, documento.indexOf('</head>'))
 
     expect(head).toContain('family=Roboto')
+  })
+
+  it('incluye la fuente propia del subtítulo en el head', () => {
+    const documento = generateDocumento(TEXTO, {
+      ...ESTILOS,
+      subtituloFamilia: 'Open Sans, sans-serif',
+    })
+    const head = documento.slice(0, documento.indexOf('</head>'))
+
+    expect(head).toContain('family=Open+Sans')
   })
 })

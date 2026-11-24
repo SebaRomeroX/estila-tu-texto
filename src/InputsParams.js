@@ -63,6 +63,13 @@ export const InputsNumberParams = {
     max: 200,
     step: 5,
   },
+  escalaSubtitulo: {
+    label: 'Tamaño subtítulo (%)',
+    campo: 'escalaSubtitulo',
+    min: 100,
+    max: 200,
+    step: 1,
+  },
   paddingVertical: {
     label: 'Padding vertical (px)',
     campo: 'paddingVertical',
@@ -135,6 +142,16 @@ export const InputsSelectsParams = {
   tituloPeso: {
     label: 'Ancho título',
     campo: 'tituloPeso',
+    opciones: OPCIONES_PESO_TITULO,
+  },
+  subtituloFamilia: {
+    label: 'Fuente subtítulo',
+    campo: 'subtituloFamilia',
+    opciones: OPCIONES_FUENTE_TITULO,
+  },
+  subtituloPeso: {
+    label: 'Ancho subtítulo',
+    campo: 'subtituloPeso',
     opciones: OPCIONES_PESO_TITULO,
   },
   transform: {

@@ -1,4 +1,9 @@
-import { estilosToStyleObject, factorTitulo, paddingBloque } from './estilos.js'
+import {
+  estilosToStyleObject,
+  factorSubtitulo,
+  factorTitulo,
+  paddingBloque,
+} from './estilos.js'
 import { enlaceGoogleFonts } from './fuentes.js'
 
 /**
@@ -58,8 +63,9 @@ function generarArticulo(texto) {
 }
 
 /**
- * Hojas de Google Fonts necesarias: la del cuerpo y, si el título tiene fuente
- * propia, también la del título. Sin duplicados si ambos usan la misma web.
+ * Hojas de Google Fonts necesarias: la del cuerpo y, si el título o el
+ * subtítulo tienen fuente propia, también las de ellos. Sin duplicados si
+ * comparten la misma web.
  *
  * @param {import('../types.js').Estilos} estilos
  * @returns {string[]}
@@ -68,6 +74,9 @@ function enlacesFuente(estilos) {
   const familias = [estilos.family]
   if (estilos.tituloFamilia !== 'heredar') {
     familias.push(estilos.tituloFamilia)
+  }
+  if (estilos.subtituloFamilia !== 'heredar') {
+    familias.push(estilos.subtituloFamilia)
   }
 
   /** @type {string[]} */
@@ -94,6 +103,13 @@ function generarCssReglas(estilos) {
     ...layoutFijo(estilos),
   ].map((declaracion) => `    ${declaracion}`)
 
+  const factorSub = factorSubtitulo(estilos.escalaSubtitulo)
+  const subtituloPropio =
+    estilos.subtituloFamilia !== 'heredar' ||
+    estilos.subtituloPeso !== 'heredar' ||
+    estilos.subtituloColor !== '' ||
+    factorSub !== 1.17
+
   return [
     `  .texto {`,
     ...declaracionesCss,
@@ -115,6 +131,27 @@ function generarCssReglas(estilos) {
       ? []
       : [`    color: ${estilos.tituloColor};`]),
     `  }`,
+    // el subtítulo solo genera regla cuando el usuario lo separó del cuerpo:
+    // con los defaults el h3 conserva el 1.17em y el bold del navegador
+    ...(subtituloPropio
+      ? [
+          ``,
+          `  .texto h3 {`,
+          // siempre se fija el tamaño al emitir la regla: así un reset de CSS
+          // que cambie el h3 no altera el 1.17em de partida
+          `    font-size: ${factorSub}em;`,
+          ...(estilos.subtituloFamilia === 'heredar'
+            ? []
+            : [`    font-family: ${estilos.subtituloFamilia};`]),
+          ...(estilos.subtituloPeso === 'heredar'
+            ? []
+            : [`    font-weight: ${estilos.subtituloPeso};`]),
+          ...(estilos.subtituloColor === ''
+            ? []
+            : [`    color: ${estilos.subtituloColor};`]),
+          `  }`,
+        ]
+      : []),
     ``,
     // sangría solo en párrafos: text-indent se hereda y en el contenedor
     // también indentaría los títulos

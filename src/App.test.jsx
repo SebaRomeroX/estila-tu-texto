@@ -154,7 +154,7 @@ describe('preview y snippet compartidos', () => {
     expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
 
-  it('avisa si la fuente propia del título tampoco está instalada', () => {
+  it('avisa si las fuentes propias del título y subtítulo tampoco están instaladas', () => {
     Object.defineProperty(document, 'fonts', {
       configurable: true,
       value: { check: vi.fn(() => false) },
@@ -164,9 +164,14 @@ describe('preview y snippet compartidos', () => {
     fireEvent.change(screen.getByLabelText('Fuente título'), {
       target: { value: 'Garamond, serif' },
     })
+    fireEvent.change(screen.getByLabelText('Fuente subtítulo'), {
+      target: { value: 'Palatino, Palatino Linotype, serif' },
+    })
 
     expect(
-      screen.getByText(/«Georgia» y «Garamond» no están instaladas/i),
+      screen.getByText(
+        /«Georgia», «Garamond» y «Palatino» no están instaladas/i,
+      ),
     ).toBeInTheDocument()
   })
 
@@ -478,17 +483,68 @@ describe('estilos propios del título', () => {
 
     fireEvent.change(colorTitulo, { target: { value: '#123456' } })
 
-    // elegir un color activa "Color propio"
-    expect(screen.getByLabelText('Color propio')).toBeChecked()
+    // elegir un color activa "Color propio título"
+    expect(screen.getByLabelText('Color propio título')).toBeChecked()
     expect(preview.style.getPropertyValue('--titulo-color')).toBe('#123456')
     expect(pre).toHaveTextContent('color: #123456;')
     expect(screen.getByText('Contraste título')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByLabelText('Color propio'))
+    fireEvent.click(screen.getByLabelText('Color propio título'))
 
     expect(preview.style.getPropertyValue('--titulo-color')).toBe('')
     expect(pre).not.toHaveTextContent('color: #123456;')
     expect(screen.queryByText('Contraste título')).not.toBeInTheDocument()
+  })
+})
+
+describe('estilos propios del subtítulo', () => {
+  it('la fuente, el peso y la escala no tocan el cuerpo', () => {
+    expect(preview.style.getPropertyValue('--subtitulo-familia')).toBe('')
+    expect(preview.style.getPropertyValue('--subtitulo-peso')).toBe('')
+    expect(preview.style.getPropertyValue('--escala-subtitulo')).toBe('1.17')
+
+    fireEvent.change(screen.getByLabelText('Fuente subtítulo'), {
+      target: { value: 'Georgia, serif' },
+    })
+    fireEvent.change(screen.getByLabelText('Ancho subtítulo'), {
+      target: { value: '700' },
+    })
+    fireEvent.change(screen.getByLabelText('Tamaño subtítulo (%)'), {
+      target: { value: '140' },
+    })
+
+    expect(preview.style.getPropertyValue('--subtitulo-familia')).toBe(
+      'Georgia, serif',
+    )
+    expect(preview.style.getPropertyValue('--subtitulo-peso')).toBe('700')
+    expect(preview.style.getPropertyValue('--escala-subtitulo')).toBe('1.4')
+    // el bloque sigue con la tipografía del cuerpo
+    expect(preview.style.fontFamily).toBe('system-ui')
+    expect(preview.style.fontWeight).toBe('400')
+    expect(pre).toHaveTextContent('font-size: 1.4em;')
+    expect(pre).toHaveTextContent('font-family: Georgia, serif;')
+    expect(pre).toHaveTextContent('font-weight: 700;')
+  })
+
+  it('el color propio del subtítulo se activa y se hereda al desactivarlo', () => {
+    expect(preview.style.getPropertyValue('--subtitulo-color')).toBe('')
+    expect(screen.queryByText('Contraste subtítulo')).not.toBeInTheDocument()
+
+    const colorSubtitulo = screen.getByLabelText('Color subtítulo')
+    expect(colorSubtitulo).toHaveValue(ESTILOS_POR_DEFECTO.color.toLowerCase())
+
+    fireEvent.change(colorSubtitulo, { target: { value: '#123456' } })
+
+    expect(screen.getByLabelText('Color propio subtítulo')).toBeChecked()
+    expect(preview.style.getPropertyValue('--subtitulo-color')).toBe('#123456')
+    expect(pre).toHaveTextContent('color: #123456;')
+    expect(screen.getByText('Contraste subtítulo')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByLabelText('Color propio subtítulo'))
+
+    expect(preview.style.getPropertyValue('--subtitulo-color')).toBe('')
+    expect(pre).not.toHaveTextContent('color: #123456;')
+    expect(screen.queryByText('Contraste subtítulo')).not.toBeInTheDocument()
   })
 })
 

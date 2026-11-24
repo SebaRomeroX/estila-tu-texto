@@ -30,6 +30,10 @@
  * @property {string} tituloFamilia
  * @property {string} tituloPeso
  * @property {string} tituloColor
+ * @property {string} subtituloFamilia
+ * @property {string} subtituloPeso
+ * @property {string} subtituloColor
+ * @property {string} escalaSubtitulo
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
  * @property {string} fondoTransparente

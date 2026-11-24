@@ -17,10 +17,11 @@ import {
 import { InputNumber } from './InputNumber.jsx'
 import { InputSelect } from './InputSelect.jsx'
 import { InputColor } from './InputColor.jsx'
-import { InputColorTitulo } from './InputColorTitulo.jsx'
+import { InputColorPropio } from './InputColorPropio.jsx'
 import {
   IndicadorContraste,
   IndicadorContrasteSeleccion,
+  IndicadorContrasteSubtitulo,
   IndicadorContrasteTitulo,
 } from './IndicadorContraste.jsx'
 import { AvisoFuente } from './AvisoFuente.jsx'
@@ -210,15 +211,30 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.espacio} />
         <InputNumber elemento={InputsNumberParams.ancho} />
         <InputNumber elemento={InputsNumberParams.escalaTitulo} />
+        <InputNumber elemento={InputsNumberParams.escalaSubtitulo} />
         <InputNumber elemento={InputsNumberParams.paddingVertical} />
         <InputNumber elemento={InputsNumberParams.paddingHorizontal} />
       </div>
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.tituloFamilia} />
         <InputSelect elemento={InputsSelectsParams.tituloPeso} />
-        <InputColorTitulo />
+        <InputColorPropio
+          etiqueta='Color título'
+          campo='tituloColor'
+          etiquetaPropio='Color propio título'
+        />
       </div>
       <IndicadorContrasteTitulo />
+      <div className='inputs-configuracion'>
+        <InputSelect elemento={InputsSelectsParams.subtituloFamilia} />
+        <InputSelect elemento={InputsSelectsParams.subtituloPeso} />
+        <InputColorPropio
+          etiqueta='Color subtítulo'
+          campo='subtituloColor'
+          etiquetaPropio='Color propio subtítulo'
+        />
+      </div>
+      <IndicadorContrasteSubtitulo />
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.transform} />
         <InputSelect elemento={InputsSelectsParams.decoracion} />

@@ -64,6 +64,7 @@
 - **Compartir por URL:** el enlace lleva tu texto y tus estilos, sin backend
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Título independiente:** fuente, peso y color propios para el título, sin cambiar los párrafos
+- **Subtítulo independiente:** fuente, peso, color y tamaño propios para el subtítulo, sin tocar el resto del texto
 - **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
 - **Descargar imagen PNG:** la vista previa tal como se ve (fondo o transparencia incluidos) en 2x, ideal para redes

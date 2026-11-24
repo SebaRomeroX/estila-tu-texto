@@ -457,6 +457,16 @@ body {
   color: var(--titulo-color, inherit);
 }
 
+/* subtítulo: mismo patrón que el h2. Los defaults (1.17em y bold) son los
+   que el navegador le da al h3; con el snippet pasa lo mismo porque solo se
+   emite una regla .texto h3 cuando el usuario lo personaliza. */
+.visualizador h3 {
+  font-size: calc(1em * var(--escala-subtitulo, 1.17));
+  font-family: var(--subtitulo-familia, inherit);
+  font-weight: var(--subtitulo-peso, bold);
+  color: var(--subtitulo-color, inherit);
+}
+
 /* sangría solo en párrafos: text-indent es heredable y en el contenedor
    también indentaría los títulos. La variable la pone Visualizador, igual
    que la regla .texto p del snippet generado */
