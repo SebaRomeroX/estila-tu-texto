@@ -451,6 +451,78 @@ describe('color de selección', () => {
   })
 })
 
+describe('degradado de texto', () => {
+  it('solo agrega la clase, la variable y la regla cuando está activo', () => {
+    expect(preview).not.toHaveClass('visualizador-degradado')
+    expect(preview.style.getPropertyValue('--degradado')).toBe('')
+    expect(pre).not.toHaveTextContent('linear-gradient')
+    expect(screen.queryByLabelText('Degradado inicio')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Degradado de texto'), {
+      target: { value: 'degradado' },
+    })
+
+    expect(preview).toHaveClass('visualizador-degradado')
+    expect(preview.style.getPropertyValue('--degradado')).toBe(
+      'linear-gradient(135deg, #F0F8FF, #2D5AAD)',
+    )
+    expect(pre).toHaveTextContent(
+      'background-image: linear-gradient(135deg, #F0F8FF, #2D5AAD);',
+    )
+    expect(pre).toHaveTextContent('-webkit-background-clip: text;')
+    expect(pre).toHaveTextContent('background-clip: text;')
+    expect(pre).toHaveTextContent('-webkit-text-fill-color: transparent;')
+    expect(pre).toHaveTextContent('color: transparent;')
+    // el fondo del bloque no se toca
+    expect(preview.style.background).toBe('rgb(2, 2, 2)')
+    expect(screen.getByLabelText('Degradado inicio')).toHaveValue('#f0f8ff')
+    expect(screen.getByLabelText('Degradado fin')).toHaveValue('#2d5aad')
+  })
+
+  it('actualiza los colores y los quita al desactivar', () => {
+    const selector = screen.getByLabelText('Degradado de texto')
+    fireEvent.change(selector, { target: { value: 'degradado' } })
+
+    fireEvent.change(screen.getByLabelText('Degradado inicio'), {
+      target: { value: '#000000' },
+    })
+    fireEvent.change(screen.getByLabelText('Degradado fin'), {
+      target: { value: '#ffffff' },
+    })
+
+    expect(preview.style.getPropertyValue('--degradado')).toBe(
+      'linear-gradient(135deg, #000000, #ffffff)',
+    )
+    expect(pre).toHaveTextContent(
+      'background-image: linear-gradient(135deg, #000000, #ffffff);',
+    )
+
+    fireEvent.change(selector, { target: { value: 'none' } })
+
+    expect(preview).not.toHaveClass('visualizador-degradado')
+    expect(preview.style.getPropertyValue('--degradado')).toBe('')
+    expect(pre).not.toHaveTextContent('linear-gradient')
+    expect(screen.queryByLabelText('Degradado inicio')).not.toBeInTheDocument()
+  })
+
+  it('mantiene visible la selección cuando hay degradado', () => {
+    fireEvent.change(screen.getByLabelText('Degradado de texto'), {
+      target: { value: 'degradado' },
+    })
+
+    // sin selección propia, el snippet recupera el color del navegador
+    expect(pre).toHaveTextContent('-webkit-text-fill-color: HighlightText;')
+
+    fireEvent.change(screen.getByLabelText('Selección de texto'), {
+      target: { value: 'personalizada' },
+    })
+
+    // con selección propia, el relleno usa el color elegido
+    expect(pre).toHaveTextContent('-webkit-text-fill-color: #FFFFFF;')
+    expect(pre).not.toHaveTextContent('HighlightText')
+  })
+})
+
 describe('estilos propios del título', () => {
   it('la fuente y el peso del título no tocan el cuerpo', () => {
     expect(preview.style.getPropertyValue('--titulo-familia')).toBe('')
@@ -1049,6 +1121,24 @@ describe('accesibilidad', () => {
   it('el fondo transparente tampoco introduce violaciones', async () => {
     fireEvent.change(screen.getByLabelText('Fondo del bloque'), {
       target: { value: 'si' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
+
+    const { violations } = await axe.run(container, {
+      resultTypes: ['violations'],
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    })
+
+    expect(
+      violations.map((violacion) => `${violacion.impact}:${violacion.id}`),
+    ).toEqual([])
+  })
+
+  it('el degradado de texto tampoco introduce violaciones', async () => {
+    fireEvent.change(screen.getByLabelText('Degradado de texto'), {
+      target: { value: 'degradado' },
     })
     fireEvent.click(screen.getByRole('button', { name: /vista limpia/i }))
 

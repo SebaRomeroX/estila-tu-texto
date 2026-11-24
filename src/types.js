@@ -34,6 +34,9 @@
  * @property {string} subtituloPeso
  * @property {string} subtituloColor
  * @property {string} escalaSubtitulo
+ * @property {string} degradado
+ * @property {string} degradadoInicio
+ * @property {string} degradadoFin
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
  * @property {string} fondoTransparente

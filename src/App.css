@@ -484,11 +484,32 @@ body {
   padding-right: 0.08em;
 }
 
+/* degradado de texto: se aplica a los hijos y no al bloque, así el fondo
+   sólido del artículo sigue viéndose. La variable --degradado la pone
+   Visualizador desde el estado, igual que la regla del snippet generado. */
+.visualizador.visualizador-degradado h2,
+.visualizador.visualizador-degradado h3,
+.visualizador.visualizador-degradado p {
+  background-image: var(--degradado);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* con el relleno transparente del degradado, la selección necesita recuperar
+   un color de texto visible; HighlightText es el que usa el navegador */
+.visualizador.visualizador-degradado ::selection {
+  -webkit-text-fill-color: HighlightText;
+}
+
 /* selección personalizada: las variables las pone Visualizador desde el
-   estado, igual que la regla .texto ::selection del snippet generado */
+   estado, igual que la regla .texto ::selection del snippet generado. Va
+   después del fallback del degradado para que el color propio gane. */
 .visualizador.visualizador-seleccion ::selection {
   background-color: var(--seleccion-fondo);
   color: var(--seleccion-texto);
+  -webkit-text-fill-color: var(--seleccion-texto);
 }
 
 /* el foco de mouse ya se feedbacka con el caret del texto,

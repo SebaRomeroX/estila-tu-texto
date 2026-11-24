@@ -37,6 +37,9 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   subtituloPeso: 'heredar',
   subtituloColor: '',
   escalaSubtitulo: '117',
+  degradado: 'none',
+  degradadoInicio: '#F0F8FF',
+  degradadoFin: '#2D5AAD',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -75,6 +78,17 @@ export function factorSubtitulo(escalaSubtitulo) {
 }
 
 /**
+ * Gradiente de texto compartido por preview y snippet. El ángulo es fijo:
+ * el usuario elige los dos colores, no la dirección.
+ *
+ * @param {import('../types.js').Estilos} estilos
+ * @returns {string}
+ */
+export function degradadoCss(estilos) {
+  return `linear-gradient(135deg, ${estilos.degradadoInicio}, ${estilos.degradadoFin})`
+}
+
+/**
  * Padding del bloque en píxeles: vertical horizontal, como el atajo CSS.
  * Vive fuera de estilosToStyleObject porque es parte del layout fijo, pero
  * ahora es configurable; preview y snippet leen de acá para no divergir.
@@ -103,6 +117,11 @@ export function estilosToPreviewStyle(estilos) {
     '--sangria': `${estilos.sangria}em`,
     '--seleccion-fondo': estilos.seleccionFondo,
     '--seleccion-texto': estilos.seleccionTexto,
+    // el gradiente se pasa como variable para que la regla del preview y la
+    // del snippet compartan exactamente los mismos colores
+    ...(estilos.degradado === 'degradado'
+      ? { '--degradado': degradadoCss(estilos) }
+      : {}),
     // solo se emiten las variables del título cuando el usuario las cambió:
     // con los defaults el preview sigue usando la herencia y el bold del UA
     ...(estilos.tituloFamilia === 'heredar'

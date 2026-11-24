@@ -1,4 +1,5 @@
 import {
+  degradadoCss,
   estilosToStyleObject,
   factorSubtitulo,
   factorTitulo,
@@ -109,6 +110,7 @@ function generarCssReglas(estilos) {
     estilos.subtituloPeso !== 'heredar' ||
     estilos.subtituloColor !== '' ||
     factorSub !== 1.17
+  const conDegradado = estilos.degradado === 'degradado'
 
   return [
     `  .texto {`,
@@ -171,13 +173,43 @@ function generarCssReglas(estilos) {
           `  }`,
         ]
       : []),
-    // selección personalizada: solo se emite si el usuario la activó
+    // selección personalizada: solo se emite si el usuario la activó. El
+    // -webkit-text-fill-color mantiene visible el texto seleccionado cuando
+    // además hay degradado (el relleno normal es transparente).
     ...(estilos.seleccion === 'personalizada'
       ? [
           ``,
           `  .texto ::selection {`,
           `    background-color: ${estilos.seleccionFondo};`,
           `    color: ${estilos.seleccionTexto};`,
+          `    -webkit-text-fill-color: ${estilos.seleccionTexto};`,
+          `  }`,
+        ]
+      : []),
+    // degradado de texto: va en los hijos y no en el bloque para que el fondo
+    // sólido del article siga viéndose. Con "none" no se emite nada y el
+    // snapshot por defecto no cambia.
+    ...(conDegradado
+      ? [
+          ``,
+          `  .texto h2,`,
+          `  .texto h3,`,
+          `  .texto p {`,
+          `    background-image: ${degradadoCss(estilos)};`,
+          `    -webkit-background-clip: text;`,
+          `    background-clip: text;`,
+          `    -webkit-text-fill-color: transparent;`,
+          `    color: transparent;`,
+          `  }`,
+        ]
+      : []),
+    // sin selección propia, el navegador elige el fondo de la selección pero
+    // el relleno transparente del degradado lo dejaría invisible
+    ...(conDegradado && estilos.seleccion !== 'personalizada'
+      ? [
+          ``,
+          `  .texto ::selection {`,
+          `    -webkit-text-fill-color: HighlightText;`,
           `  }`,
         ]
       : []),

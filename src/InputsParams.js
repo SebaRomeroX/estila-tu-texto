@@ -223,6 +223,14 @@ export const InputsSelectsParams = {
       { nombre: 'personalizada', contenido: 'personalizada' },
     ],
   },
+  degradado: {
+    label: 'Degradado de texto',
+    campo: 'degradado',
+    opciones: [
+      { nombre: 'ninguno', contenido: 'none' },
+      { nombre: 'degradado', contenido: 'degradado' },
+    ],
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */
@@ -242,5 +250,13 @@ export const InputsColorParams = {
   seleccionTexto: {
     label: 'Texto seleccionado',
     campo: 'seleccionTexto',
+  },
+  degradadoInicio: {
+    label: 'Degradado inicio',
+    campo: 'degradadoInicio',
+  },
+  degradadoFin: {
+    label: 'Degradado fin',
+    campo: 'degradadoFin',
   },
 }

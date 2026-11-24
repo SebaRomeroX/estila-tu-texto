@@ -258,6 +258,15 @@ export const StyleEditor = () => {
         )}
       </div>
       <IndicadorContrasteSeleccion />
+      <div className='inputs-configuracion'>
+        <InputSelect elemento={InputsSelectsParams.degradado} />
+        {estilos.degradado === 'degradado' && (
+          <>
+            <InputColor elemento={InputsColorParams.degradadoInicio} />
+            <InputColor elemento={InputsColorParams.degradadoFin} />
+          </>
+        )}
+      </div>
     </section>
   )
 }

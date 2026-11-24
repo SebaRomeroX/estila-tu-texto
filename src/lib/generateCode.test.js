@@ -7,6 +7,7 @@ import {
   generateHtml,
 } from './generateCode.js'
 import {
+  degradadoCss,
   estilosToPreviewStyle,
   estilosToStyleObject,
   factorSubtitulo,
@@ -44,6 +45,9 @@ const ESTILOS = {
   subtituloPeso: 'heredar',
   subtituloColor: '',
   escalaSubtitulo: '117',
+  degradado: 'none',
+  degradadoInicio: '#F0F8FF',
+  degradadoFin: '#2D5AAD',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -177,6 +181,18 @@ describe('factorSubtitulo', () => {
   })
 })
 
+describe('degradadoCss', () => {
+  it('arma un gradiente de 135deg con los dos colores elegidos', () => {
+    expect(
+      degradadoCss({
+        ...ESTILOS,
+        degradadoInicio: '#000000',
+        degradadoFin: '#FFFFFF',
+      }),
+    ).toBe('linear-gradient(135deg, #000000, #FFFFFF)')
+  })
+})
+
 describe('estilosToPreviewStyle', () => {
   it('agrega la variable de la escala del título sin tocar el resto', () => {
     const estilo = /** @type {Record<string, unknown>} */ (
@@ -285,6 +301,25 @@ describe('estilosToPreviewStyle', () => {
     expect(transparente).not.toHaveProperty('background')
     // el color de letra no se toca: sigue siendo el del usuario
     expect(transparente.color).toBe('#F0F8FF')
+  })
+
+  it('solo agrega la variable del degradado cuando está activo', () => {
+    const porDefecto = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle(ESTILOS)
+    )
+    expect(porDefecto).not.toHaveProperty('--degradado')
+
+    const activo = /** @type {Record<string, unknown>} */ (
+      estilosToPreviewStyle({
+        ...ESTILOS,
+        degradado: 'degradado',
+        degradadoInicio: '#000000',
+        degradadoFin: '#FFFFFF',
+      })
+    )
+    expect(activo['--degradado']).toBe(
+      'linear-gradient(135deg, #000000, #FFFFFF)',
+    )
   })
 })
 
@@ -436,6 +471,53 @@ describe('generateCode', () => {
     expect(conSeleccion).toContain('  .texto ::selection {')
     expect(conSeleccion).toContain('    background-color: #123456;')
     expect(conSeleccion).toContain('    color: #abcdef;')
+    expect(conSeleccion).toContain('    -webkit-text-fill-color: #abcdef;')
+  })
+
+  it('emite el degradado solo cuando está activo', () => {
+    const porDefecto = generateCode(TEXTO, ESTILOS)
+    expect(porDefecto).not.toContain('background-clip: text')
+    expect(porDefecto).not.toContain('linear-gradient')
+
+    const conDegradado = generateCode(TEXTO, {
+      ...ESTILOS,
+      degradado: 'degradado',
+      degradadoInicio: '#000000',
+      degradadoFin: '#FFFFFF',
+    })
+
+    // va en los hijos, no en el bloque: el fondo del article sigue visible
+    expect(conDegradado).toContain('  .texto h2,')
+    expect(conDegradado).toContain('  .texto h3,')
+    expect(conDegradado).toContain('  .texto p {')
+    expect(conDegradado).toContain(
+      '    background-image: linear-gradient(135deg, #000000, #FFFFFF);',
+    )
+    expect(conDegradado).toContain('    -webkit-background-clip: text;')
+    expect(conDegradado).toContain('    background-clip: text;')
+    expect(conDegradado).toContain('    -webkit-text-fill-color: transparent;')
+    expect(conDegradado).toContain('    color: transparent;')
+  })
+
+  it('mantiene visible la selección con degradado activo', () => {
+    // sin selección propia, el texto seleccionado usa el color del navegador
+    const sinSeleccion = generateCode(TEXTO, {
+      ...ESTILOS,
+      degradado: 'degradado',
+    })
+    expect(sinSeleccion).toContain(
+      '    -webkit-text-fill-color: HighlightText;',
+    )
+
+    // con selección propia, el color elegido también rellena el texto
+    const conSeleccion = generateCode(TEXTO, {
+      ...ESTILOS,
+      degradado: 'degradado',
+      seleccion: 'personalizada',
+      seleccionTexto: '#abcdef',
+    })
+    expect(conSeleccion).toContain('    -webkit-text-fill-color: #abcdef;')
+    expect(conSeleccion).not.toContain('HighlightText')
   })
 
   it('emite fuente, peso y color del título solo cuando se personalizan', () => {
