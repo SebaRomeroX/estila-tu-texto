@@ -60,6 +60,7 @@ export const Visualizador = ({
   const conSeleccion = estilos.seleccion === 'personalizada'
   const conFondoTransparente = estilos.fondoTransparente === 'si'
   const conDegradado = estilos.degradado === 'degradado'
+  const conColumnas = estilos.columnas === 'dos'
   const activa = plantillaActiva(texto)
   const articuloRef = useRef(/** @type {HTMLElement | null} */ (null))
   const [estadoImagen, setEstadoImagen] = useState('idle')
@@ -70,7 +71,8 @@ export const Visualizador = ({
     'visualizador' +
     (conCapitular ? ' visualizador-capitular' : '') +
     (conSeleccion ? ' visualizador-seleccion' : '') +
-    (conDegradado ? ' visualizador-degradado' : '')
+    (conDegradado ? ' visualizador-degradado' : '') +
+    (conColumnas ? ' visualizador-columnas' : '')
 
   // la vista limpia bloquea el scroll de la página, lleva el foco al cierre y
   // lo devuelve al botón que la abrió al salir (Escape o "Cerrar")

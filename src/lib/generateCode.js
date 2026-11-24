@@ -111,6 +111,7 @@ function generarCssReglas(estilos) {
     estilos.subtituloColor !== '' ||
     factorSub !== 1.17
   const conDegradado = estilos.degradado === 'degradado'
+  const conColumnas = estilos.columnas === 'dos'
 
   return [
     `  .texto {`,
@@ -210,6 +211,24 @@ function generarCssReglas(estilos) {
           ``,
           `  .texto ::selection {`,
           `    -webkit-text-fill-color: HighlightText;`,
+          `  }`,
+        ]
+      : []),
+    // dos columnas: column-count no funciona en un contenedor flex, así que el
+    // layout pasa a block y los títulos ocupan todo el ancho. Con "una" no se
+    // emite nada y el snapshot por defecto no cambia.
+    ...(conColumnas
+      ? [
+          ``,
+          `  .texto {`,
+          `    display: block;`,
+          `    column-count: 2;`,
+          `    column-gap: 2em;`,
+          `  }`,
+          ``,
+          `  .texto h2,`,
+          `  .texto h3 {`,
+          `    column-span: all;`,
           `  }`,
         ]
       : []),

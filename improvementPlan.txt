@@ -748,6 +748,18 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (284/284 statements, 163/163 ramas, 71/71 funciones) · build OK · axe 0.
 
+[x] P2-45 Dos columnas de texto  ✔ 2026-11-23
+  Verificado (2026-11-23):
+    - Campo columnas ("una" | "dos"), default "una".
+    - Con "dos" el bloque pasa de flex a block (column-count no funciona en un
+      contenedor flex), usa column-count: 2 y column-gap: 2em, y los títulos
+      reciben column-span: all para no partirse.
+    - Preview y snippet comparten la regla; con "una" no se emite nada y el
+      snapshot por defecto no cambia.
+    - Tests: 2 nuevos → 222/222.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (285/285 statements, 165/165 ramas, 71/71 funciones) · build OK · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1429,6 +1441,12 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - La selección conserva un relleno visible (color propio o HighlightText).
     - Tests: 8 nuevos → 220/220 · coverage 163/163 ramas · build OK · axe 0.
 
+2026-11-23 · Post-plan · P2-45 COMPLETADO — "feat(estilos): dos columnas"
+    - El bloque puede pasar a dos columnas: display block, column-count 2 y
+      títulos con column-span all para que no se partan.
+    - Con "una" no se emite CSS, así que el snapshot por defecto queda intacto.
+    - Tests: 2 nuevos → 222/222 · coverage 165/165 ramas · build OK · axe 0.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1437,8 +1455,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 220 tests · cobertura 100% de la
-        lógica pura (163/163 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 222 tests · cobertura 100% de la
+        lógica pura (165/165 ramas) · axe 0 violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1473,7 +1491,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 46/46 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 47/47 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1518,17 +1536,18 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   P2-42 agrega fondo transparente con tablero de referencia y PNG sin fondo.
   P2-43 separa fuente, peso, color y escala del subtítulo.
   P2-44 agrega degradado de texto de dos colores sobre título, subtítulo y
-  párrafos.
+  párrafos. P2-45 permite pasar el bloque a dos columnas con títulos a todo
+  el ancho.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-44 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-45 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
   el tamaño en rem, la descarga como imagen, la vista limpia, el título con
   estilo propio, el padding configurable, el fondo transparente, el subtítulo
-  con estilo propio y el degradado de texto.
+  con estilo propio, el degradado de texto y las dos columnas.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1574,7 +1593,7 @@ C) EFECTOS "WOW" (diferenciadores visuales)
   - texto con degradado (background-clip: text)                  S  → P2-44
   - drop cap (::first-letter)                                    S  → P2-33
   - contorno (-webkit-text-stroke) y neón (text-shadow)          M
-  - dos columnas (columns)                                       S
+  - dos columnas (columns)                                       S  → P2-45
   - animación de entrada con prefers-reduced-motion              M
   - tarjeta "glass" (backdrop-filter)                            M
 

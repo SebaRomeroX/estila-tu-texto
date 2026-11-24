@@ -231,6 +231,14 @@ export const InputsSelectsParams = {
       { nombre: 'degradado', contenido: 'degradado' },
     ],
   },
+  columnas: {
+    label: 'Columnas',
+    campo: 'columnas',
+    opciones: [
+      { nombre: 'una', contenido: 'una' },
+      { nombre: 'dos', contenido: 'dos' },
+    ],
+  },
 }
 
 /** @type {Record<string, import('./types.js').ElementoInput>} */

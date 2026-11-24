@@ -523,6 +523,29 @@ describe('degradado de texto', () => {
   })
 })
 
+describe('dos columnas', () => {
+  it('solo activa la clase y la regla cuando se eligen dos', () => {
+    expect(preview).not.toHaveClass('visualizador-columnas')
+    expect(pre).not.toHaveTextContent('column-count')
+
+    fireEvent.change(screen.getByLabelText('Columnas'), {
+      target: { value: 'dos' },
+    })
+
+    expect(preview).toHaveClass('visualizador-columnas')
+    expect(pre).toHaveTextContent('column-count: 2;')
+    expect(pre).toHaveTextContent('column-gap: 2em;')
+    expect(pre).toHaveTextContent('column-span: all;')
+
+    fireEvent.change(screen.getByLabelText('Columnas'), {
+      target: { value: 'una' },
+    })
+
+    expect(preview).not.toHaveClass('visualizador-columnas')
+    expect(pre).not.toHaveTextContent('column-count')
+  })
+})
+
 describe('estilos propios del título', () => {
   it('la fuente y el peso del título no tocan el cuerpo', () => {
     expect(preview.style.getPropertyValue('--titulo-familia')).toBe('')

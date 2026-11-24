@@ -37,6 +37,7 @@
  * @property {string} degradado
  * @property {string} degradadoInicio
  * @property {string} degradadoFin
+ * @property {string} columnas
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
  * @property {string} fondoTransparente

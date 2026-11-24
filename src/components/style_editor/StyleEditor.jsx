@@ -266,6 +266,7 @@ export const StyleEditor = () => {
             <InputColor elemento={InputsColorParams.degradadoFin} />
           </>
         )}
+        <InputSelect elemento={InputsSelectsParams.columnas} />
       </div>
     </section>
   )

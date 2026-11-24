@@ -503,6 +503,21 @@ body {
   -webkit-text-fill-color: HighlightText;
 }
 
+/* dos columnas: column-count no funciona en un contenedor flex, así que el
+   layout pasa a block. Los títulos ocupan todo el ancho para no partirse.
+   La clase la pone Visualizador desde el estado, igual que la regla del
+   snippet generado. */
+.visualizador.visualizador-columnas {
+  display: block;
+  column-count: 2;
+  column-gap: 2em;
+}
+
+.visualizador.visualizador-columnas h2,
+.visualizador.visualizador-columnas h3 {
+  column-span: all;
+}
+
 /* selección personalizada: las variables las pone Visualizador desde el
    estado, igual que la regla .texto ::selection del snippet generado. Va
    después del fallback del degradado para que el color propio gane. */

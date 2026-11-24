@@ -48,6 +48,7 @@ const ESTILOS = {
   degradado: 'none',
   degradadoInicio: '#F0F8FF',
   degradadoFin: '#2D5AAD',
+  columnas: 'una',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -518,6 +519,20 @@ describe('generateCode', () => {
     })
     expect(conSeleccion).toContain('    -webkit-text-fill-color: #abcdef;')
     expect(conSeleccion).not.toContain('HighlightText')
+  })
+
+  it('emite las dos columnas solo cuando están activas', () => {
+    const porDefecto = generateCode(TEXTO, ESTILOS)
+    expect(porDefecto).not.toContain('column-count')
+    expect(porDefecto).not.toContain('column-span')
+
+    const conColumnas = generateCode(TEXTO, { ...ESTILOS, columnas: 'dos' })
+    expect(conColumnas).toContain('    display: block;')
+    expect(conColumnas).toContain('    column-count: 2;')
+    expect(conColumnas).toContain('    column-gap: 2em;')
+    expect(conColumnas).toContain('  .texto h2,')
+    expect(conColumnas).toContain('  .texto h3 {')
+    expect(conColumnas).toContain('    column-span: all;')
   })
 
   it('emite fuente, peso y color del título solo cuando se personalizan', () => {

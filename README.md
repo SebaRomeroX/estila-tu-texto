@@ -76,6 +76,7 @@
 - **Sombra de texto:** presets suave y resplandor para dar profundidad o un halo del color del texto
 - **Selección personalizada:** elegí el fondo y el color del texto al seleccionar, con aviso de contraste WCAG
 - **Degradado de texto:** dos colores en gradiente sobre título, subtítulo y párrafos, sin tapar el fondo del bloque
+- **Dos columnas:** el bloque pasa a dos columnas con los títulos ocupando todo el ancho
 - **Arquitectura extensible:** diseñada para añadir nuevos estilos sin tocar lógica core
 
 **Componentes Especializados por Tipo de Input**

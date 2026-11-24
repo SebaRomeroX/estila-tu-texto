@@ -40,6 +40,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   degradado: 'none',
   degradadoInicio: '#F0F8FF',
   degradadoFin: '#2D5AAD',
+  columnas: 'una',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
