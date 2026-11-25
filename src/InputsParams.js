@@ -70,6 +70,13 @@ export const InputsNumberParams = {
     max: 200,
     step: 1,
   },
+  opacidad: {
+    label: 'Opacidad del bloque',
+    campo: 'opacidad',
+    min: 0.1,
+    max: 1,
+    step: 0.05,
+  },
   paddingVertical: {
     label: 'Padding vertical (px)',
     campo: 'paddingVertical',

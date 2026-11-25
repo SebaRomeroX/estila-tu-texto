@@ -214,6 +214,7 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.escalaSubtitulo} />
         <InputNumber elemento={InputsNumberParams.paddingVertical} />
         <InputNumber elemento={InputsNumberParams.paddingHorizontal} />
+        <InputNumber elemento={InputsNumberParams.opacidad} />
       </div>
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.tituloFamilia} />

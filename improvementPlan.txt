@@ -791,6 +791,16 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · 222 unitarios ·
       coverage 100% · build OK · 5 e2e · axe 0.
 
+[x] P2-48 Opacidad del bloque  ✔ 2026-11-24
+  Verificado (2026-11-24):
+    - Campo opacidad (0.1–1, default 1) en el bloque de configuración.
+    - La propiedad opacity se emite solo cuando no es 1, así que el CSS por
+      defecto y el snapshot no cambian. Preview y snippet comparten la regla.
+    - Tests: 3 nuevos → 225/225.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (285/285 statements, 167/167 ramas, 71/71 funciones) · build OK ·
+      test:e2e 5/5 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1494,6 +1504,10 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       tipo y alt) y el README cuenta qué es, cómo se prueba y qué tecnologías
       usa.
 
+2026-11-24 · Post-plan · P2-48 COMPLETADO — "feat(estilos): opacidad del bloque"
+    - La opacidad se aplica al bloque completo (fondo incluido) y se emite
+      solo cuando baja de 1, así que los defaults siguen sin generar CSS.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1539,7 +1553,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 49/49 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 50/50 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).

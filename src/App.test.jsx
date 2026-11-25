@@ -400,6 +400,19 @@ describe('letra capitular', () => {
   })
 })
 
+describe('opacidad del bloque', () => {
+  it('aplica la opacidad en el preview y en el snippet', () => {
+    expect(pre).not.toHaveTextContent('opacity:')
+
+    fireEvent.change(screen.getByLabelText('Opacidad del bloque'), {
+      target: { value: '0.55' },
+    })
+
+    expect(preview.style.opacity).toBe('0.55')
+    expect(pre).toHaveTextContent('opacity: 0.55;')
+  })
+})
+
 describe('sombra de texto', () => {
   it('aplica la sombra en el preview y en el snippet', () => {
     expect(pre).not.toHaveTextContent('text-shadow')

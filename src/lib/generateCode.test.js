@@ -49,6 +49,7 @@ const ESTILOS = {
   degradadoInicio: '#F0F8FF',
   degradadoFin: '#2D5AAD',
   columnas: 'una',
+  opacidad: '1',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -143,6 +144,14 @@ describe('estilosToStyleObject', () => {
     expect(
       estilosToStyleObject({ ...ESTILOS, spacing: '-0.05' }).letterSpacing,
     ).toBe('-0.05em')
+  })
+
+  it('solo agrega opacidad cuando el bloque no es opaco', () => {
+    expect(estilosToStyleObject(ESTILOS)).not.toHaveProperty('opacity')
+
+    expect(estilosToStyleObject({ ...ESTILOS, opacidad: '0.6' }).opacity).toBe(
+      '0.6',
+    )
   })
 
   it('solo agrega text-shadow cuando la sombra está activa', () => {
@@ -446,6 +455,14 @@ describe('generateCode', () => {
     expect(conCapitular).toContain('    float: left;')
     expect(conCapitular).toContain('    font-size: 3.2em;')
     expect(conCapitular).toContain('    line-height: 0.9;')
+  })
+
+  it('emite la opacidad solo cuando el bloque no es opaco', () => {
+    expect(generateCode(TEXTO, ESTILOS)).not.toContain('opacity:')
+
+    expect(generateCode(TEXTO, { ...ESTILOS, opacidad: '0.55' })).toContain(
+      '    opacity: 0.55;',
+    )
   })
 
   it('emite la sombra de texto solo cuando está activa', () => {

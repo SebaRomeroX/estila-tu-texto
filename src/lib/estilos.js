@@ -41,6 +41,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   degradadoInicio: '#F0F8FF',
   degradadoFin: '#2D5AAD',
   columnas: 'una',
+  opacidad: '1',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -176,6 +177,7 @@ export function estilosToStyleObject(estilos) {
     versalitas,
     corteLinea,
     sombra,
+    opacidad,
   } = estilos
 
   return {
@@ -216,6 +218,10 @@ export function estilosToStyleObject(estilos) {
     textWrap: /** @type {import('react').CSSProperties['textWrap']} */ (
       corteLinea
     ),
+    // opacidad plena = no se emite la propiedad: el CSS por defecto queda
+    // intacto y el snapshot no cambia. Afecta al bloque completo, incluido el
+    // fondo, igual en el preview y en el snippet.
+    ...(opacidad === '1' ? {} : { opacity: opacidad }),
     // sombra apagada = no se emite la propiedad: el CSS por defecto queda
     // intacto. Es heredable, así que cubre título, subtítulo y párrafos.
     ...(sombra === 'none'
