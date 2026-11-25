@@ -844,6 +844,18 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (285/285 statements, 175/175 ramas, 71/71 funciones) · build OK ·
       test:e2e 6/6 · axe 0.
 
+[x] P2-53 Tarjeta glass con backdrop-filter  ✔ 2026-11-24
+  Verificado (2026-11-24):
+    - Campo glass ("none" | "si"). Activo, el fondo elegido pasa a rgba al
+      55% y se suman backdrop-filter (blur + saturate), borde y sombra.
+    - Si el fondo es transparente se mantiene sin fondo; el desenfoque, borde
+      y sombra sí se aplican. Un borde explícito del usuario gana sobre el de
+      glass.
+    - Tests: 7 nuevos (6 unitarios + 1 e2e) → 241/241 y 7/7.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (296/296 statements, 185/185 ramas, 73/73 funciones) · build OK ·
+      test:e2e 7/7 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1570,6 +1582,11 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       prefers-reduced-motion, tanto en el preview como en el snippet.
     - Playwright lo comprueba emulando movimiento reducido en Chromium.
 
+2026-11-24 · Post-plan · P2-53 COMPLETADO — "feat(efectos): tarjeta glass"
+    - La tarjeta usa el color de fondo al 55% con backdrop-filter blur +
+      saturate, borde y sombra. colorConAlfa tolera valores no hex.
+    - Compatible con fondo transparente y con el borde explícito del usuario.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1615,7 +1632,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 54/54 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 55/55 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).

@@ -237,6 +237,7 @@ export const StyleEditor = () => {
       </div>
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.animacion} />
+        <InputSelect elemento={InputsSelectsParams.glass} />
       </div>
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.tituloFamilia} />

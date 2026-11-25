@@ -54,6 +54,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   contornoAncho: '1',
   contornoColor: '#000000',
   animacion: 'none',
+  glass: 'none',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -100,6 +101,34 @@ export function factorSubtitulo(escalaSubtitulo) {
  */
 export function degradadoCss(estilos) {
   return `linear-gradient(135deg, ${estilos.degradadoInicio}, ${estilos.degradadoFin})`
+}
+
+/**
+ * Convierte un color hexadecimal (#RGB o #RRGGBB) a rgba con la transparencia
+ * pedida. Si el valor no es un hex válido se devuelve tal cual: el CSS nunca
+ * queda inválido, simplemente conserva el color original.
+ *
+ * @param {string} color
+ * @param {number} alfa 0–1
+ * @returns {string}
+ */
+export function colorConAlfa(color, alfa) {
+  const coincidencia = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(color.trim())
+  if (!coincidencia) return color
+
+  const valor = coincidencia[1]
+  const completo =
+    valor.length === 3
+      ? valor
+          .split('')
+          .map((caracter) => caracter + caracter)
+          .join('')
+      : valor
+  const rojo = Number.parseInt(completo.slice(0, 2), 16)
+  const verde = Number.parseInt(completo.slice(2, 4), 16)
+  const azul = Number.parseInt(completo.slice(4, 6), 16)
+
+  return `rgba(${rojo}, ${verde}, ${azul}, ${alfa})`
 }
 
 /**
@@ -201,14 +230,24 @@ export function estilosToStyleObject(estilos) {
     contorno,
     contornoAncho,
     contornoColor,
+    glass,
   } = estilos
+
+  // fondo efectivo: transparente gana; glass usa el mismo color con alfa para
+  // que el desenfoque de atrás se vea. El resto conserva el color sólido.
+  const fondo =
+    fondoTransparente === 'si'
+      ? null
+      : glass === 'si'
+        ? colorConAlfa(background, 0.55)
+        : background
 
   return {
     color,
     // fondo transparente: no se emite la propiedad (ni en el preview ni en el
     // CSS). El color guardado queda como referencia de contraste y para
     // cuando se vuelve al fondo sólido.
-    ...(fondoTransparente === 'si' ? {} : { background }),
+    ...(fondo === null ? {} : { background: fondo }),
     fontFamily: family,
     fontSize: `${size}rem`,
     fontWeight: weight,
@@ -245,6 +284,17 @@ export function estilosToStyleObject(estilos) {
     // intacto y el snapshot no cambia. Afecta al bloque completo, incluido el
     // fondo, igual en el preview y en el snippet.
     ...(opacidad === '1' ? {} : { opacity: opacidad }),
+    // tarjeta glass: desenfoque del fondo más borde y sombra suaves. El fondo
+    // translúcido se calculó arriba. Va antes del borde del usuario para que
+    // un borde explícito gane si las dos opciones están activas.
+    ...(glass === 'si'
+      ? {
+          backdropFilter: 'blur(14px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+          border: '1px solid rgba(255, 255, 255, 0.22)',
+          boxShadow: '0 18px 48px rgba(0, 0, 0, 0.35)',
+        }
+      : {}),
     // borde del bloque: apagado por defecto, así que no emite propiedades ni
     // cambia el snapshot. El radio se aplica junto con el borde.
     ...(borde === 'si'

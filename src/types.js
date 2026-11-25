@@ -51,6 +51,7 @@
  * @property {string} contornoAncho
  * @property {string} contornoColor
  * @property {string} animacion
+ * @property {string} glass
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
  * @property {string} fondoTransparente

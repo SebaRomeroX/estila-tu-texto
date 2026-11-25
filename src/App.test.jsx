@@ -467,6 +467,20 @@ describe('contorno de texto', () => {
   })
 })
 
+describe('tarjeta glass', () => {
+  it('aplica fondo translúcido, desenfoque y borde en preview y snippet', () => {
+    expect(pre).not.toHaveTextContent('backdrop-filter:')
+
+    fireEvent.change(screen.getByLabelText('Tarjeta glass'), {
+      target: { value: 'si' },
+    })
+
+    expect(preview.style.background).toContain('rgba(2, 2, 2, 0.55)')
+    expect(preview.style.boxShadow).toContain('rgba(0, 0, 0, 0.35)')
+    expect(pre).toHaveTextContent('backdrop-filter: blur(14px) saturate(140%);')
+  })
+})
+
 describe('animación de entrada', () => {
   it('aplica la clase y emite los keyframes solo cuando está activa', () => {
     expect(preview).not.toHaveClass('visualizador-animacion')

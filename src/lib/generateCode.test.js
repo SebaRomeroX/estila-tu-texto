@@ -7,6 +7,7 @@ import {
   generateHtml,
 } from './generateCode.js'
 import {
+  colorConAlfa,
   degradadoCss,
   estilosToPreviewStyle,
   estilosToStyleObject,
@@ -62,6 +63,7 @@ const ESTILOS = {
   contornoAncho: '1',
   contornoColor: '#000000',
   animacion: 'none',
+  glass: 'none',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -193,6 +195,27 @@ describe('estilosToStyleObject', () => {
     expect(conContorno.paintOrder).toBe('stroke fill')
   })
 
+  it('aplica la tarjeta glass con fondo translúcido y desenfoque', () => {
+    const porDefecto = estilosToStyleObject(ESTILOS)
+    expect(porDefecto).not.toHaveProperty('backdropFilter')
+
+    const glass = estilosToStyleObject({ ...ESTILOS, glass: 'si' })
+    expect(glass.background).toBe('rgba(2, 2, 2, 0.55)')
+    expect(glass.backdropFilter).toBe('blur(14px) saturate(140%)')
+    expect(glass.WebkitBackdropFilter).toBe('blur(14px) saturate(140%)')
+    expect(glass.boxShadow).toContain('rgba(0, 0, 0, 0.35)')
+  })
+
+  it('glass respeta el fondo transparente', () => {
+    const glass = estilosToStyleObject({
+      ...ESTILOS,
+      glass: 'si',
+      fondoTransparente: 'si',
+    })
+    expect(glass).not.toHaveProperty('background')
+    expect(glass.backdropFilter).toBe('blur(14px) saturate(140%)')
+  })
+
   it('solo agrega text-shadow cuando la sombra está activa', () => {
     expect(estilosToStyleObject(ESTILOS)).not.toHaveProperty('textShadow')
 
@@ -212,6 +235,21 @@ describe('estilosToStyleObject', () => {
         sombraColor: '#123456',
       }).textShadow,
     ).toBe('2px 4px 8px #123456')
+  })
+})
+
+describe('colorConAlfa', () => {
+  it('convierte hex de 6 dígitos a rgba', () => {
+    expect(colorConAlfa('#020202', 0.55)).toBe('rgba(2, 2, 2, 0.55)')
+    expect(colorConAlfa('#F0F8FF', 1)).toBe('rgba(240, 248, 255, 1)')
+  })
+
+  it('expande el hex de 3 dígitos', () => {
+    expect(colorConAlfa('#abc', 0.5)).toBe('rgba(170, 187, 204, 0.5)')
+  })
+
+  it('devuelve el valor original si no es un hex válido', () => {
+    expect(colorConAlfa('rgb(1, 2, 3)', 0.5)).toBe('rgb(1, 2, 3)')
   })
 })
 
@@ -638,6 +676,19 @@ describe('generateCode', () => {
     expect(conColumnas).toContain('  .texto h2,')
     expect(conColumnas).toContain('  .texto h3 {')
     expect(conColumnas).toContain('    column-span: all;')
+  })
+
+  it('emite la tarjeta glass solo cuando está activa', () => {
+    const porDefecto = generateCode(TEXTO, ESTILOS)
+    expect(porDefecto).not.toContain('backdrop-filter:')
+
+    const conGlass = generateCode(TEXTO, { ...ESTILOS, glass: 'si' })
+    expect(conGlass).toContain('background: rgba(2, 2, 2, 0.55);')
+    expect(conGlass).toContain('backdrop-filter: blur(14px) saturate(140%);')
+    expect(conGlass).toContain(
+      '-webkit-backdrop-filter: blur(14px) saturate(140%);',
+    )
+    expect(conGlass).toContain('box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);')
   })
 
   it('emite la animación de entrada y su fallback de movimiento reducido', () => {

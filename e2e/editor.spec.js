@@ -123,6 +123,19 @@ test('dos columnas se reparten en el navegador', async ({ page }, testInfo) => {
   })
 })
 
+test('la tarjeta glass aplica desenfoque y fondo translúcido', async ({
+  page,
+}) => {
+  await abrirApp(page)
+  await page.getByLabel('Tarjeta glass').selectOption('si')
+
+  const preview = page.locator('article.visualizador').first()
+  await expect(preview).toHaveCSS('background-color', 'rgba(2, 2, 2, 0.55)')
+  expect(
+    await preview.evaluate((el) => getComputedStyle(el).backdropFilter),
+  ).toContain('blur(14px)')
+})
+
 test('la animación de entrada respeta prefers-reduced-motion', async ({
   page,
 }) => {

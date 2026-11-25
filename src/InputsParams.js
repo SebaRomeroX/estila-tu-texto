@@ -202,6 +202,14 @@ export const InputsSelectsParams = {
       { nombre: 'entrada suave', contenido: 'entrada' },
     ],
   },
+  glass: {
+    label: 'Tarjeta glass',
+    campo: 'glass',
+    opciones: [
+      { nombre: 'no', contenido: 'none' },
+      { nombre: 'sí', contenido: 'si' },
+    ],
+  },
   peso: {
     label: 'Ancho letra',
     campo: 'weight',
