@@ -24,6 +24,10 @@
  * @property {string} corteLinea
  * @property {string} letraCapitular
  * @property {string} sombra
+ * @property {string} sombraX
+ * @property {string} sombraY
+ * @property {string} sombraDifuminado
+ * @property {string} sombraColor
  * @property {string} seleccion
  * @property {string} seleccionFondo
  * @property {string} seleccionTexto

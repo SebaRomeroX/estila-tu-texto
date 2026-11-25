@@ -452,6 +452,29 @@ describe('sombra de texto', () => {
     expect(preview.style.textShadow).toContain('0.4em')
     expect(pre).toHaveTextContent('text-shadow: 0 0 0.4em currentColor;')
   })
+
+  it('permite una sombra personalizada con desplazamiento, blur y color', () => {
+    expect(screen.queryByLabelText('Sombra X (px)')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Sombra'), {
+      target: { value: 'personalizada' },
+    })
+
+    fireEvent.change(screen.getByLabelText('Sombra X (px)'), {
+      target: { value: '2' },
+    })
+    fireEvent.change(screen.getByLabelText('Sombra Y (px)'), {
+      target: { value: '4' },
+    })
+    fireEvent.change(screen.getByLabelText('Difuminado sombra (px)'), {
+      target: { value: '8' },
+    })
+    fireEvent.change(screen.getByLabelText('Color sombra'), {
+      target: { value: '#123456' },
+    })
+
+    expect(pre).toHaveTextContent('text-shadow: 2px 4px 8px #123456;')
+  })
 })
 
 describe('color de selección', () => {

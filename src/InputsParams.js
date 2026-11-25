@@ -91,6 +91,27 @@ export const InputsNumberParams = {
     max: 80,
     step: 2,
   },
+  sombraX: {
+    label: 'Sombra X (px)',
+    campo: 'sombraX',
+    min: -20,
+    max: 20,
+    step: 1,
+  },
+  sombraY: {
+    label: 'Sombra Y (px)',
+    campo: 'sombraY',
+    min: -20,
+    max: 20,
+    step: 1,
+  },
+  sombraDifuminado: {
+    label: 'Difuminado sombra (px)',
+    campo: 'sombraDifuminado',
+    min: 0,
+    max: 40,
+    step: 1,
+  },
   paddingVertical: {
     label: 'Padding vertical (px)',
     campo: 'paddingVertical',
@@ -242,6 +263,7 @@ export const InputsSelectsParams = {
       { nombre: 'ninguna', contenido: 'none' },
       { nombre: 'suave', contenido: 'suave' },
       { nombre: 'resplandor', contenido: 'resplandor' },
+      { nombre: 'personalizada', contenido: 'personalizada' },
     ],
   },
   seleccion: {
@@ -299,5 +321,9 @@ export const InputsColorParams = {
   bordeColor: {
     label: 'Color borde',
     campo: 'bordeColor',
+  },
+  sombraColor: {
+    label: 'Color sombra',
+    campo: 'sombraColor',
   },
 }

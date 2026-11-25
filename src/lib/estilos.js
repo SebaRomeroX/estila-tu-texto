@@ -23,6 +23,10 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   corteLinea: 'wrap',
   letraCapitular: 'none',
   sombra: 'none',
+  sombraX: '0',
+  sombraY: '2',
+  sombraDifuminado: '4',
+  sombraColor: '#000000',
   seleccion: 'none',
   seleccionFondo: '#2F4F6F',
   seleccionTexto: '#FFFFFF',
@@ -181,6 +185,10 @@ export function estilosToStyleObject(estilos) {
     versalitas,
     corteLinea,
     sombra,
+    sombraX,
+    sombraY,
+    sombraDifuminado,
+    sombraColor,
     opacidad,
     borde,
     bordeAncho,
@@ -246,7 +254,9 @@ export function estilosToStyleObject(estilos) {
           textShadow:
             sombra === 'suave'
               ? '0 1px 2px rgba(0, 0, 0, 0.45)'
-              : '0 0 0.4em currentColor',
+              : sombra === 'resplandor'
+                ? '0 0 0.4em currentColor'
+                : `${sombraX}px ${sombraY}px ${sombraDifuminado}px ${sombraColor}`,
         }),
   }
 }

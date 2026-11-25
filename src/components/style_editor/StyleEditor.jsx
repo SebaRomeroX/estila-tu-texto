@@ -259,6 +259,14 @@ export const StyleEditor = () => {
         <InputSelect elemento={InputsSelectsParams.letraCapitular} />
         <InputSelect elemento={InputsSelectsParams.sombra} />
       </div>
+      {estilos.sombra === 'personalizada' && (
+        <div className='inputs-configuracion'>
+          <InputNumber elemento={InputsNumberParams.sombraX} />
+          <InputNumber elemento={InputsNumberParams.sombraY} />
+          <InputNumber elemento={InputsNumberParams.sombraDifuminado} />
+          <InputColor elemento={InputsColorParams.sombraColor} />
+        </div>
+      )}
       <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.seleccion} />
         {estilos.seleccion === 'personalizada' && (

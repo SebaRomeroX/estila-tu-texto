@@ -35,6 +35,10 @@ const ESTILOS = {
   corteLinea: 'wrap',
   letraCapitular: 'none',
   sombra: 'none',
+  sombraX: '0',
+  sombraY: '2',
+  sombraDifuminado: '4',
+  sombraColor: '#000000',
   seleccion: 'none',
   seleccionFondo: '#2F4F6F',
   seleccionTexto: '#FFFFFF',
@@ -181,6 +185,16 @@ describe('estilosToStyleObject', () => {
     expect(
       estilosToStyleObject({ ...ESTILOS, sombra: 'resplandor' }).textShadow,
     ).toBe('0 0 0.4em currentColor')
+    expect(
+      estilosToStyleObject({
+        ...ESTILOS,
+        sombra: 'personalizada',
+        sombraX: '2',
+        sombraY: '4',
+        sombraDifuminado: '8',
+        sombraColor: '#123456',
+      }).textShadow,
+    ).toBe('2px 4px 8px #123456')
   })
 })
 
@@ -506,6 +520,16 @@ describe('generateCode', () => {
     expect(generateCode(TEXTO, { ...ESTILOS, sombra: 'resplandor' })).toContain(
       'text-shadow: 0 0 0.4em currentColor;',
     )
+    expect(
+      generateCode(TEXTO, {
+        ...ESTILOS,
+        sombra: 'personalizada',
+        sombraX: '2',
+        sombraY: '4',
+        sombraDifuminado: '8',
+        sombraColor: '#123456',
+      }),
+    ).toContain('text-shadow: 2px 4px 8px #123456;')
   })
 
   it('emite la selección personalizada solo cuando está activa', () => {
