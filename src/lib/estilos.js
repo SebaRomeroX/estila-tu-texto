@@ -50,6 +50,9 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   bordeAncho: '2',
   bordeColor: '#F0F8FF',
   bordeRadio: '12',
+  contorno: 'none',
+  contornoAncho: '1',
+  contornoColor: '#000000',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -194,6 +197,9 @@ export function estilosToStyleObject(estilos) {
     bordeAncho,
     bordeColor,
     bordeRadio,
+    contorno,
+    contornoAncho,
+    contornoColor,
   } = estilos
 
   return {
@@ -244,6 +250,14 @@ export function estilosToStyleObject(estilos) {
       ? {
           border: `${bordeAncho}px solid ${bordeColor}`,
           borderRadius: `${bordeRadio}px`,
+        }
+      : {}),
+    // contorno del texto: apagado por defecto y sin emitir nada. El
+    // paint-order deja el relleno por encima del trazo para no taparlo.
+    ...(contorno === 'si'
+      ? {
+          WebkitTextStroke: `${contornoAncho}px ${contornoColor}`,
+          paintOrder: 'stroke fill',
         }
       : {}),
     // sombra apagada = no se emite la propiedad: el CSS por defecto queda

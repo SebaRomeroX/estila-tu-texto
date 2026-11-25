@@ -47,6 +47,9 @@
  * @property {string} bordeAncho
  * @property {string} bordeColor
  * @property {string} bordeRadio
+ * @property {string} contorno
+ * @property {string} contornoAncho
+ * @property {string} contornoColor
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
  * @property {string} fondoTransparente

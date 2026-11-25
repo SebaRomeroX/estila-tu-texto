@@ -58,6 +58,9 @@ const ESTILOS = {
   bordeAncho: '2',
   bordeColor: '#F0F8FF',
   bordeRadio: '12',
+  contorno: 'none',
+  contornoAncho: '1',
+  contornoColor: '#000000',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -174,6 +177,19 @@ describe('estilosToStyleObject', () => {
     })
     expect(conBorde.border).toBe('3px solid #123456')
     expect(conBorde.borderRadius).toBe('20px')
+  })
+
+  it('solo agrega el contorno cuando está activo', () => {
+    expect(estilosToStyleObject(ESTILOS)).not.toHaveProperty('WebkitTextStroke')
+
+    const conContorno = estilosToStyleObject({
+      ...ESTILOS,
+      contorno: 'si',
+      contornoAncho: '2',
+      contornoColor: '#123456',
+    })
+    expect(conContorno.WebkitTextStroke).toBe('2px #123456')
+    expect(conContorno.paintOrder).toBe('stroke fill')
   })
 
   it('solo agrega text-shadow cuando la sombra está activa', () => {
@@ -509,6 +525,21 @@ describe('generateCode', () => {
     })
     expect(conBorde).toContain('    border: 3px solid #123456;')
     expect(conBorde).toContain('    border-radius: 20px;')
+  })
+
+  it('emite el contorno solo cuando está activo', () => {
+    const porDefecto = generateCode(TEXTO, ESTILOS)
+    expect(porDefecto).not.toContain('-webkit-text-stroke:')
+    expect(porDefecto).not.toContain('paint-order:')
+
+    const conContorno = generateCode(TEXTO, {
+      ...ESTILOS,
+      contorno: 'si',
+      contornoAncho: '2',
+      contornoColor: '#123456',
+    })
+    expect(conContorno).toContain('    -webkit-text-stroke: 2px #123456;')
+    expect(conContorno).toContain('    paint-order: stroke fill;')
   })
 
   it('emite la sombra de texto solo cuando está activa', () => {

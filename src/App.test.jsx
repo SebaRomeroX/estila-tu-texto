@@ -441,6 +441,32 @@ describe('borde del bloque', () => {
   })
 })
 
+describe('contorno de texto', () => {
+  it('muestra los controles y emite el trazo solo cuando está activo', () => {
+    expect(pre).not.toHaveTextContent('-webkit-text-stroke:')
+    expect(
+      screen.queryByLabelText('Ancho contorno (px)'),
+    ).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Contorno de texto'), {
+      target: { value: 'si' },
+    })
+
+    fireEvent.change(screen.getByLabelText('Ancho contorno (px)'), {
+      target: { value: '2' },
+    })
+    fireEvent.change(screen.getByLabelText('Color contorno'), {
+      target: { value: '#123456' },
+    })
+
+    expect(preview.style.getPropertyValue('-webkit-text-stroke')).toBe(
+      '2px #123456',
+    )
+    expect(pre).toHaveTextContent('-webkit-text-stroke: 2px #123456;')
+    expect(pre).toHaveTextContent('paint-order: stroke fill;')
+  })
+})
+
 describe('sombra de texto', () => {
   it('aplica la sombra en el preview y en el snippet', () => {
     expect(pre).not.toHaveTextContent('text-shadow')

@@ -227,6 +227,15 @@ export const StyleEditor = () => {
         )}
       </div>
       <div className='inputs-configuracion'>
+        <InputSelect elemento={InputsSelectsParams.contorno} />
+        {estilos.contorno === 'si' && (
+          <>
+            <InputNumber elemento={InputsNumberParams.contornoAncho} />
+            <InputColor elemento={InputsColorParams.contornoColor} />
+          </>
+        )}
+      </div>
+      <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.tituloFamilia} />
         <InputSelect elemento={InputsSelectsParams.tituloPeso} />
         <InputColorPropio

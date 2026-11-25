@@ -112,6 +112,13 @@ export const InputsNumberParams = {
     max: 40,
     step: 1,
   },
+  contornoAncho: {
+    label: 'Ancho contorno (px)',
+    campo: 'contornoAncho',
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+  },
   paddingVertical: {
     label: 'Padding vertical (px)',
     campo: 'paddingVertical',
@@ -174,6 +181,14 @@ export const InputsSelectsParams = {
   borde: {
     label: 'Borde',
     campo: 'borde',
+    opciones: [
+      { nombre: 'ninguno', contenido: 'none' },
+      { nombre: 'sí', contenido: 'si' },
+    ],
+  },
+  contorno: {
+    label: 'Contorno de texto',
+    campo: 'contorno',
     opciones: [
       { nombre: 'ninguno', contenido: 'none' },
       { nombre: 'sí', contenido: 'si' },
@@ -325,5 +340,9 @@ export const InputsColorParams = {
   sombraColor: {
     label: 'Color sombra',
     campo: 'sombraColor',
+  },
+  contornoColor: {
+    label: 'Color contorno',
+    campo: 'contornoColor',
   },
 }
