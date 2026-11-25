@@ -413,6 +413,34 @@ describe('opacidad del bloque', () => {
   })
 })
 
+describe('borde del bloque', () => {
+  it('muestra los controles y emite borde + radio solo cuando está activo', () => {
+    expect(pre).not.toHaveTextContent('border-radius:')
+    expect(screen.queryByLabelText('Ancho borde (px)')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Borde'), {
+      target: { value: 'si' },
+    })
+
+    expect(screen.getByLabelText('Ancho borde (px)')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Ancho borde (px)'), {
+      target: { value: '3' },
+    })
+    fireEvent.change(screen.getByLabelText('Radio del borde (px)'), {
+      target: { value: '20' },
+    })
+    fireEvent.change(screen.getByLabelText('Color borde'), {
+      target: { value: '#123456' },
+    })
+
+    expect(preview.style.border).toBe('3px solid rgb(18, 52, 86)')
+    expect(preview.style.borderRadius).toBe('20px')
+    expect(pre).toHaveTextContent('border: 3px solid #123456;')
+    expect(pre).toHaveTextContent('border-radius: 20px;')
+  })
+})
+
 describe('sombra de texto', () => {
   it('aplica la sombra en el preview y en el snippet', () => {
     expect(pre).not.toHaveTextContent('text-shadow')

@@ -39,6 +39,10 @@
  * @property {string} degradadoFin
  * @property {string} columnas
  * @property {string} opacidad
+ * @property {string} borde
+ * @property {string} bordeAncho
+ * @property {string} bordeColor
+ * @property {string} bordeRadio
  * @property {string} paddingVertical
  * @property {string} paddingHorizontal
  * @property {string} fondoTransparente

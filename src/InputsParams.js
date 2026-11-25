@@ -77,6 +77,20 @@ export const InputsNumberParams = {
     max: 1,
     step: 0.05,
   },
+  bordeAncho: {
+    label: 'Ancho borde (px)',
+    campo: 'bordeAncho',
+    min: 0,
+    max: 20,
+    step: 1,
+  },
+  bordeRadio: {
+    label: 'Radio del borde (px)',
+    campo: 'bordeRadio',
+    min: 0,
+    max: 80,
+    step: 2,
+  },
   paddingVertical: {
     label: 'Padding vertical (px)',
     campo: 'paddingVertical',
@@ -134,6 +148,14 @@ export const InputsSelectsParams = {
     opciones: [
       { nombre: 'color sólido', contenido: 'no' },
       { nombre: 'transparente', contenido: 'si' },
+    ],
+  },
+  borde: {
+    label: 'Borde',
+    campo: 'borde',
+    opciones: [
+      { nombre: 'ninguno', contenido: 'none' },
+      { nombre: 'sí', contenido: 'si' },
     ],
   },
   peso: {
@@ -273,5 +295,9 @@ export const InputsColorParams = {
   degradadoFin: {
     label: 'Degradado fin',
     campo: 'degradadoFin',
+  },
+  bordeColor: {
+    label: 'Color borde',
+    campo: 'bordeColor',
   },
 }

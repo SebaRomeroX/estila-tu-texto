@@ -42,6 +42,10 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   degradadoFin: '#2D5AAD',
   columnas: 'una',
   opacidad: '1',
+  borde: 'none',
+  bordeAncho: '2',
+  bordeColor: '#F0F8FF',
+  bordeRadio: '12',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -178,6 +182,10 @@ export function estilosToStyleObject(estilos) {
     corteLinea,
     sombra,
     opacidad,
+    borde,
+    bordeAncho,
+    bordeColor,
+    bordeRadio,
   } = estilos
 
   return {
@@ -222,6 +230,14 @@ export function estilosToStyleObject(estilos) {
     // intacto y el snapshot no cambia. Afecta al bloque completo, incluido el
     // fondo, igual en el preview y en el snippet.
     ...(opacidad === '1' ? {} : { opacity: opacidad }),
+    // borde del bloque: apagado por defecto, así que no emite propiedades ni
+    // cambia el snapshot. El radio se aplica junto con el borde.
+    ...(borde === 'si'
+      ? {
+          border: `${bordeAncho}px solid ${bordeColor}`,
+          borderRadius: `${bordeRadio}px`,
+        }
+      : {}),
     // sombra apagada = no se emite la propiedad: el CSS por defecto queda
     // intacto. Es heredable, así que cubre título, subtítulo y párrafos.
     ...(sombra === 'none'

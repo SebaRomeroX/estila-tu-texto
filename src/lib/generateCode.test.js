@@ -50,6 +50,10 @@ const ESTILOS = {
   degradadoFin: '#2D5AAD',
   columnas: 'una',
   opacidad: '1',
+  borde: 'none',
+  bordeAncho: '2',
+  bordeColor: '#F0F8FF',
+  bordeRadio: '12',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -152,6 +156,20 @@ describe('estilosToStyleObject', () => {
     expect(estilosToStyleObject({ ...ESTILOS, opacidad: '0.6' }).opacity).toBe(
       '0.6',
     )
+  })
+
+  it('solo agrega borde y radio cuando el borde está activo', () => {
+    expect(estilosToStyleObject(ESTILOS)).not.toHaveProperty('border')
+
+    const conBorde = estilosToStyleObject({
+      ...ESTILOS,
+      borde: 'si',
+      bordeAncho: '3',
+      bordeColor: '#123456',
+      bordeRadio: '20',
+    })
+    expect(conBorde.border).toBe('3px solid #123456')
+    expect(conBorde.borderRadius).toBe('20px')
   })
 
   it('solo agrega text-shadow cuando la sombra está activa', () => {
@@ -463,6 +481,20 @@ describe('generateCode', () => {
     expect(generateCode(TEXTO, { ...ESTILOS, opacidad: '0.55' })).toContain(
       '    opacity: 0.55;',
     )
+  })
+
+  it('emite el borde y el radio solo cuando el borde está activo', () => {
+    expect(generateCode(TEXTO, ESTILOS)).not.toContain('border-radius:')
+
+    const conBorde = generateCode(TEXTO, {
+      ...ESTILOS,
+      borde: 'si',
+      bordeAncho: '3',
+      bordeColor: '#123456',
+      bordeRadio: '20',
+    })
+    expect(conBorde).toContain('    border: 3px solid #123456;')
+    expect(conBorde).toContain('    border-radius: 20px;')
   })
 
   it('emite la sombra de texto solo cuando está activa', () => {

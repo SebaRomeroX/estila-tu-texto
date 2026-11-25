@@ -217,6 +217,16 @@ export const StyleEditor = () => {
         <InputNumber elemento={InputsNumberParams.opacidad} />
       </div>
       <div className='inputs-configuracion'>
+        <InputSelect elemento={InputsSelectsParams.borde} />
+        {estilos.borde === 'si' && (
+          <>
+            <InputNumber elemento={InputsNumberParams.bordeAncho} />
+            <InputColor elemento={InputsColorParams.bordeColor} />
+            <InputNumber elemento={InputsNumberParams.bordeRadio} />
+          </>
+        )}
+      </div>
+      <div className='inputs-configuracion'>
         <InputSelect elemento={InputsSelectsParams.tituloFamilia} />
         <InputSelect elemento={InputsSelectsParams.tituloPeso} />
         <InputColorPropio
