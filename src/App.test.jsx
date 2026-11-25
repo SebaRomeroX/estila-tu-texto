@@ -467,6 +467,24 @@ describe('contorno de texto', () => {
   })
 })
 
+describe('animación de entrada', () => {
+  it('aplica la clase y emite los keyframes solo cuando está activa', () => {
+    expect(preview).not.toHaveClass('visualizador-animacion')
+    expect(pre).not.toHaveTextContent('@keyframes')
+
+    fireEvent.change(screen.getByLabelText('Animación de entrada'), {
+      target: { value: 'entrada' },
+    })
+
+    expect(preview).toHaveClass('visualizador-animacion')
+    expect(pre).toHaveTextContent('@keyframes estila-texto-entrada')
+    expect(pre).toHaveTextContent(
+      'animation: estila-texto-entrada 0.6s ease-out both;',
+    )
+    expect(pre).toHaveTextContent('@media (prefers-reduced-motion: reduce)')
+  })
+})
+
 describe('sombra de texto', () => {
   it('aplica la sombra en el preview y en el snippet', () => {
     expect(pre).not.toHaveTextContent('text-shadow')

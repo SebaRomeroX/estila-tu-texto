@@ -232,6 +232,32 @@ function generarCssReglas(estilos) {
           `  }`,
         ]
       : []),
+    // animación de entrada: solo transform para no pisar la opacidad. La
+    // media query deja el bloque quieto si el sistema pide menos movimiento.
+    // Con "none" no se emite nada y el snapshot por defecto no cambia.
+    ...(estilos.animacion === 'entrada'
+      ? [
+          ``,
+          `  @keyframes estila-texto-entrada {`,
+          `    from {`,
+          `      transform: translateY(0.6em);`,
+          `    }`,
+          `    to {`,
+          `      transform: translateY(0);`,
+          `    }`,
+          `  }`,
+          ``,
+          `  .texto {`,
+          `    animation: estila-texto-entrada 0.6s ease-out both;`,
+          `  }`,
+          ``,
+          `  @media (prefers-reduced-motion: reduce) {`,
+          `    .texto {`,
+          `      animation: none;`,
+          `    }`,
+          `  }`,
+        ]
+      : []),
   ]
 }
 

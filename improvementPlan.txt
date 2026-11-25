@@ -833,6 +833,17 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (285/285 statements, 173/173 ramas, 71/71 funciones) · build OK ·
       test:e2e 5/5 · axe 0.
 
+[x] P2-52 Animación de entrada con movimiento reducido  ✔ 2026-11-24
+  Verificado (2026-11-24):
+    - Campo animación ("none" | "entrada"). El preview agrega la clase y el
+      snippet emite @keyframes con transform (sin tocar la opacidad elegida).
+    - La animación se apaga con @media (prefers-reduced-motion: reduce) tanto
+      en el preview como en el CSS generado.
+    - Tests: 2 unitarios + 1 e2e nuevos → 234/234 y 6/6.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (285/285 statements, 175/175 ramas, 71/71 funciones) · build OK ·
+      test:e2e 6/6 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1554,6 +1565,11 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       paint-order: stroke fill para conservar el relleno.
     - Apagado por defecto: el snapshot sigue intacto.
 
+2026-11-24 · Post-plan · P2-52 COMPLETADO — "feat(efectos): animación de entrada"
+    - La entrada anima solo transform y se desactiva con
+      prefers-reduced-motion, tanto en el preview como en el snippet.
+    - Playwright lo comprueba emulando movimiento reducido en Chromium.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1599,7 +1615,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 53/53 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 54/54 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).

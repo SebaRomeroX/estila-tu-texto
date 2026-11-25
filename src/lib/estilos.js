@@ -53,6 +53,7 @@ export const ESTILOS_POR_DEFECTO = Object.freeze({
   contorno: 'none',
   contornoAncho: '1',
   contornoColor: '#000000',
+  animacion: 'none',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',

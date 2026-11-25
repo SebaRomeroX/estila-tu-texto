@@ -194,6 +194,14 @@ export const InputsSelectsParams = {
       { nombre: 'sí', contenido: 'si' },
     ],
   },
+  animacion: {
+    label: 'Animación de entrada',
+    campo: 'animacion',
+    opciones: [
+      { nombre: 'ninguna', contenido: 'none' },
+      { nombre: 'entrada suave', contenido: 'entrada' },
+    ],
+  },
   peso: {
     label: 'Ancho letra',
     campo: 'weight',

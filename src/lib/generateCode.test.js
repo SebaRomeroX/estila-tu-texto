@@ -61,6 +61,7 @@ const ESTILOS = {
   contorno: 'none',
   contornoAncho: '1',
   contornoColor: '#000000',
+  animacion: 'none',
   paddingVertical: '30',
   paddingHorizontal: '60',
   fondoTransparente: 'no',
@@ -637,6 +638,26 @@ describe('generateCode', () => {
     expect(conColumnas).toContain('  .texto h2,')
     expect(conColumnas).toContain('  .texto h3 {')
     expect(conColumnas).toContain('    column-span: all;')
+  })
+
+  it('emite la animación de entrada y su fallback de movimiento reducido', () => {
+    const porDefecto = generateCode(TEXTO, ESTILOS)
+    expect(porDefecto).not.toContain('@keyframes')
+    expect(porDefecto).not.toContain('prefers-reduced-motion')
+
+    const conAnimacion = generateCode(TEXTO, {
+      ...ESTILOS,
+      animacion: 'entrada',
+    })
+    expect(conAnimacion).toContain('  @keyframes estila-texto-entrada {')
+    expect(conAnimacion).toContain('      transform: translateY(0.6em);')
+    expect(conAnimacion).toContain(
+      '    animation: estila-texto-entrada 0.6s ease-out both;',
+    )
+    expect(conAnimacion).toContain(
+      '  @media (prefers-reduced-motion: reduce) {',
+    )
+    expect(conAnimacion).toContain('      animation: none;')
   })
 
   it('emite fuente, peso y color del título solo cuando se personalizan', () => {

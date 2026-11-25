@@ -123,6 +123,20 @@ test('dos columnas se reparten en el navegador', async ({ page }, testInfo) => {
   })
 })
 
+test('la animación de entrada respeta prefers-reduced-motion', async ({
+  page,
+}) => {
+  await abrirApp(page)
+  await page.getByLabel('Animación de entrada').selectOption('entrada')
+
+  const preview = page.locator('article.visualizador').first()
+  await expect(preview).toHaveClass(/visualizador-animacion/)
+  await expect(preview).toHaveCSS('animation-name', 'texto-entrada-preview')
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(preview).toHaveCSS('animation-name', 'none')
+})
+
 test('el contraste indicado coincide con los colores renderizados', async ({
   page,
 }) => {

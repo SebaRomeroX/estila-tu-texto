@@ -518,6 +518,28 @@ body {
   column-span: all;
 }
 
+/* animación de entrada: solo transform para no pisar la opacidad elegida.
+   La clase la pone Visualizador desde el estado, igual que la regla del
+   snippet generado. */
+@keyframes texto-entrada-preview {
+  from {
+    transform: translateY(0.6em);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.visualizador.visualizador-animacion {
+  animation: texto-entrada-preview 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visualizador.visualizador-animacion {
+    animation: none;
+  }
+}
+
 /* selección personalizada: las variables las pone Visualizador desde el
    estado, igual que la regla .texto ::selection del snippet generado. Va
    después del fallback del degradado para que el color propio gane. */
