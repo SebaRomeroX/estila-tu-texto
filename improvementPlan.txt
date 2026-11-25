@@ -778,6 +778,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · npm test 222/222 ·
       coverage 100% · build OK · test:e2e 5/5 · axe 0.
 
+[x] P2-47 Capturas, og:image y presentación del README  ✔ 2026-11-24
+  Verificado (2026-11-24):
+    - public/vista_previa.png se regeneró con Playwright desde la app real:
+      tema Editorial + degradado, 1440x538.
+    - public/og-image.png es una tarjeta 1200x630 con Open Sans self-hosteada,
+      el degradado de la app y los claims del producto.
+    - index.html agrega Open Graph completo (imagen, tipo, dimensiones y texto
+      alternativo) y Twitter summary_large_image.
+    - README: captura nueva con epígrafe, tecnologías reales (Vite, Vitest,
+      Playwright, JSDoc), scripts de e2e y sección de calidad con los conteos.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · 222 unitarios ·
+      coverage 100% · build OK · 5 e2e · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1473,6 +1486,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       esquina del padding queda con alfa 0.
     - CI instala Chromium y ejecuta npm run test:e2e después del build.
 
+2026-11-24 · Post-plan · P2-47 COMPLETADO — "docs: capturas, og:image y README"
+    - La captura del README se regeneró desde la app real con Playwright (tema
+      Editorial + degradado) y la tarjeta social 1200x630 usa la tipografía y
+      los colores del producto.
+    - Open Graph y Twitter quedan completos (summary_large_image, dimensiones,
+      tipo y alt) y el README cuenta qué es, cómo se prueba y qué tecnologías
+      usa.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1518,7 +1539,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 48/48 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 49/49 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1565,18 +1586,19 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   P2-44 agrega degradado de texto de dos colores sobre título, subtítulo y
   párrafos. P2-45 permite pasar el bloque a dos columnas con títulos a todo
   el ancho. P2-46 suma tests de navegador con Playwright para CSS computado,
-  columnas, contraste y exportación PNG.
+  columnas, contraste y exportación PNG. P2-47 renueva la captura del README,
+  la tarjeta social 1200x630 y la presentación del proyecto.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-46 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-47 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
   el tamaño en rem, la descarga como imagen, la vista limpia, el título con
   estilo propio, el padding configurable, el fondo transparente, el subtítulo
-  con estilo propio, el degradado de texto, las dos columnas y los tests de
-  navegador.
+  con estilo propio, el degradado de texto, las dos columnas, los tests de
+  navegador y la nueva presentación social.
 ================================================================================
 
 --------------------------------------------------------------------------------

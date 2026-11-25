@@ -17,12 +17,18 @@
 
 ### 🖼️ Vista Previa
 
-![vista previa](./public/vista_previa.png)
+![Vista previa de Estila tu Texto](./public/vista_previa.png)
+
+_Tema Editorial con degradado de texto, tal como se ve en el editor._
 
 ### 🛠️ Tecnologías
 
 - **React** (con Hooks)
-- **CSS**
+- **Vite** para desarrollo y build
+- **CSS** con variables y layout responsive
+- **Vitest + Testing Library** para tests unitarios y de integración
+- **Playwright** para tests de navegador (CSS real, contraste y export PNG)
+- **JSDoc + TypeScript** (`checkJs`) para tipar el dominio
 - **Netlify** para despliegue
 
 ### ✨ **Control Total de Tipografía**
@@ -95,6 +101,13 @@ npm run dev
 **Scripts útiles:** `npm run lint` · `npm test` · `npm run test:coverage` · `npm run test:e2e` · `npm run build`
 
 Los tests de navegador usan Playwright con Chromium: la primera vez ejecutá `npx playwright install chromium`.
+
+### 🧪 Calidad
+
+- **222 tests** unitarios y de integración con Vitest y Testing Library.
+- **100% de cobertura** en la lógica pura (`src/lib/**`): estilos, contraste, snippet, persistencia y compartir por URL.
+- **5 tests de navegador** con Playwright: variables CSS computadas, contraste real, dos columnas y exportación PNG (incluida la transparencia).
+- **CI** con formato, lint, typecheck, cobertura, build y e2e en cada push.
 
 ### 💡Lecciones Clave
 
