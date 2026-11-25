@@ -92,7 +92,9 @@ npm install
 npm run dev
 ```
 
-**Scripts útiles:** `npm run lint` · `npm test` · `npm run test:coverage` · `npm run build`
+**Scripts útiles:** `npm run lint` · `npm test` · `npm run test:coverage` · `npm run test:e2e` · `npm run build`
+
+Los tests de navegador usan Playwright con Chromium: la primera vez ejecutá `npx playwright install chromium`.
 
 ### 💡Lecciones Clave
 

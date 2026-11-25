@@ -13,6 +13,9 @@ dist-ssr
 coverage
 *.local
 Roadmap.txt
+test-results
+playwright-report
+blob-report
 
 # Editor directories and files
 .vscode/*

@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    // Vitest solo corre los tests de src; e2e lo ejecuta Playwright
+    include: ['src/**/*.{test,spec}.{js,jsx}'],
     setupFiles: './src/test/setup.js',
     coverage: {
       provider: 'v8',

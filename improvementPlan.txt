@@ -760,6 +760,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
       (285/285 statements, 165/165 ramas, 71/71 funciones) · build OK · axe 0.
 
+[x] P2-46 Tests de navegador con Playwright  ✔ 2026-11-24
+  Verificado (2026-11-24):
+    - @playwright/test + playwright.config.js: Chromium, Vite en
+      127.0.0.1:4173, reintentos solo en CI y reporte github en CI.
+    - e2e/editor.spec.js (5 tests): variables CSS computadas y snippet
+      compartido; dos columnas reales medidas con Range.getClientRects;
+      contraste recalculado con los colores computados por el navegador;
+      descarga PNG con firma e IHDR válidos; PNG transparente con alfa 0 en
+      la esquina del padding.
+    - Las capturas del preview quedan adjuntas al reporte como artefactos
+      visuales (dos columnas y PNG exportado).
+    - CI instala Chromium con --with-deps y corre npm run test:e2e después
+      del build.
+    - Tests: 5 e2e nuevos; los 222 unitarios se mantienen. Coverage lib sigue
+      100% (285/285 statements, 165/165 ramas, 71/71 funciones).
+    - Verificación: format OK · typecheck 0 · lint 0/0 · npm test 222/222 ·
+      coverage 100% · build OK · test:e2e 5/5 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1447,6 +1465,14 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - Con "una" no se emite CSS, así que el snapshot por defecto queda intacto.
     - Tests: 2 nuevos → 222/222 · coverage 165/165 ramas · build OK · axe 0.
 
+2026-11-24 · Post-plan · P2-46 COMPLETADO — "test(e2e): navegador real con
+  Playwright"
+    - Chromium real cubre lo que jsdom no puede: CSS computado, dos columnas
+      medidas con rectángulos, contraste recalculado y PNG descargado.
+    - El PNG transparente se decodifica en el navegador para comprobar que la
+      esquina del padding queda con alfa 0.
+    - CI instala Chromium y ejecuta npm run test:e2e después del build.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1455,8 +1481,9 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
 
   Justificación de la nota:
     Calidad de código y proceso (lo que más cambió):
-      - lint 0/0 · typecheck 0 errores · 222 tests · cobertura 100% de la
-        lógica pura (165/165 ramas) · axe 0 violaciones · build verde.
+      - lint 0/0 · typecheck 0 errores · 222 tests unitarios + 5 e2e de
+        Playwright · cobertura 100% de la lógica pura (165/165 ramas) · axe 0
+        violaciones · build verde.
       - CI con 5 puertas (format, lint, typecheck, tests+coverage, build).
       - Prettier + .editorconfig: formato único y automatizado.
     Arquitectura:
@@ -1491,7 +1518,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 47/47 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 48/48 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1537,17 +1564,19 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   P2-43 separa fuente, peso, color y escala del subtítulo.
   P2-44 agrega degradado de texto de dos colores sobre título, subtítulo y
   párrafos. P2-45 permite pasar el bloque a dos columnas con títulos a todo
-  el ancho.
+  el ancho. P2-46 suma tests de navegador con Playwright para CSS computado,
+  columnas, contraste y exportación PNG.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-45 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-46 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
   capitular, las plantillas, la sombra de texto, la selección personalizada,
   el tamaño en rem, la descarga como imagen, la vista limpia, el título con
   estilo propio, el padding configurable, el fondo transparente, el subtítulo
-  con estilo propio, el degradado de texto y las dos columnas.
+  con estilo propio, el degradado de texto, las dos columnas y los tests de
+  navegador.
 ================================================================================
 
 --------------------------------------------------------------------------------
