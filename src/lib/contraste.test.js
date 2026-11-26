@@ -36,7 +36,7 @@ describe('ratioContraste', () => {
   it('el mismo color da 1:1 y el orden no importa', () => {
     expect(ratioContraste('#123456', '#123456')).toBeCloseTo(1, 5)
     expect(ratioContraste('#000000', '#FFFFFF')).toBeCloseTo(
-      ratioContraste('#FFFFFF', '#000000'),
+      /** @type {number} */ (ratioContraste('#FFFFFF', '#000000')),
       5,
     )
   })

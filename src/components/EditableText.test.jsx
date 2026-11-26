@@ -27,7 +27,9 @@ describe('EditableText', () => {
     const { container } = render(
       <EditableText etiqueta='p' valor='base' onCambio={onCambio} />,
     )
-    const elemento = container.querySelector('p')
+    const elemento = /** @type {HTMLParagraphElement} */ (
+      container.querySelector('p')
+    )
 
     elemento.textContent = 'base editada'
     fireEvent.input(elemento)
@@ -51,7 +53,7 @@ describe('EditableText', () => {
     }
 
     const { container } = render(<Vista />)
-    const h3 = container.querySelector('h3')
+    const h3 = /** @type {HTMLHeadingElement} */ (container.querySelector('h3'))
 
     // el usuario edita en el DOM y el estado se sincroniza con él
     h3.textContent = 'editado a mano'
@@ -91,7 +93,9 @@ describe('EditableText', () => {
     const { container } = render(
       <EditableText etiqueta='p' valor='x' onCambio={() => {}} />,
     )
-    const elemento = container.querySelector('p')
+    const elemento = /** @type {HTMLParagraphElement} */ (
+      container.querySelector('p')
+    )
 
     const noCancelado = fireEvent.paste(elemento, {
       clipboardData: { getData: vi.fn(() => '<b>rico</b>') },

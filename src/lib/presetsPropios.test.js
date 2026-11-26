@@ -81,7 +81,7 @@ describe('guardarPresets', () => {
   it('persiste la lista', () => {
     guardarPresets([{ nombre: 'Uno', estilos: ESTILOS }])
 
-    expect(JSON.parse(localStorage.getItem(CLAVE_PRESETS))).toEqual([
+    expect(JSON.parse(localStorage.getItem(CLAVE_PRESETS) ?? '[]')).toEqual([
       { nombre: 'Uno', estilos: ESTILOS },
     ])
   })

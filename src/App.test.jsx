@@ -39,8 +39,10 @@ function renderApp() {
     </IdiomaProvider>,
   )
   container = app.container
-  pre = container.querySelector('pre')
-  preview = container.querySelector('.visualizador')
+  pre = /** @type {HTMLPreElement} */ (container.querySelector('pre'))
+  preview = /** @type {HTMLElement} */ (
+    container.querySelector('.visualizador')
+  )
 }
 
 beforeEach(() => {
@@ -363,7 +365,9 @@ describe('validación de rangos de los inputs numéricos', () => {
 
 describe('vista de editor de código', () => {
   it('numera las líneas sin incluirlas en el texto copiable', () => {
-    const gutter = container.querySelector('.codigo-lineas')
+    const gutter = /** @type {HTMLElement} */ (
+      container.querySelector('.codigo-lineas')
+    )
 
     expect(gutter).toHaveAttribute('aria-hidden', 'true')
     expect(gutter.children).toHaveLength(pre.textContent.split('\n').length)
@@ -1219,6 +1223,7 @@ describe('compartir por URL', () => {
     await screen.findByText('✔')
     const [enlace] = vi.mocked(navigator.clipboard.writeText).mock.calls[0]
     const estado = decodificarEstado(new URL(enlace).hash)
+    if (!estado) throw new Error('el enlace compartido no se pudo decodificar')
 
     expect(estado.texto.titulo).toBe('Texto de Ejemplo')
     expect(estado.estilos.color).toBe('#123456')
@@ -1581,10 +1586,10 @@ describe('borrar datos guardados', () => {
     expect(within(preview).getByText('Texto de Ejemplo')).toBeInTheDocument()
     expect(within(preview).queryByText('Dato sensible')).not.toBeInTheDocument()
     // y lo persistido ya no contiene datos personales
-    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS)).color).toBe(
+    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS) ?? '{}').color).toBe(
       '#F0F8FF',
     )
-    expect(JSON.parse(localStorage.getItem(CLAVE_TEXTO)).titulo).toBe(
+    expect(JSON.parse(localStorage.getItem(CLAVE_TEXTO) ?? '{}').titulo).toBe(
       'Texto de Ejemplo',
     )
     // feedback para lectores de pantalla
@@ -1602,7 +1607,7 @@ describe('borrar datos guardados', () => {
     )
 
     expect(preview.style.color).toBe('rgb(18, 52, 86)')
-    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS)).color).toBe(
+    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS) ?? '{}').color).toBe(
       '#123456',
     )
   })

@@ -77,7 +77,7 @@ describe('guardarObjeto', () => {
   it('escribe el objeto serializado', () => {
     guardarObjeto(CLAVE_ESTILOS, { color: '#abcdef', size: '1.2' })
 
-    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS))).toEqual({
+    expect(JSON.parse(localStorage.getItem(CLAVE_ESTILOS) ?? '{}')).toEqual({
       color: '#abcdef',
       size: '1.2',
     })

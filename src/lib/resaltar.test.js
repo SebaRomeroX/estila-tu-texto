@@ -21,7 +21,11 @@ const reconstruir = (lineas) =>
  * @param {import('../types.js').Token[]} linea
  * @param {import('../types.js').TipoToken} tipo
  */
-const buscar = (linea, tipo) => linea.find((token) => token.tipo === tipo)
+const buscar = (linea, tipo) => {
+  const token = linea.find((elemento) => elemento.tipo === tipo)
+  if (!token) throw new Error(`no se encontró el token ${tipo}`)
+  return token
+}
 
 describe('resaltarCodigo', () => {
   it('es lossless: reconstruye el snippet exacto', () => {

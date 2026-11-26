@@ -19,6 +19,7 @@ beforeEach(() => {
     value: vi.fn(),
   })
   vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(
+    /** @this {HTMLAnchorElement} */
     function () {
       enlaceClickeado = /** @type {HTMLAnchorElement} */ (this)
     },

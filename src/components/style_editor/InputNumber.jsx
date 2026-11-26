@@ -3,7 +3,7 @@ import { EstilosContext } from '../../context/estilosContext.js'
 import { IdiomaContext } from '../../context/idiomaContext.js'
 
 /**
- * @param {import('../../types.js').ParametrosInput} props
+ * @param {import('../../types.js').ParametrosInputNumber} props
  */
 export const InputNumber = ({ elemento }) => {
   const { label, min, max, step, campo } = elemento

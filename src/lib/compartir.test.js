@@ -52,6 +52,7 @@ describe('codificarEstado / decodificarEstado', () => {
     )
 
     const estado = decodificarEstado(`#s=${payload}`)
+    if (!estado) throw new Error('el payload válido debería decodificar')
 
     expect(estado.texto.titulo).toBe('Hola')
     expect(estado.texto.parrafo1).toBe(TEXTO_POR_DEFECTO.parrafo1)

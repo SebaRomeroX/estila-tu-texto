@@ -120,18 +120,24 @@
  * @property {string} contenido pila CSS que se guarda y se emite
  * @property {boolean} web true si se self-hostea en public/fonts
  * @property {string} [google] familia para la CSS2 API de Google Fonts
- * @property {string} [grupo] etiqueta del <optgroup>
+ * @property {string} grupo etiqueta del <optgroup>
  *
  * @typedef {Object} ElementoInput
  * @property {string} label
  * @property {CampoEstilo} campo
- * @property {number} [min]
- * @property {number} [max]
- * @property {number} [step]
- * @property {Opcion[]} [opciones]
+ *
+ * @typedef {ElementoInput & { min: number, max: number, step: number }} ElementoInputNumber
+ *
+ * @typedef {ElementoInput & { opciones: Opcion[] }} ElementoInputSelect
  *
  * @typedef {Object} ParametrosInput
  * @property {ElementoInput} elemento
+ *
+ * @typedef {Object} ParametrosInputNumber
+ * @property {ElementoInputNumber} elemento
+ *
+ * @typedef {Object} ParametrosInputSelect
+ * @property {ElementoInputSelect} elemento
  *
  * @typedef {Object} ParametrosEditableText
  * @property {string} [etiqueta] etiqueta HTML a renderizar (default: p)

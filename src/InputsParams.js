@@ -4,7 +4,7 @@ import { FUENTES } from './lib/fuentes.js'
  * Fichas de configuración de cada input. Tipadas como ElementoInput para que
  * `campo` sea CampoEstilo (no string suelto) y el compilador valide los rangos.
  *
- * @type {Record<string, import('./types.js').ElementoInput>}
+ * @type {Record<string, import('./types.js').ElementoInputNumber>}
  */
 export const InputsNumberParams = {
   gap: {
@@ -160,7 +160,7 @@ const OPCIONES_PESO_TITULO = [
   ...OPCIONES_PESO,
 ]
 
-/** @type {Record<string, import('./types.js').ElementoInput>} */
+/** @type {Record<string, import('./types.js').ElementoInputSelect>} */
 export const InputsSelectsParams = {
   align: {
     label: 'Posicion texto',
