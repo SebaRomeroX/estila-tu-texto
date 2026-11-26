@@ -9,6 +9,15 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'list',
+  expect: {
+    toHaveScreenshot: {
+      // diferencias mínimas por antialiasing no deben romper el build; los
+      // cambios reales de layout o color superan ampliamente este umbral
+      maxDiffPixelRatio: 0.01,
+      animations: 'disabled',
+      caret: 'hide',
+    },
+  },
   use: {
     baseURL,
     trace: 'on-first-retry',

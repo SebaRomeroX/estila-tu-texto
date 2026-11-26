@@ -870,6 +870,19 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (309/309 statements, 200/200 ramas, 78/78 funciones) · build OK ·
       test:e2e 8/8 · axe 0.
 
+[x] P2-55 Regresión visual con snapshots de Playwright  ✔ 2026-11-25
+  Verificado (2026-11-25):
+    - toHaveScreenshot con maxDiffPixelRatio 0.01, animaciones desactivadas y
+      caret oculto. Dos baselines por plataforma: preview por defecto y tema
+      Editorial con degradado de texto.
+    - Las capturas protegen tipografía, colores, fondo y relleno del texto:
+      un cambio real de layout o color rompe el test, mientras que el
+      antialiasing no genera falsos positivos.
+    - Tests: 1 e2e nuevo con 2 snapshots → 254/254 unitarios y 9/9 e2e.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (309/309 statements, 200/200 ramas, 78/78 funciones) · build OK ·
+      test:e2e 9/9 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1607,6 +1620,10 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       en el header; <html lang> y los comentarios del snippet acompañan.
     - El texto editable y las plantillas son datos y no se traducen.
 
+2026-11-25 · Post-plan · P2-55 COMPLETADO — "test(e2e): regresión visual"
+    - Baselines del preview por defecto y de Editorial con degradado, con
+      tolerancia mínima para antialiasing, animaciones y caret desactivados.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1652,7 +1669,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 56/56 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 57/57 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1789,7 +1806,7 @@ D) FUNCIONES DE PRODUCTO
 
 E) CALIDAD TÉCNICA
   - TypeScript estricto (hoy JSDoc + strict:false)               L
-  - Playwright + snapshots visuales (contraste real)             M
+  - Playwright + snapshots visuales (contraste real)             M → P2-55
   - Code splitting (bundle ~222 KB JS; html-to-image ya va en chunk aparte) S
   - i18n                                                         L
 

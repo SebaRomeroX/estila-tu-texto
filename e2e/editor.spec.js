@@ -63,6 +63,20 @@ async function descargarPng(page) {
   return { download, png: Buffer.concat(trozos) }
 }
 
+test('capturas de regresión visual del preview', async ({ page }) => {
+  await abrirApp(page)
+  const preview = page.locator('article.visualizador').first()
+
+  // sin cambios: el snapshot por defecto protege tipografía, colores y
+  // espaciado del bloque base
+  await expect(preview).toHaveScreenshot('preview-default.png')
+
+  // tema claro + degradado: cubre variables, fondo y relleno del texto
+  await page.getByRole('button', { name: /tema Editorial/i }).click()
+  await page.getByLabel('Degradado de texto').selectOption('degradado')
+  await expect(preview).toHaveScreenshot('preview-editorial-degradado.png')
+})
+
 test('el preview y el snippet comparten variables y estado', async ({
   page,
 }) => {
