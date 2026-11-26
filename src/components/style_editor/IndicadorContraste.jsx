@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 import { evaluarContraste } from '../../lib/contraste.js'
 
 /**
@@ -10,6 +11,7 @@ import { evaluarContraste } from '../../lib/contraste.js'
  * @param {{ etiqueta: string, color: string, fondo: string }} props
  */
 const IndicadorContrastePar = ({ etiqueta, color, fondo }) => {
+  const { t } = useContext(IdiomaContext)
   const resultado = evaluarContraste(color, fondo)
 
   // colores no parseables (storage editado a mano): no hay nada que informar
@@ -20,21 +22,23 @@ const IndicadorContrastePar = ({ etiqueta, color, fondo }) => {
       <span className='contraste-etiqueta'>{etiqueta}</span>
       <strong>{resultado.ratio.toFixed(2)}:1</strong>
       <span aria-hidden='true'>·</span>
-      {resultado.nivel}
+      {t(resultado.nivel)}
     </p>
   )
 }
 
 export const IndicadorContraste = () => {
   const { estilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
 
   // con fondo transparente el color guardado no pinta el bloque: el ratio es
   // una referencia para el fondo donde se vaya a incrustar
-  const referencia = estilos.fondoTransparente === 'si' ? ' (referencia)' : ''
+  const referencia =
+    estilos.fondoTransparente === 'si' ? t(' (referencia)') : ''
 
   return (
     <IndicadorContrastePar
-      etiqueta={`Contraste texto/fondo${referencia}`}
+      etiqueta={`${t('Contraste texto/fondo')}${referencia}`}
       color={estilos.color}
       fondo={estilos.background}
     />
@@ -47,11 +51,12 @@ export const IndicadorContraste = () => {
  */
 export const IndicadorContrasteSeleccion = () => {
   const { estilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   if (estilos.seleccion === 'none') return null
 
   return (
     <IndicadorContrastePar
-      etiqueta='Contraste selección'
+      etiqueta={t('Contraste selección')}
       color={estilos.seleccionTexto}
       fondo={estilos.seleccionFondo}
     />
@@ -64,13 +69,15 @@ export const IndicadorContrasteSeleccion = () => {
  */
 export const IndicadorContrasteTitulo = () => {
   const { estilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   if (!estilos.tituloColor) return null
 
-  const referencia = estilos.fondoTransparente === 'si' ? ' (referencia)' : ''
+  const referencia =
+    estilos.fondoTransparente === 'si' ? t(' (referencia)') : ''
 
   return (
     <IndicadorContrastePar
-      etiqueta={`Contraste título${referencia}`}
+      etiqueta={`${t('Contraste título')}${referencia}`}
       color={estilos.tituloColor}
       fondo={estilos.background}
     />
@@ -82,13 +89,15 @@ export const IndicadorContrasteTitulo = () => {
  */
 export const IndicadorContrasteSubtitulo = () => {
   const { estilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   if (!estilos.subtituloColor) return null
 
-  const referencia = estilos.fondoTransparente === 'si' ? ' (referencia)' : ''
+  const referencia =
+    estilos.fondoTransparente === 'si' ? t(' (referencia)') : ''
 
   return (
     <IndicadorContrastePar
-      etiqueta={`Contraste subtítulo${referencia}`}
+      etiqueta={`${t('Contraste subtítulo')}${referencia}`}
       color={estilos.subtituloColor}
       fondo={estilos.background}
     />

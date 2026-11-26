@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 
 /**
  * @param {import('../../types.js').ParametrosInput} props
@@ -7,13 +8,14 @@ import { EstilosContext } from '../../context/estilosContext.js'
 export const InputColor = ({ elemento }) => {
   const { label, campo } = elemento
   const { estilos, actualizarEstilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
 
   const valorObtenido = estilos[campo]
 
   return (
     <div className='campo-color'>
       <label>
-        <span>{label}</span>
+        <span>{t(label)}</span>
         <input
           type='color'
           onChange={(e) => actualizarEstilos(campo, e.target.value)}

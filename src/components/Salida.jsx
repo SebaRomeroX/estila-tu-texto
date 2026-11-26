@@ -1,5 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
+import { IdiomaContext } from '../context/idiomaContext.js'
 import { crearEnlace } from '../lib/compartir.js'
 import { descargarHtml } from '../lib/descargar.js'
 import {
@@ -46,13 +47,14 @@ const ESTADOS_ENLACE = {
  */
 export const SalidaCodigo = ({ texto }) => {
   const { estilos } = useContext(EstilosContext)
+  const { idioma, t } = useContext(IdiomaContext)
   const copia = useCopiar()
   const copiaHtml = useCopiar()
   const copiaCss = useCopiar()
   const enlace = useCopiar()
 
   // misma función para mostrar y para copiar → no pueden divergir
-  const codigo = generateCode(texto, estilos)
+  const codigo = generateCode(texto, estilos, idioma)
   // el resaltado es solo de presentación: parte del mismo string
   const lineas = useMemo(() => resaltarCodigo(codigo), [codigo])
   const { emoji, mensaje } = ESTADOS_COPIA[copia.estado]
@@ -67,7 +69,7 @@ export const SalidaCodigo = ({ texto }) => {
   }
 
   function copiarHtml() {
-    copiaHtml.copiar(generateHtml(texto, estilos))
+    copiaHtml.copiar(generateHtml(texto, estilos, idioma))
   }
 
   function copiarCss() {
@@ -81,7 +83,7 @@ export const SalidaCodigo = ({ texto }) => {
 
   function descargar() {
     // documento completo: se puede abrir en el navegador sin esta app
-    descargarHtml(generateDocumento(texto, estilos))
+    descargarHtml(generateDocumento(texto, estilos, idioma))
   }
 
   return (
@@ -89,39 +91,47 @@ export const SalidaCodigo = ({ texto }) => {
       <article className='salida-codigo'>
         <header>
           <div className='salida-codigo-titulo'>
-            <h2 className='titulo'>Codigo</h2>
+            <h2 className='titulo'>{t('Codigo')}</h2>
             <span className='codigo-lenguaje'>HTML + CSS</span>
           </div>
           <div className='salida-codigo-acciones'>
             <button type='button' onClick={descargar}>
-              Descargar .html <span aria-hidden='true'>⤓</span>
+              {t('Descargar .html')} <span aria-hidden='true'>⤓</span>
             </button>
             <button type='button' onClick={compartir}>
-              Compartir <span aria-hidden='true'>{emojiEnlace}</span>
+              {t('Compartir')} <span aria-hidden='true'>{emojiEnlace}</span>
               <span className='sr-only' role='status' aria-live='polite'>
-                {mensajeEnlace}
-              </span>
-            </button>
-            <button type='button' aria-label='Copiar HTML' onClick={copiarHtml}>
-              HTML <span aria-hidden='true'>{emojiHtml}</span>
-              <span className='sr-only' role='status' aria-live='polite'>
-                {mensajeHtml}
-              </span>
-            </button>
-            <button type='button' aria-label='Copiar CSS' onClick={copiarCss}>
-              CSS <span aria-hidden='true'>{emojiCss}</span>
-              <span className='sr-only' role='status' aria-live='polite'>
-                {mensajeCss}
+                {t(mensajeEnlace)}
               </span>
             </button>
             <button
               type='button'
-              aria-label='Copiar HTML y CSS'
+              aria-label={t('Copiar HTML')}
+              onClick={copiarHtml}
+            >
+              HTML <span aria-hidden='true'>{emojiHtml}</span>
+              <span className='sr-only' role='status' aria-live='polite'>
+                {t(mensajeHtml)}
+              </span>
+            </button>
+            <button
+              type='button'
+              aria-label={t('Copiar CSS')}
+              onClick={copiarCss}
+            >
+              CSS <span aria-hidden='true'>{emojiCss}</span>
+              <span className='sr-only' role='status' aria-live='polite'>
+                {t(mensajeCss)}
+              </span>
+            </button>
+            <button
+              type='button'
+              aria-label={t('Copiar HTML y CSS')}
               onClick={copiarCodigo}
             >
-              Copiar todo <span aria-hidden='true'>{emoji}</span>
+              {t('Copiar todo')} <span aria-hidden='true'>{emoji}</span>
               <span className='sr-only' role='status' aria-live='polite'>
-                {mensaje}
+                {t(mensaje)}
               </span>
             </button>
           </div>

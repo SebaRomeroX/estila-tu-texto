@@ -4,7 +4,9 @@ import { StyleEditor } from './components/style_editor/StyleEditor'
 import { SalidaCodigo } from './components/Salida'
 import { Visualizador } from './components/Visualizador'
 import { EstilosContext } from './context/estilosContext.js'
+import { IdiomaContext } from './context/idiomaContext.js'
 import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
+import { IDIOMAS } from './lib/i18n.js'
 import { decodificarEstado, limpiarHashCompartido } from './lib/compartir.js'
 import {
   CLAVE_TEXTO,
@@ -16,6 +18,7 @@ import { TEXTO_POR_DEFECTO } from './lib/texto.js'
 
 const App = () => {
   const { aplicarEstilos, limpiarHistorial } = useContext(EstilosContext)
+  const { idioma, cambiarIdioma, t } = useContext(IdiomaContext)
   const [mensajeBorrado, setMensajeBorrado] = useState('')
 
   // init lazy: un enlace compartido gana; si no hay, la sesión anterior (si
@@ -64,7 +67,9 @@ const App = () => {
   // acción destructiva: pide confirmación antes de borrar nada
   function borrarDatosGuardados() {
     const confirmado = window.confirm(
-      'Se borrarán tu texto y estilos guardados en este navegador. ¿Continuar?',
+      t(
+        'Se borrarán tu texto y estilos guardados en este navegador. ¿Continuar?',
+      ),
     )
     if (!confirmado) return
 
@@ -73,13 +78,27 @@ const App = () => {
     aplicarEstilos(ESTILOS_POR_DEFECTO)
     // el historial es de la sesión: si se borran los datos, no queda rastro
     limpiarHistorial()
-    setMensajeBorrado('Datos guardados borrados')
+    setMensajeBorrado(t('Datos guardados borrados'))
   }
 
   return (
     <div>
       <header className='header'>
-        <h1 className='titulo seccion'>Estila tu Texto</h1>
+        <h1 className='titulo header-titulo'>Estila tu Texto</h1>
+        <label className='idioma-selector'>
+          <span className='sr-only'>{t('Idioma')}</span>
+          <select
+            aria-label={t('Idioma')}
+            value={idioma}
+            onChange={(e) => cambiarIdioma(e.target.value)}
+          >
+            {IDIOMAS.map((opcion) => (
+              <option key={opcion.id} value={opcion.id}>
+                {opcion.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
       </header>
       <main>
         <StyleEditor />
@@ -93,7 +112,7 @@ const App = () => {
       </main>
       <footer className='footer'>
         <p>
-          Hecho con ❤ por{' '}
+          {t('Hecho con ❤ por')}{' '}
           <a
             target='_blank'
             rel='noreferrer'
@@ -104,15 +123,15 @@ const App = () => {
         </p>
         <p className='nota-privacidad'>
           <span aria-hidden='true'>🔒 </span>
-          Guardado local: tu texto y estilos se quedan en este navegador
-          (localStorage); en un equipo compartido, quienes tengan acceso podrán
-          verlos.{' '}
+          {t(
+            'Guardado local: tu texto y estilos se quedan en este navegador (localStorage); en un equipo compartido, quienes tengan acceso podrán verlos.',
+          )}{' '}
           <button
             type='button'
             className='borrar-datos'
             onClick={borrarDatosGuardados}
           >
-            Borrar datos guardados
+            {t('Borrar datos guardados')}
           </button>
           <span className='sr-only' role='status' aria-live='polite'>
             {mensajeBorrado}

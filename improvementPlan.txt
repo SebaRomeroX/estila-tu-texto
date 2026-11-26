@@ -856,6 +856,20 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (296/296 statements, 185/185 ramas, 73/73 funciones) · build OK ·
       test:e2e 7/7 · axe 0.
 
+[x] P2-54 Internacionalización de la interfaz  ✔ 2026-11-25
+  Verificado (2026-11-25):
+    - Español (fuente) e inglés, con selector en el header. Traduce shell,
+      controles, opciones, plantillas, temas, avisos de contraste/fuentes,
+      estados de copia y mensajes de confirmación.
+    - El idioma se guarda en localStorage, se aplica a <html lang> y también
+      traduce los comentarios del snippet y el lang del documento descargado.
+    - El contenido editable y los textos de las plantillas siguen siendo datos
+      del usuario: no se traducen ni se pisan al cambiar de idioma.
+    - Tests: 13 nuevos (11 unitarios + 2 integración) + 1 e2e → 254/254 y 8/8.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage lib 100%
+      (309/309 statements, 200/200 ramas, 78/78 funciones) · build OK ·
+      test:e2e 8/8 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1587,6 +1601,12 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       saturate, borde y sombra. colorConAlfa tolera valores no hex.
     - Compatible con fondo transparente y con el borde explícito del usuario.
 
+2026-11-25 · Post-plan · P2-54 COMPLETADO — "feat(i18n): interfaz en español e
+  inglés"
+    - Diccionario ES→EN con marcadores, provider con persistencia y selector
+      en el header; <html lang> y los comentarios del snippet acompañan.
+    - El texto editable y las plantillas son datos y no se traducen.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1632,7 +1652,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 55/55 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 56/56 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).

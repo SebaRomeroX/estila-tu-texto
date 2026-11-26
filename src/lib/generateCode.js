@@ -6,6 +6,7 @@ import {
   paddingBloque,
 } from './estilos.js'
 import { enlaceGoogleFonts } from './fuentes.js'
+import { normalizarIdioma, traducir } from './i18n.js'
 
 /**
  * Escapa texto del usuario para inyectarlo seguro dentro del HTML del snippet.
@@ -276,14 +277,21 @@ function generarCss(estilos) {
  *
  * @param {import('../types.js').Texto} texto
  * @param {import('../types.js').Estilos} estilos
+ * @param {string} [idioma]
  * @returns {string[]}
  */
-function generarHtmlConFuente(texto, estilos) {
+function generarHtmlConFuente(texto, estilos, idioma = 'es') {
   const enlaces = enlacesFuente(estilos)
   const comentario =
     enlaces.length > 1
-      ? `<!-- Fuentes web: carga estas hojas para que el texto se vea igual fuera de la app -->`
-      : `<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->`
+      ? `<!-- ${traducir(
+          idioma,
+          'Fuentes web: carga estas hojas para que el texto se vea igual fuera de la app',
+        )} -->`
+      : `<!-- ${traducir(
+          idioma,
+          'Fuente web: carga esta hoja para que el texto se vea igual fuera de la app',
+        )} -->`
 
   return [
     // solo para fuentes web: sin esta hoja el snippet se ve distinto fuera de
@@ -306,10 +314,11 @@ function generarHtmlConFuente(texto, estilos) {
  *
  * @param {import('../types.js').Texto} texto
  * @param {import('../types.js').Estilos} estilos
+ * @param {string} [idioma]
  * @returns {string}
  */
-export function generateHtml(texto, estilos) {
-  return generarHtmlConFuente(texto, estilos).join('\n')
+export function generateHtml(texto, estilos, idioma = 'es') {
+  return generarHtmlConFuente(texto, estilos, idioma).join('\n')
 }
 
 /**
@@ -328,11 +337,12 @@ export function generateCss(estilos) {
  *
  * @param {import('../types.js').Texto} texto
  * @param {import('../types.js').Estilos} estilos
+ * @param {string} [idioma]
  * @returns {string}
  */
-export function generateCode(texto, estilos) {
+export function generateCode(texto, estilos, idioma = 'es') {
   return [
-    ...generarHtmlConFuente(texto, estilos),
+    ...generarHtmlConFuente(texto, estilos, idioma),
     ``,
     ...generarCss(estilos),
   ].join('\n')
@@ -344,15 +354,16 @@ export function generateCode(texto, estilos) {
  *
  * @param {import('../types.js').Texto} texto
  * @param {import('../types.js').Estilos} estilos
+ * @param {string} [idioma]
  * @returns {string}
  */
-export function generateDocumento(texto, estilos) {
+export function generateDocumento(texto, estilos, idioma = 'es') {
   const enlaces = enlacesFuente(estilos)
   const titulo = texto.titulo.trim() || 'Estila tu Texto'
 
   return [
     `<!doctype html>`,
-    `<html lang="es">`,
+    `<html lang="${normalizarIdioma(idioma)}">`,
     `<head>`,
     `  <meta charset="utf-8">`,
     `  <meta name="viewport" content="width=device-width, initial-scale=1">`,

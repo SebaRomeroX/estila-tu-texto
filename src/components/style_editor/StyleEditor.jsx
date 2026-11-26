@@ -5,6 +5,7 @@ import {
   InputsSelectsParams,
 } from '../../InputsParams.js'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 import { ESTILOS_POR_DEFECTO } from '../../lib/estilos.js'
 import { EVENTO_DATOS_BORRADOS } from '../../lib/persistencia.js'
 import { PRESETS, esMismoEstilo, presetActivo } from '../../lib/presets.js'
@@ -50,6 +51,7 @@ export const StyleEditor = () => {
     rehacer,
     irAHistorial,
   } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   const activo = presetActivo(estilos)
 
   // temas propios: estado local + localStorage. "Borrar datos guardados" los
@@ -80,7 +82,7 @@ export const StyleEditor = () => {
     guardarPresets(nuevos)
     setPresetsPropios(nuevos)
     setNombreNuevo('')
-    setMensaje(`Tema «${nombre}» guardado`)
+    setMensaje(t('Tema «{nombre}» guardado', { nombre }))
   }
 
   /**
@@ -90,23 +92,23 @@ export const StyleEditor = () => {
     const nuevos = quitarPreset(presetsPropios, nombre)
     guardarPresets(nuevos)
     setPresetsPropios(nuevos)
-    setMensaje(`Tema «${nombre}» eliminado`)
+    setMensaje(t('Tema «{nombre}» eliminado', { nombre }))
   }
 
   return (
     <section className='seccion'>
-      <h2 className='titulo'>Configuracion</h2>
+      <h2 className='titulo'>{t('Configuracion')}</h2>
       <div className='temas'>
-        <span className='temas-label'>Temas:</span>
+        <span className='temas-label'>{t('Temas:')}</span>
         {PRESETS.map(({ id, nombre, estilos }) => (
           <button
             key={id}
             type='button'
-            aria-label={`Aplicar tema ${nombre}`}
+            aria-label={t('Aplicar tema {nombre}', { nombre: t(nombre) })}
             aria-pressed={id === activo}
             onClick={() => aplicarEstilos(estilos)}
           >
-            {nombre}
+            {t(nombre)}
           </button>
         ))}
         <button
@@ -114,19 +116,19 @@ export const StyleEditor = () => {
           className='temas-reset'
           onClick={() => aplicarEstilos(ESTILOS_POR_DEFECTO)}
         >
-          Restablecer estilos <span aria-hidden='true'>↺</span>
+          {t('Restablecer estilos')} <span aria-hidden='true'>↺</span>
         </button>
       </div>
 
       <div className='historial'>
         <button type='button' onClick={deshacer} disabled={!puedeDeshacer}>
-          <span aria-hidden='true'>↶</span> Deshacer
+          <span aria-hidden='true'>↶</span> {t('Deshacer')}
         </button>
         <button type='button' onClick={rehacer} disabled={!puedeRehacer}>
-          <span aria-hidden='true'>↷</span> Rehacer
+          <span aria-hidden='true'>↷</span> {t('Rehacer')}
         </button>
         <label className='historial-selector'>
-          <span>Historial</span>
+          <span>{t('Historial')}</span>
           <select
             value={indiceHistorial}
             onChange={(e) => irAHistorial(Number(e.target.value))}
@@ -134,7 +136,7 @@ export const StyleEditor = () => {
             {historial.map((estado, indice) => (
               <option key={indice} value={indice}>
                 {indice + 1}. {resumenEstilos(estado)}
-                {indice === indiceHistorial ? ' (actual)' : ''}
+                {indice === indiceHistorial ? ` ${t('(actual)')}` : ''}
               </option>
             ))}
           </select>
@@ -143,12 +145,14 @@ export const StyleEditor = () => {
 
       {presetsPropios.length > 0 && (
         <div className='temas'>
-          <span className='temas-label'>Mis temas:</span>
+          <span className='temas-label'>{t('Mis temas:')}</span>
           {presetsPropios.map((preset) => (
             <span key={preset.nombre} className='tema-propio'>
               <button
                 type='button'
-                aria-label={`Aplicar tema propio ${preset.nombre}`}
+                aria-label={t('Aplicar tema propio {nombre}', {
+                  nombre: preset.nombre,
+                })}
                 aria-pressed={
                   activo === null && esMismoEstilo(estilos, preset.estilos)
                 }
@@ -159,7 +163,9 @@ export const StyleEditor = () => {
               <button
                 type='button'
                 className='tema-propio-borrar'
-                aria-label={`Eliminar tema propio ${preset.nombre}`}
+                aria-label={t('Eliminar tema propio {nombre}', {
+                  nombre: preset.nombre,
+                })}
                 onClick={() => eliminarTema(preset.nombre)}
               >
                 ×
@@ -171,17 +177,17 @@ export const StyleEditor = () => {
 
       <form className='guardar-tema' onSubmit={guardarTema}>
         <label>
-          <span>Guardar tema actual</span>
+          <span>{t('Guardar tema actual')}</span>
           <input
             type='text'
             value={nombreNuevo}
             maxLength={40}
-            placeholder='Mi tema'
+            placeholder={t('Mi tema')}
             onChange={(e) => setNombreNuevo(e.target.value)}
           />
         </label>
         <button type='submit' disabled={!nombreNuevo.trim()}>
-          Guardar tema
+          {t('Guardar tema')}
         </button>
         <span className='sr-only' role='status' aria-live='polite'>
           {mensaje}
@@ -199,8 +205,9 @@ export const StyleEditor = () => {
       </div>
       {estilos.fondoTransparente === 'si' && (
         <p className='aviso-fondo'>
-          Con fondo transparente, «Color fondo» solo se usa como referencia de
-          contraste: el bloque y la imagen se exportan sin fondo.
+          {t(
+            'Con fondo transparente, «Color fondo» solo se usa como referencia de contraste: el bloque y la imagen se exportan sin fondo.',
+          )}
         </p>
       )}
       <IndicadorContraste />

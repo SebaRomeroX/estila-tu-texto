@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 
 /**
  * @param {import('../../types.js').ParametrosInput} props
@@ -7,6 +8,7 @@ import { EstilosContext } from '../../context/estilosContext.js'
 export const InputNumber = ({ elemento }) => {
   const { label, min, max, step, campo } = elemento
   const { estilos, actualizarEstilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
 
   const valorObtenido = estilos[campo]
 
@@ -52,7 +54,7 @@ export const InputNumber = ({ elemento }) => {
 
   return (
     <label>
-      <span>{label}</span>
+      <span>{t(label)}</span>
       <input
         type='number'
         value={draft}

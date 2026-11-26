@@ -41,7 +41,25 @@ body {
 }
 
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  padding: 0 36px;
   background-color: var(--color-acento);
+}
+
+.header-titulo {
+  padding-block: 36px;
+}
+
+.idioma-selector select {
+  padding: 0.35em 0.6em;
+  border: 1px solid rgba(240, 248, 255, 0.5);
+  border-radius: 0.4em;
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: 0.9em;
 }
 
 .titulo {

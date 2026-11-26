@@ -147,6 +147,11 @@
  *
  * @typedef {Object} ParametrosSalida
  * @property {Texto} texto
+ *
+ * @typedef {Object} ContextoIdioma
+ * @property {'es' | 'en'} idioma
+ * @property {(idioma: string) => void} cambiarIdioma
+ * @property {(texto: string, datos?: Record<string, string | number>) => string} t
  */
 
 export {}

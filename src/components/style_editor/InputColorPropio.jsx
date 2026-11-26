@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 
 /**
  * Color propio de un bloque (título o subtítulo). El estado vacío significa
@@ -14,13 +15,14 @@ import { EstilosContext } from '../../context/estilosContext.js'
  */
 export const InputColorPropio = ({ etiqueta, campo, etiquetaPropio }) => {
   const { estilos, actualizarEstilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   const valor = estilos[campo]
   const propio = valor !== ''
 
   return (
     <div className='campo-color'>
       <label>
-        <span>{etiqueta}</span>
+        <span>{t(etiqueta)}</span>
         <input
           type='color'
           value={propio ? valor : estilos.color}
@@ -35,10 +37,10 @@ export const InputColorPropio = ({ etiqueta, campo, etiquetaPropio }) => {
             actualizarEstilos(campo, e.target.checked ? estilos.color : '')
           }
         />
-        <span>{etiquetaPropio}</span>
+        <span>{t(etiquetaPropio)}</span>
       </label>
       <span className='valor-color' aria-hidden='true'>
-        {propio ? valor : 'heredado'}
+        {propio ? valor : t('heredado')}
       </span>
     </div>
   )

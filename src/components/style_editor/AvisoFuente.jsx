@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 import { buscarFuente, fuenteDisponible } from '../../lib/fuentes.js'
 
 /**
@@ -10,6 +11,7 @@ import { buscarFuente, fuenteDisponible } from '../../lib/fuentes.js'
  */
 export const AvisoFuente = () => {
   const { estilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   const familias = [estilos.family]
   if (estilos.tituloFamilia !== 'heredar') familias.push(estilos.tituloFamilia)
   if (estilos.subtituloFamilia !== 'heredar') {
@@ -38,8 +40,10 @@ export const AvisoFuente = () => {
 
   return (
     <p className='aviso-fuente' role='status'>
-      {lista} {verbo} en este equipo: la vista previa usa una fuente de
-      respaldo. Elige una de las cargadas para que se vea igual en todos lados.
+      {t(
+        '{nombres} {verbo} en este equipo: la vista previa usa una fuente de respaldo. Elige una de las cargadas para que se vea igual en todos lados.',
+        { nombres: lista, verbo: t(verbo) },
+      )}
     </p>
   )
 }

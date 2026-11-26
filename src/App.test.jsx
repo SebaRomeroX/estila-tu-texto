@@ -4,9 +4,11 @@ import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import App from './App.jsx'
 import { EstilosProvider } from './context/EstilosProvider.jsx'
+import { IdiomaProvider } from './context/IdiomaProvider.jsx'
 import { codificarEstado, decodificarEstado } from './lib/compartir.js'
 import { descargarImagen } from './lib/descargarImagen.js'
 import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
+import { CLAVE_IDIOMA } from './lib/i18n.js'
 import {
   CLAVE_ESTILOS,
   CLAVE_PRESETS,
@@ -30,9 +32,11 @@ let app
 // igual que en main.jsx: la app vive dentro del provider
 function renderApp() {
   app = render(
-    <EstilosProvider>
-      <App />
-    </EstilosProvider>,
+    <IdiomaProvider>
+      <EstilosProvider>
+        <App />
+      </EstilosProvider>
+    </IdiomaProvider>,
   )
   container = app.container
   pre = container.querySelector('pre')
@@ -41,6 +45,8 @@ function renderApp() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  // idioma y datos guardados de un test no deben filtrarse al siguiente
+  localStorage.clear()
   // cada test arranca sin enlace compartido en la URL
   window.history.replaceState(null, '', '/')
   // y sin un FontFaceSet falso de un test anterior
@@ -1475,6 +1481,41 @@ describe('temas propios', () => {
       screen.queryByRole('button', { name: 'Aplicar tema propio Se va' }),
     ).not.toBeInTheDocument()
     expect(localStorage.getItem(CLAVE_PRESETS)).toBeNull()
+  })
+})
+
+describe('idioma de la interfaz', () => {
+  it('cambia textos, labels, lang y persiste la elección', () => {
+    fireEvent.change(screen.getByLabelText('Idioma'), {
+      target: { value: 'en' },
+    })
+
+    expect(screen.getByRole('heading', { name: 'Preview' })).toBeInTheDocument()
+    expect(screen.getByText('Settings')).toBeInTheDocument()
+    expect(screen.getByLabelText('Text color')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Undo' })).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('en')
+    expect(localStorage.getItem(CLAVE_IDIOMA)).toBe('en')
+
+    fireEvent.change(screen.getByLabelText('Language'), {
+      target: { value: 'es' },
+    })
+
+    expect(
+      screen.getByRole('heading', { name: 'Vista previa' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Configuracion')).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('es')
+    expect(localStorage.getItem(CLAVE_IDIOMA)).toBe('es')
+  })
+
+  it('arranca en el idioma guardado en el navegador', () => {
+    localStorage.setItem(CLAVE_IDIOMA, 'en')
+    app.unmount()
+    renderApp()
+
+    expect(screen.getByRole('heading', { name: 'Preview' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Block opacity')).toBeInTheDocument()
   })
 })
 

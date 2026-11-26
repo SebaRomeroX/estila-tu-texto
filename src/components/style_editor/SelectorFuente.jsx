@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { EstilosContext } from '../../context/estilosContext.js'
+import { IdiomaContext } from '../../context/idiomaContext.js'
 import { FUENTES, fuenteDisponible } from '../../lib/fuentes.js'
 
 // orden de aparición de los grupos en el catálogo (web → sistema → genéricas)
@@ -12,13 +13,14 @@ const GRUPOS = [...new Set(FUENTES.map((fuente) => fuente.grupo))]
  */
 export const SelectorFuente = () => {
   const { estilos, actualizarEstilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
 
   return (
     <div className='selector-fuente'>
-      <h3 className='selector-fuente-label'>Fuente</h3>
+      <h3 className='selector-fuente-label'>{t('Fuente')}</h3>
       {GRUPOS.map((grupo) => (
         <div key={grupo} className='selector-fuente-grupo'>
-          <h4 className='selector-fuente-grupo-titulo'>{grupo}</h4>
+          <h4 className='selector-fuente-grupo-titulo'>{t(grupo)}</h4>
           <div className='selector-fuente-opciones'>
             {FUENTES.filter((fuente) => fuente.grupo === grupo).map(
               (fuente) => {
@@ -47,11 +49,13 @@ export const SelectorFuente = () => {
                     )}
                     <span>{fuente.nombre}</span>
                     {fuente.web && (
-                      <span className='selector-fuente-badge'>cargada</span>
+                      <span className='selector-fuente-badge'>
+                        {t('cargada')}
+                      </span>
                     )}
                     {noInstalada && (
                       <span className='selector-fuente-badge'>
-                        no instalada
+                        {t('no instalada')}
                       </span>
                     )}
                   </button>

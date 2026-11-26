@@ -711,6 +711,24 @@ describe('generateCode', () => {
     expect(conAnimacion).toContain('      animation: none;')
   })
 
+  it('traduce los comentarios de fuentes web y el lang del documento', () => {
+    const estilosWeb = { ...ESTILOS, family: 'Roboto, sans-serif' }
+
+    expect(generateCode(TEXTO, estilosWeb)).toContain(
+      '<!-- Fuente web: carga esta hoja para que el texto se vea igual fuera de la app -->',
+    )
+    expect(generateCode(TEXTO, estilosWeb, 'en')).toContain(
+      '<!-- Web font: load this stylesheet so the text looks the same outside the app -->',
+    )
+
+    const documento = generateDocumento(TEXTO, estilosWeb, 'en')
+    expect(documento).toContain('<html lang="en">')
+    // un idioma desconocido cae a español en el atributo lang
+    expect(generateDocumento(TEXTO, estilosWeb, 'fr')).toContain(
+      '<html lang="es">',
+    )
+  })
+
   it('emite fuente, peso y color del título solo cuando se personalizan', () => {
     /** @param {import('../types.js').Estilos} estilos */
     const bloqueTitulo = (estilos) => {

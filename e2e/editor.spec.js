@@ -123,6 +123,22 @@ test('dos columnas se reparten en el navegador', async ({ page }, testInfo) => {
   })
 })
 
+test('el idioma cambia la interfaz y se recuerda al recargar', async ({
+  page,
+}) => {
+  await abrirApp(page)
+  await page.getByLabel('Idioma').selectOption('en')
+
+  await expect(page.getByRole('heading', { name: 'Preview' })).toBeVisible()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+
+  await page.reload()
+  await page.locator('article.visualizador').first().waitFor()
+
+  await expect(page.getByRole('heading', { name: 'Preview' })).toBeVisible()
+  await expect(page.getByLabel('Block opacity')).toBeVisible()
+})
+
 test('la tarjeta glass aplica desenfoque y fondo translúcido', async ({
   page,
 }) => {

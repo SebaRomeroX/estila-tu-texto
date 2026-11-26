@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { EstilosContext } from '../context/estilosContext.js'
+import { IdiomaContext } from '../context/idiomaContext.js'
 import { descargarImagen } from '../lib/descargarImagen.js'
 import { estilosToPreviewStyle } from '../lib/estilos.js'
 import { PLANTILLAS, plantillaActiva } from '../lib/plantillas.js'
@@ -56,6 +57,7 @@ export const Visualizador = ({
   cargarTexto,
 }) => {
   const { estilos } = useContext(EstilosContext)
+  const { t } = useContext(IdiomaContext)
   const conCapitular = estilos.letraCapitular === 'primera'
   const conSeleccion = estilos.seleccion === 'personalizada'
   const conFondoTransparente = estilos.fondoTransparente === 'si'
@@ -153,7 +155,12 @@ export const Visualizador = ({
     if (
       !esElTextoPorDefecto &&
       !window.confirm(
-        `Se reemplazará el texto actual por la plantilla "${plantilla.nombre}". ¿Continuar?`,
+        t(
+          'Se reemplazará el texto actual por la plantilla "{nombre}". ¿Continuar?',
+          {
+            nombre: plantilla.nombre,
+          },
+        ),
       )
     ) {
       return
@@ -177,19 +184,19 @@ export const Visualizador = ({
     >
       <div className='seccion'>
         <div className='visualizador-header'>
-          <h2 className='titulo'>Vista previa</h2>
+          <h2 className='titulo'>{t('Vista previa')}</h2>
           <div className='visualizador-acciones'>
             <span className='plantilla-selector'>
-              <label htmlFor='plantilla-texto'>Plantilla</label>
+              <label htmlFor='plantilla-texto'>{t('Plantilla')}</label>
               <select
                 id='plantilla-texto'
                 value={activa ?? ''}
                 onChange={(e) => aplicarPlantilla(e.target.value)}
               >
-                <option value=''>Elegir plantilla…</option>
+                <option value=''>{t('Elegir plantilla…')}</option>
                 {PLANTILLAS.map((plantilla) => (
                   <option key={plantilla.id} value={plantilla.id}>
-                    {plantilla.nombre}
+                    {t(plantilla.nombre)}
                   </option>
                 ))}
               </select>
@@ -199,23 +206,25 @@ export const Visualizador = ({
               onClick={descargarVista}
               disabled={estadoImagen === 'generando'}
             >
-              {estadoImagen === 'generando' ? 'Generando…' : 'Descargar imagen'}
+              {estadoImagen === 'generando'
+                ? t('Generando…')
+                : t('Descargar imagen')}
             </button>
             <button
               type='button'
               ref={botonVistaRef}
               onClick={() => setVistaLimpia(true)}
             >
-              Vista limpia <span aria-hidden='true'>⛶</span>
+              {t('Vista limpia')} <span aria-hidden='true'>⛶</span>
             </button>
             <button type='button' onClick={restablecerTexto}>
-              Restablecer texto ↺
+              {t('Restablecer texto')} ↺
             </button>
             <p className='estado-imagen' role='status'>
-              {estadoImagen === 'generando' && 'Generando imagen…'}
-              {estadoImagen === 'listo' && 'Imagen descargada.'}
+              {estadoImagen === 'generando' && t('Generando imagen…')}
+              {estadoImagen === 'listo' && t('Imagen descargada.')}
               {estadoImagen === 'error' &&
-                'No se pudo generar la imagen. Intentá de nuevo.'}
+                t('No se pudo generar la imagen. Intentá de nuevo.')}
             </p>
           </div>
         </div>
@@ -231,7 +240,7 @@ export const Visualizador = ({
               <EditableText
                 key={campo}
                 etiqueta={etiqueta}
-                nombre={nombre}
+                nombre={t(nombre)}
                 valor={texto[campo]}
                 onCambio={(valor) => actualizarTexto(campo, valor)}
               />
@@ -245,7 +254,7 @@ export const Visualizador = ({
           className='vista-limpia'
           role='dialog'
           aria-modal='true'
-          aria-label='Vista limpia'
+          aria-label={t('Vista limpia')}
           style={
             conFondoTransparente
               ? {
@@ -262,7 +271,7 @@ export const Visualizador = ({
             className='vista-limpia-cerrar'
             onClick={() => setVistaLimpia(false)}
           >
-            Cerrar vista limpia <span aria-hidden='true'>✕</span>
+            {t('Cerrar vista limpia')} <span aria-hidden='true'>✕</span>
           </button>
           <Marco transparente={conFondoTransparente}>
             <article
