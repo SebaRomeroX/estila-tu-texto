@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { PLANTILLAS, plantillaActiva } from './plantillas.js'
-import { TEXTO_POR_DEFECTO } from './texto.js'
+import { PLANTILLAS, plantillaActiva } from './plantillas'
+import { TEXTO_POR_DEFECTO } from './texto'
 
 const CAMPOS = Object.keys(TEXTO_POR_DEFECTO)
 

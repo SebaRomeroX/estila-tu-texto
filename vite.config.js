@@ -17,13 +17,13 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     // Vitest solo corre los tests de src; e2e lo ejecuta Playwright
-    include: ['src/**/*.{test,spec}.{js,jsx}'],
+    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
     setupFiles: './src/test/setup.js',
     coverage: {
       provider: 'v8',
       // el criterio de calidad es cobertura 100% de la lógica pura (lib)
       include: ['src/lib/**'],
-      exclude: ['src/lib/**/*.test.js', 'src/lib/**/__snapshots__/**'],
+      exclude: ['src/lib/**/*.test.*', 'src/lib/**/__snapshots__/**'],
       thresholds: {
         lines: 100,
         functions: 100,

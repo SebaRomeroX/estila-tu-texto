@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { ESTILOS_POR_DEFECTO } from './estilos.js'
-import { CLAVE_PRESETS } from './persistencia.js'
+import { ESTILOS_POR_DEFECTO } from './estilos'
+import { CLAVE_PRESETS } from './persistencia'
 import {
   MAX_PRESETS,
   agregarPreset,
   cargarPresets,
   guardarPresets,
   quitarPreset,
-} from './presetsPropios.js'
+} from './presetsPropios'
 
 const ESTILOS = { ...ESTILOS_POR_DEFECTO, color: '#123456' }
 

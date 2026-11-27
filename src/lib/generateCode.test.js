@@ -5,7 +5,7 @@ import {
   generateCss,
   generateDocumento,
   generateHtml,
-} from './generateCode.js'
+} from './generateCode'
 import {
   colorConAlfa,
   degradadoCss,
@@ -13,7 +13,7 @@ import {
   estilosToStyleObject,
   factorSubtitulo,
   factorTitulo,
-} from './estilos.js'
+} from './estilos'
 
 const ESTILOS = {
   color: '#F0F8FF',
@@ -730,7 +730,7 @@ describe('generateCode', () => {
   })
 
   it('emite fuente, peso y color del título solo cuando se personalizan', () => {
-    /** @param {import('../types.js').Estilos} estilos */
+    /** @param {import('../types').Estilos} estilos */
     const bloqueTitulo = (estilos) => {
       const css = generateCss(estilos)
       return css.slice(css.indexOf('.texto h2 {'), css.indexOf('.texto p {'))
@@ -754,7 +754,7 @@ describe('generateCode', () => {
   })
 
   it('emite el bloque del subtítulo solo cuando se personaliza', () => {
-    /** @param {import('../types.js').Estilos} estilos */
+    /** @param {import('../types').Estilos} estilos */
     const bloqueSubtitulo = (estilos) => {
       const css = generateCss(estilos)
       const inicio = css.indexOf('.texto h3 {')

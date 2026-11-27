@@ -5,7 +5,7 @@ import {
   guardarIdioma,
   normalizarIdioma,
   traducir,
-} from './i18n.js'
+} from './i18n'
 
 afterEach(() => {
   localStorage.clear()

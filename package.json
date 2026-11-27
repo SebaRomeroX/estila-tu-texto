@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit -p jsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

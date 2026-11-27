@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { toPng } from 'html-to-image'
-import { descargarImagen } from './descargarImagen.js'
+import { descargarImagen } from './descargarImagen'
 
 vi.mock('html-to-image', () => ({ toPng: vi.fn() }))
 

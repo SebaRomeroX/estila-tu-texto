@@ -5,7 +5,7 @@ import {
   enlaceGoogleFonts,
   fuenteDisponible,
   primeraFamilia,
-} from './fuentes.js'
+} from './fuentes'
 
 afterEach(() => {
   // si un test mockeó FontFaceSet, no debe filtrarse al siguiente

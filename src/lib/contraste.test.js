@@ -5,7 +5,7 @@ import {
   nivelContraste,
   parseHex,
   ratioContraste,
-} from './contraste.js'
+} from './contraste'
 
 describe('parseHex', () => {
   it('lee #rrggbb y #rgb, con o sin almohadilla', () => {

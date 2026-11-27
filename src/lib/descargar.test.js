@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { descargarHtml } from './descargar.js'
+import { descargarHtml } from './descargar'
 
 /** @type {HTMLAnchorElement | null} */
 let enlaceClickeado = null

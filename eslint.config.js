@@ -7,6 +7,9 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['dist', 'coverage']),
   {
+    // TS/TSX no pasa por ESLint: typescript-eslint aún no soporta TypeScript 7
+    // (API nativa). El código de producción lo valida `npm run typecheck`
+    // (tsc estricto, sin locales/params sin usar); acá queda el tooling JS.
     files: ['**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,

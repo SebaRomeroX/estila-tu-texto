@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { ESTILOS_POR_DEFECTO } from './estilos.js'
-import { generateCode } from './generateCode.js'
-import { resaltarCodigo } from './resaltar.js'
+import { ESTILOS_POR_DEFECTO } from './estilos'
+import { generateCode } from './generateCode'
+import { resaltarCodigo } from './resaltar'
 
 const TEXTO = {
   titulo: 'Titulo de prueba',
@@ -12,14 +12,14 @@ const TEXTO = {
 }
 
 /**
- * @param {import('../types.js').Token[][]} lineas
+ * @param {import('../types').Token[][]} lineas
  */
 const reconstruir = (lineas) =>
   lineas.map((tokens) => tokens.map((token) => token.texto).join('')).join('\n')
 
 /**
- * @param {import('../types.js').Token[]} linea
- * @param {import('../types.js').TipoToken} tipo
+ * @param {import('../types').Token[]} linea
+ * @param {import('../types').TipoToken} tipo
  */
 const buscar = (linea, tipo) => {
   const token = linea.find((elemento) => elemento.tipo === tipo)

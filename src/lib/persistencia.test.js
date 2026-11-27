@@ -7,7 +7,7 @@ import {
   borrarDatos,
   cargarObjeto,
   guardarObjeto,
-} from './persistencia.js'
+} from './persistencia'
 
 const POR_DEFECTO = { color: '#000000', size: '1' }
 

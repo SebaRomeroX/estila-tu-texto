@@ -8,23 +8,19 @@ import {
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
-import App from './App.jsx'
-import { EstilosProvider } from './context/EstilosProvider.jsx'
-import { IdiomaProvider } from './context/IdiomaProvider.jsx'
-import { codificarEstado, decodificarEstado } from './lib/compartir.js'
-import { descargarImagen } from './lib/descargarImagen.js'
-import { ESTILOS_POR_DEFECTO } from './lib/estilos.js'
-import { CLAVE_IDIOMA } from './lib/i18n.js'
-import {
-  CLAVE_ESTILOS,
-  CLAVE_PRESETS,
-  CLAVE_TEXTO,
-} from './lib/persistencia.js'
-import { TEXTO_POR_DEFECTO } from './lib/texto.js'
+import App from './App'
+import { EstilosProvider } from './context/EstilosProvider'
+import { IdiomaProvider } from './context/IdiomaProvider'
+import { codificarEstado, decodificarEstado } from './lib/compartir'
+import { descargarImagen } from './lib/descargarImagen'
+import { ESTILOS_POR_DEFECTO } from './lib/estilos'
+import { CLAVE_IDIOMA } from './lib/i18n'
+import { CLAVE_ESTILOS, CLAVE_PRESETS, CLAVE_TEXTO } from './lib/persistencia'
+import { TEXTO_POR_DEFECTO } from './lib/texto'
 
 // jsdom no puede rasterizar: el wrapper de html-to-image se mockea en la
 // integración y se prueba aparte en descargarImagen.test.js
-vi.mock('./lib/descargarImagen.js', () => ({ descargarImagen: vi.fn() }))
+vi.mock('./lib/descargarImagen', () => ({ descargarImagen: vi.fn() }))
 
 /** @type {HTMLElement} */
 let container

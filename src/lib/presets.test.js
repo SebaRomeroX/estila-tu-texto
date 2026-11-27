@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ESTILOS_POR_DEFECTO } from './estilos.js'
-import { PRESETS, esMismoEstilo, presetActivo } from './presets.js'
+import { ESTILOS_POR_DEFECTO } from './estilos'
+import { PRESETS, esMismoEstilo, presetActivo } from './presets'
 
 describe('esMismoEstilo', () => {
   it('es true con los mismos valores en todas las claves', () => {
@@ -19,7 +19,7 @@ describe('esMismoEstilo', () => {
   })
 
   it('ignora claves que no son del dominio', () => {
-    const conIntruso = /** @type {import('../types.js').Estilos} */ ({
+    const conIntruso = /** @type {import('../types').Estilos} */ ({
       ...ESTILOS_POR_DEFECTO,
       intruso: 'x',
     })

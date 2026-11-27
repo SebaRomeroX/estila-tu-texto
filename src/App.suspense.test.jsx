@@ -1,8 +1,8 @@
 import { act, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import App from './App.jsx'
-import { EstilosProvider } from './context/EstilosProvider.jsx'
-import { IdiomaProvider } from './context/IdiomaProvider.jsx'
+import App from './App'
+import { EstilosProvider } from './context/EstilosProvider'
+import { IdiomaProvider } from './context/IdiomaProvider'
 
 // Suspense solo muestra el fallback mientras la promesa del chunk está
 // pendiente. Se simula un módulo que "tarda" para poder observarlo.
@@ -13,7 +13,7 @@ const estado = vi.hoisted(() => ({
   resolver: null,
 }))
 
-vi.mock('./components/Salida.jsx', () => ({
+vi.mock('./components/Salida', () => ({
   SalidaCodigo: () => {
     if (!estado.promesa) {
       estado.promesa = new Promise((resolver) => {

@@ -4,9 +4,9 @@ import {
   crearEnlace,
   decodificarEstado,
   limpiarHashCompartido,
-} from './compartir.js'
-import { ESTILOS_POR_DEFECTO } from './estilos.js'
-import { TEXTO_POR_DEFECTO } from './texto.js'
+} from './compartir'
+import { ESTILOS_POR_DEFECTO } from './estilos'
+import { TEXTO_POR_DEFECTO } from './texto'
 
 const TEXTO = {
   ...TEXTO_POR_DEFECTO,
