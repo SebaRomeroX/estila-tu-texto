@@ -897,6 +897,20 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       lib 100% (309/309 statements, 200/200 ramas, 78/78 funciones) · build OK
       · test:e2e 9/9 · axe 0.
 
+[x] P2-57 Code splitting del bundle  ✔ 2026-11-25
+  Verificado (2026-11-25):
+    - El snippet (generación de código + resaltado) pasa a React.lazy en un
+      chunk diferido; mientras llega se muestra un fallback role="status"
+      traducido ("Cargando código…" / "Loading code…").
+    - React se separa en un chunk propio y cacheable entre despliegues
+      (manualChunks). El JS de la app baja de ~242 KB a ~46.6 KB; React
+      (~186.5 KB), Salida (~9.1 KB) y html-to-image (~13 KB) se cargan aparte.
+    - Tests: 1 nuevo de integración que simula el chunk pendiente y verifica
+      el fallback accesible → 255/255 unitarios y 9/9 e2e.
+    - Verificación: format OK · typecheck 0 strict · lint 0/0 · coverage lib
+      100% (309/309 statements, 200/200 ramas, 78/78 funciones) · build OK ·
+      test:e2e 9/9 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1642,6 +1656,10 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - strict:true en jsconfig.json manteniendo JS + JSDoc; se tiparon el
       contexto de estilos, las fichas de inputs y los null de los tests.
 
+2026-11-25 · Post-plan · P2-57 COMPLETADO — "perf(build): code splitting"
+    - Snippet y resaltado en un chunk diferido con fallback accesible; React
+      en un chunk cacheable. El JS de la app queda en ~46.6 KB.
+
 --------------------------------------------------------------------------------
 6. EVALUACIÓN FINAL (2026-10-31)
 --------------------------------------------------------------------------------
@@ -1687,7 +1705,7 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 58/58 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 59/59 resueltos (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1740,12 +1758,13 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   Actualización 2026-11-25 (post-plan): P2-48..P2-53 suman opacidad, borde y
   radio, sombra de texto configurable, contorno, animación de entrada con
   movimiento reducido y tarjeta glass; P2-54 agrega i18n español/inglés y
-  P2-55 snapshots visuales de Playwright. P2-56 activa strict:true: el punto 1
-  de "qué separa del 9-10" queda resuelto en lo que respecta a la verificación
-  estricta, aunque la migración de los archivos a .ts sigue abierta.
+  P2-55 snapshots visuales de Playwright. P2-56 activa strict:true y P2-57
+  difiere el snippet y separa React en chunks: el punto 1 de "qué separa del
+  9-10" queda resuelto en lo que respecta a la verificación estricta, aunque
+  la migración de los archivos a .ts sigue abierta.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-47 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-57 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
@@ -1753,7 +1772,9 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   el tamaño en rem, la descarga como imagen, la vista limpia, el título con
   estilo propio, el padding configurable, el fondo transparente, el subtítulo
   con estilo propio, el degradado de texto, las dos columnas, los tests de
-  navegador y la nueva presentación social.
+  navegador, la presentación social, la opacidad, el borde y radio, la sombra
+  configurable, el contorno, la animación de entrada, la tarjeta glass, el
+  idioma, la regresión visual, el typecheck estricto y el code splitting.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1834,8 +1855,9 @@ E) CALIDAD TÉCNICA
     (P2-56 activa strict:true; la migración de los archivos a .ts sigue
      abierta)
   - Playwright + snapshots visuales (contraste real)             M → P2-55
-  - Code splitting (bundle ~222 KB JS; html-to-image ya va en chunk aparte) S
-  - i18n                                                         L
+  - Code splitting (bundle ~222 KB JS; html-to-image ya va en chunk aparte) S → P2-57
+    (P2-57 difiere el snippet y separa React; el JS propio de la app queda
+     en ~46.6 KB)  - i18n                                                         L
 
 TOP 5 ELEGIDOS (esta tanda, en este orden) — IMPLEMENTADOS 2026-11-18:
   1. P2-21 contraste WCAG en vivo — convierte el bug de P2-20 en una clase

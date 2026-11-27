@@ -78,6 +78,7 @@ const TEXTOS_EN = Object.freeze({
   'Copiar HTML y CSS': 'Copy HTML and CSS',
   'Copiar todo': 'Copy all',
   'Código copiado al portapapeles': 'Code copied to clipboard',
+  'Cargando código…': 'Loading code…',
   'Error al copiar el código': 'Could not copy the code',
   'HTML copiado al portapapeles': 'HTML copied to clipboard',
   'Error al copiar el HTML': 'Could not copy the HTML',

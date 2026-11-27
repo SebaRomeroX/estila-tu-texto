@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import App from './App.jsx'
@@ -29,8 +35,9 @@ let preview
 /** @type {ReturnType<typeof render>} */
 let app
 
-// igual que en main.jsx: la app vive dentro del provider
-function renderApp() {
+// igual que en main.jsx: la app vive dentro del provider. El snippet se carga
+// en un chunk aparte, así que hay que esperar a que Suspense lo resuelva.
+async function renderApp() {
   app = render(
     <IdiomaProvider>
       <EstilosProvider>
@@ -39,13 +46,18 @@ function renderApp() {
     </IdiomaProvider>,
   )
   container = app.container
-  pre = /** @type {HTMLPreElement} */ (container.querySelector('pre'))
   preview = /** @type {HTMLElement} */ (
     container.querySelector('.visualizador')
   )
+  await waitFor(() => {
+    if (!container.querySelector('pre')) {
+      throw new Error('el snippet todavía no se cargó')
+    }
+  })
+  pre = /** @type {HTMLPreElement} */ (container.querySelector('pre'))
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   vi.clearAllMocks()
   // idioma y datos guardados de un test no deben filtrarse al siguiente
   localStorage.clear()
@@ -60,7 +72,7 @@ beforeEach(() => {
     configurable: true,
   })
 
-  renderApp()
+  await renderApp()
 })
 
 afterEach(() => {
@@ -1199,13 +1211,13 @@ describe('vista limpia', () => {
 })
 
 describe('compartir por URL', () => {
-  it('un enlace compartido gana sobre lo guardado y se limpia el hash', () => {
+  it('un enlace compartido gana sobre lo guardado y se limpia el hash', async () => {
     const texto = { ...TEXTO_POR_DEFECTO, titulo: 'Texto compartido' }
     const estilos = { ...ESTILOS_POR_DEFECTO, color: '#123456' }
     window.location.hash = `s=${codificarEstado(texto, estilos)}`
 
     app.unmount()
-    renderApp()
+    await renderApp()
 
     expect(within(preview).getByText('Texto compartido')).toBeInTheDocument()
     expect(preview.style.color).toBe('rgb(18, 52, 86)')
@@ -1451,11 +1463,11 @@ describe('temas propios', () => {
     expect(screen.getByText('Tema «Mi tema» eliminado')).toBeInTheDocument()
   })
 
-  it('los temas propios sobreviven a un remount', () => {
+  it('los temas propios sobreviven a un remount', async () => {
     guardarTema('Persistente')
 
     app.unmount()
-    renderApp()
+    await renderApp()
 
     expect(
       screen.getByRole('button', { name: 'Aplicar tema propio Persistente' }),
@@ -1514,10 +1526,10 @@ describe('idioma de la interfaz', () => {
     expect(localStorage.getItem(CLAVE_IDIOMA)).toBe('es')
   })
 
-  it('arranca en el idioma guardado en el navegador', () => {
+  it('arranca en el idioma guardado en el navegador', async () => {
     localStorage.setItem(CLAVE_IDIOMA, 'en')
     app.unmount()
-    renderApp()
+    await renderApp()
 
     expect(screen.getByRole('heading', { name: 'Preview' })).toBeInTheDocument()
     expect(screen.getByLabelText('Block opacity')).toBeInTheDocument()
@@ -1525,36 +1537,36 @@ describe('idioma de la interfaz', () => {
 })
 
 describe('persistencia en localStorage', () => {
-  it('los estilos sobreviven a un remount', () => {
+  it('los estilos sobreviven a un remount', async () => {
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
 
     app.unmount()
-    renderApp()
+    await renderApp()
 
     expect(preview.style.color).toBe('rgb(18, 52, 86)')
     expect(pre).toHaveTextContent('color: #123456;')
   })
 
-  it('el texto editado sobrevive a un remount', () => {
+  it('el texto editado sobrevive a un remount', async () => {
     const h2 = within(preview).getByText('Texto de Ejemplo')
     h2.textContent = 'Texto persistido'
     fireEvent.input(h2)
 
     app.unmount()
-    renderApp()
+    await renderApp()
 
     expect(within(preview).getByText('Texto persistido')).toBeInTheDocument()
     expect(pre).toHaveTextContent('Texto persistido')
   })
 
-  it('datos corruptos en el storage no rompen la app', () => {
+  it('datos corruptos en el storage no rompen la app', async () => {
     localStorage.setItem(CLAVE_ESTILOS, '{roto')
     localStorage.setItem(CLAVE_TEXTO, '{roto')
 
     app.unmount()
-    renderApp()
+    await renderApp()
 
     expect(preview.style.color).toBe('rgb(240, 248, 255)') // default
     expect(within(preview).getByText('Texto de Ejemplo')).toBeInTheDocument()

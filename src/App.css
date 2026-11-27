@@ -587,6 +587,10 @@ body {
   background-color: var(--color-superficie);
 }
 
+.cargando-codigo {
+  padding: 1em 2em;
+}
+
 .salida-codigo header {
   display: flex;
   flex-wrap: wrap;

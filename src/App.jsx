@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { lazy, Suspense, useContext, useEffect, useState } from 'react'
 import './App.css'
 import { StyleEditor } from './components/style_editor/StyleEditor'
-import { SalidaCodigo } from './components/Salida'
 import { Visualizador } from './components/Visualizador'
 import { EstilosContext } from './context/estilosContext.js'
 import { IdiomaContext } from './context/idiomaContext.js'
@@ -15,6 +14,14 @@ import {
   guardarObjeto,
 } from './lib/persistencia.js'
 import { TEXTO_POR_DEFECTO } from './lib/texto.js'
+
+// el snippet vive debajo del preview: cargarlo en un chunk aparte saca del
+// bundle inicial el resaltado y la generación de código
+const SalidaCodigo = lazy(() =>
+  import('./components/Salida.jsx').then((modulo) => ({
+    default: modulo.SalidaCodigo,
+  })),
+)
 
 const App = () => {
   const { aplicarEstilos, limpiarHistorial } = useContext(EstilosContext)
@@ -108,7 +115,15 @@ const App = () => {
           restablecerTexto={restablecerTexto}
           cargarTexto={cargarTexto}
         />
-        <SalidaCodigo texto={texto} />
+        <Suspense
+          fallback={
+            <p className='salida-codigo cargando-codigo' role='status'>
+              {t('Cargando código…')}
+            </p>
+          }
+        >
+          <SalidaCodigo texto={texto} />
+        </Suspense>
       </main>
       <footer className='footer'>
         <p>

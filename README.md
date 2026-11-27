@@ -27,8 +27,9 @@ _Tema Editorial con degradado de texto, tal como se ve en el editor._
 - **Vite** para desarrollo y build
 - **CSS** con variables y layout responsive
 - **Vitest + Testing Library** para tests unitarios y de integración
-- **Playwright** para tests de navegador (CSS real, contraste y export PNG)
-- **JSDoc + TypeScript** (`checkJs`) para tipar el dominio
+- **Playwright** para tests de navegador (CSS real, contraste, regresión visual y export PNG)
+- **JSDoc + TypeScript estricto** (`checkJs` + `strict`) para tipar el dominio
+- **Code splitting** del snippet y de React para un bundle inicial más chico
 - **Netlify** para despliegue
 
 ### ✨ **Control Total de Tipografía**
@@ -79,7 +80,12 @@ _Tema Editorial con degradado de texto, tal como se ve en el editor._
 - **Deshacer y rehacer:** historial de la sesión con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control
 - **Letra capitular:** la primera letra del primer párrafo con tamaño editorial, en el preview y en el snippet
 - **Plantillas de texto:** ensayo, blog, cuento y carta para arrancar sin escribir; avisa antes de reemplazar tu texto
-- **Sombra de texto:** presets suave y resplandor para dar profundidad o un halo del color del texto
+- **Sombra de texto:** presets suave y resplandor, o una sombra personalizada con X, Y, difuminado y color
+- **Contorno de texto:** borde alrededor de las letras con color y grosor ajustables
+- **Opacidad y borde del bloque:** transparencia, borde con color y radio configurables
+- **Animación de entrada:** aparición suave que respeta `prefers-reduced-motion` en preview y snippet
+- **Tarjeta glass:** fondo translúcido con `backdrop-filter`, borde y sombra, también sobre fondo transparente
+- **Idioma de la interfaz:** español e inglés, con la elección guardada en el navegador y el `lang` del snippet sincronizado
 - **Selección personalizada:** elegí el fondo y el color del texto al seleccionar, con aviso de contraste WCAG
 - **Degradado de texto:** dos colores en gradiente sobre título, subtítulo y párrafos, sin tapar el fondo del bloque
 - **Dos columnas:** el bloque pasa a dos columnas con los títulos ocupando todo el ancho
@@ -104,9 +110,11 @@ Los tests de navegador usan Playwright con Chromium: la primera vez ejecutá `np
 
 ### 🧪 Calidad
 
-- **222 tests** unitarios y de integración con Vitest y Testing Library.
+- **255 tests** unitarios y de integración con Vitest y Testing Library.
 - **100% de cobertura** en la lógica pura (`src/lib/**`): estilos, contraste, snippet, persistencia y compartir por URL.
-- **5 tests de navegador** con Playwright: variables CSS computadas, contraste real, dos columnas y exportación PNG (incluida la transparencia).
+- **9 tests de navegador** con Playwright: variables CSS computadas, contraste real, dos columnas, tarjeta glass, animación con movimiento reducido, idioma, regresión visual y exportación PNG (incluida la transparencia).
+- **TypeScript estricto** (`strict:true`) sobre JS + JSDoc, sin `any` implícitos.
+- **Build con code splitting:** React en un chunk cacheable y el snippet/resaltado en un chunk diferido.
 - **CI** con formato, lint, typecheck, cobertura, build y e2e en cada push.
 
 ### 💡Lecciones Clave
