@@ -145,6 +145,7 @@ const App = () => {
             {mensajeBorrado}
           </span>
         </p>
+        <p className='version-app'>v0.1.0</p>
       </footer>
     </div>
   )

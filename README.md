@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/SebaRomeroX/estila-tu-texto/actions/workflows/ci.yml/badge.svg)](https://github.com/SebaRomeroX/estila-tu-texto/actions/workflows/ci.yml)
 
+**Versión 0.1.0**
+
 [Demo en Vivo](https://estilatutexto.netlify.app/) · [Código Fuente](https://github.com/SebaRomeroX/estila-tu-texto)
 
 **Experimenta con estilos de texto y obtén el código listo para usar.** Una herramienta visual para diseñar tipografía sin escribir CSS manualmente.
@@ -28,7 +30,7 @@ _Tema Editorial con degradado de texto, tal como se ve en el editor._
 - **CSS** con variables y layout responsive
 - **Vitest + Testing Library** para tests unitarios y de integración
 - **Playwright** para tests de navegador (CSS real, contraste, regresión visual y export PNG)
-- **JSDoc + TypeScript estricto** (`checkJs` + `strict`) para tipar el dominio
+- **TypeScript estricto** (`strict`) en todo el código de producción (`.ts/.tsx`); tests en JS
 - **Code splitting** del snippet y de React para un bundle inicial más chico
 - **Netlify** para despliegue
 
@@ -113,7 +115,7 @@ Los tests de navegador usan Playwright con Chromium: la primera vez ejecutá `np
 - **255 tests** unitarios y de integración con Vitest y Testing Library.
 - **100% de cobertura** en la lógica pura (`src/lib/**`): estilos, contraste, snippet, persistencia y compartir por URL.
 - **9 tests de navegador** con Playwright: variables CSS computadas, contraste real, dos columnas, tarjeta glass, animación con movimiento reducido, idioma, regresión visual y exportación PNG (incluida la transparencia).
-- **TypeScript estricto** (`strict:true`) sobre JS + JSDoc, sin `any` implícitos.
+- **TypeScript estricto** (`strict:true`) en el código de producción, con `noUnusedLocals` y `noUnusedParameters`; el typecheck valida solo `.ts/.tsx`.
 - **Build con code splitting:** React en un chunk cacheable y el snippet/resaltado en un chunk diferido.
 - **CI** con formato, lint, typecheck, cobertura, build y e2e en cada push.
 
@@ -129,7 +131,7 @@ Estaba experimentando cómo las propiedades tipográficas (fuentes, line-height,
 
 ### 🔮 Próximas Mejoras (Ideas)
 
-Export a Tailwind (CSS utilitario en vez de CSS plano)
+Las ideas fuera de alcance (galería pública de temas, export a Tailwind, PWA/offline, modo claro/oscuro de la app, contador de palabras, `text-align: justify`, `hyphens`, selector px/rem y neón) están anotadas en `improvementPlan.txt` como **posibles features futuras, pendientes de aprobación**. No están implementadas ni comprometidas.
 
 Migrar a Zustand si el estado se vuelve más complejo
 

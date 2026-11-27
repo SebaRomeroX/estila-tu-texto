@@ -3,6 +3,7 @@
 ================================================================================
 Fecha:     2026-10-28
 Autor:     Revisión automática (agente)
+Versión:   0.1.0 (2026-11-27)
 Estado:    EN CURSO — ver sección 5 (registro de avances)
 
 --------------------------------------------------------------------------------
@@ -911,6 +912,24 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       100% (309/309 statements, 200/200 ramas, 78/78 funciones) · build OK ·
       test:e2e 9/9 · axe 0.
 
+[x] P2-58 Migración del código de producción a TypeScript  ✔ 2026-11-27
+  Verificado (2026-11-27):
+    - Todo el código de producción de src pasa a .ts/.tsx; los tipos del
+      dominio viven en src/types.ts (antes typedefs JSDoc en types.js).
+      Los tests siguen en .js/.jsx para no reescribir el harness de ~2.700
+      líneas; Vitest y Vite resuelven los imports sin extensión.
+    - jsconfig.json se reemplaza por tsconfig.json: strict, noUnusedLocals,
+      noUnusedParameters, moduleResolution bundler, jsx react-jsx y noEmit.
+      El typecheck valida solo producción (los tests JS quedan fuera).
+    - ESLint mantiene el tooling JS/JSX: typescript-eslint 8.x todavía no
+      soporta la API nativa de TypeScript 7, así que la puerta de los .ts es
+      tsc estricto (documentado en eslint.config.js).
+    - Sin cambios de comportamiento: el snapshot del snippet por defecto no
+      cambia; 255/255 unitarios, 9/9 e2e y coverage lib 100%.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · coverage 100%
+      (312/312 sentencias, 201/201 ramas, 78/78 funciones) · build OK ·
+      test:e2e 9/9 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1705,7 +1724,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
     7. Modelo de un solo bloque de estilos: no se puede estilar el título
        distinto de los párrafos (limitación de diseño del producto).
 
-  Estado de los issues: 59/59 resueltos (P2-13 y P2-14 se cerraron por vías
+  Estado de los issues: 59/59 del plan resueltos; P2-58 cierra además la
+  migración pendiente a TypeScript real (P2-13 y P2-14 se cerraron por vías
   distintas a las sugeridas, documentadas arriba; las 2 features que el
   usuario había diferido —text-transform/decoration— quedaron implementadas
   en P2-23).
@@ -1759,12 +1779,14 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   radio, sombra de texto configurable, contorno, animación de entrada con
   movimiento reducido y tarjeta glass; P2-54 agrega i18n español/inglés y
   P2-55 snapshots visuales de Playwright. P2-56 activa strict:true y P2-57
-  difiere el snippet y separa React en chunks: el punto 1 de "qué separa del
-  9-10" queda resuelto en lo que respecta a la verificación estricta, aunque
-  la migración de los archivos a .ts sigue abierta.
+  difiere el snippet y separa React en chunks.
+
+  Actualización 2026-11-27 (post-plan): P2-58 migra todo el código de
+  producción a .ts/.tsx con tsconfig estricto, cierra el punto 1 de "qué
+  separa del 9-10" y fija la versión 0.1.0. Los tests permanecen en JS.
 
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-57 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-58 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
@@ -1774,7 +1796,8 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   con estilo propio, el degradado de texto, las dos columnas, los tests de
   navegador, la presentación social, la opacidad, el borde y radio, la sombra
   configurable, el contorno, la animación de entrada, la tarjeta glass, el
-  idioma, la regresión visual, el typecheck estricto y el code splitting.
+  idioma, la regresión visual, el typecheck estricto, el code splitting y la
+  migración a TypeScript.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1795,34 +1818,33 @@ A) ESTILOS DE TEXTO (encajan en el modelo actual)         Esf.
   - text-indent (sangría de primera línea)                       S  → P2-30
   - word-spacing                                                 S  → P2-30
   - font-variant: small-caps                                     S  → P2-30
-  - opacity                                                      S
-  - text-align: justify (hoy solo left/center)                   S
+  - opacity                                                      S  → P2-48
+  - text-align: justify (hoy solo left/center)                   S  · fuera de alcance
   - color de ::selection                                         S  → P2-36
-  - text-shadow (x, y, blur + color)                             M  → P2-35
-    (P2-35 agrega presets suave/resplandor; los ejes y el color libres
-     siguen diferidos)
-  - hyphens: auto + lang                                         M
+  - text-shadow (x, y, blur + color)                             M  → P2-35/P2-50
+    (P2-35 agrega presets suave/resplandor; P2-50 suma ejes y color libres)
+  - hyphens: auto + lang                                         M  · fuera de alcance
   - text-wrap: balance/pretty                                    S  → P2-30
 
 B) CALIDAD DE LECTURA (lo que más sube el nivel del snippet)
   - Ancho de línea (max-width en ch)                             S  → P2-22
   - line-height sin unidad (hoy 1.4em se multiplica)             S  → P2-22
   - font-size en rem/px (opcional)                               S  → P2-37
-    (P2-37 fija rem sin selector; px queda diferido)
+    (P2-37 fija rem sin selector; un selector px/rem queda fuera de alcance)
   - letter-spacing negativo (hoy min 0)                          S  → P2-30
   - pesos 300/700/800/900 (hoy 100/400/600)                      S  → P2-30
   - padding del bloque configurable (hoy 30px 60px fijo)         S  → P2-41
-  - border, border-radius, fondo transparente                    M  → P2-42
-    (P2-42 resuelve solo el fondo transparente; borde y radio siguen
-     diferidos)
+  - border, border-radius, fondo transparente                    M  → P2-42/P2-49
+    (P2-42 resuelve el fondo transparente; P2-49 agrega borde y radio)
 
 C) EFECTOS "WOW" (diferenciadores visuales)
   - texto con degradado (background-clip: text)                  S  → P2-44
   - drop cap (::first-letter)                                    S  → P2-33
-  - contorno (-webkit-text-stroke) y neón (text-shadow)          M
+  - contorno (-webkit-text-stroke) y neón (text-shadow)          M  → P2-51
+    (P2-51 implementa el contorno; la variante neón queda fuera de alcance)
   - dos columnas (columns)                                       S  → P2-45
-  - animación de entrada con prefers-reduced-motion              M
-  - tarjeta "glass" (backdrop-filter)                            M
+  - animación de entrada con prefers-reduced-motion              M  → P2-52
+  - tarjeta "glass" (backdrop-filter)                            M  → P2-53
 
 D) FUNCIONES DE PRODUCTO
   - Contraste WCAG en vivo (AA/AAA)                              M  → P2-21
@@ -1832,7 +1854,8 @@ D) FUNCIONES DE PRODUCTO
      separado)
   - Guardar presets propios + galería                            M  → P2-29
     (P2-29 implementa los temas propios en este navegador; la galería
-     pública/compartida sigue diferida, requiere backend)
+     pública/compartida queda fuera de alcance y pendiente de aprobación,
+     porque requiere backend, moderación y cuentas)
   - Undo/redo + historial                                        M  → P2-32
   - Selector de fuente visual (con preview)                      S  → P2-27
   - Cargar webfonts o marcar "si está instalada"                 M  → P2-26
@@ -1841,23 +1864,24 @@ D) FUNCIONES DE PRODUCTO
   - Escala/peso del título (título != párrafo)                   M  → P2-25
   - Fuente/peso/color del título independientes del cuerpo       M  → P2-40
   - Fuente/peso/color/escala del subtítulo independientes       M  → P2-43
-  - Contador de palabras / tiempo de lectura                     S
+  - Contador de palabras / tiempo de lectura                     S  · fuera de alcance
   - Plantillas de texto                                          S  → P2-34
-  - Export a Tailwind                                            M
-  - Modo claro/oscuro de la app                                  M
-  - PWA / offline                                                M
+  - Export a Tailwind                                            M  · fuera de alcance
+  - Modo claro/oscuro de la app                                  M  · fuera de alcance
+  - PWA / offline                                                M  · fuera de alcance
   - Exportar imagen (redes)                                      M  → P2-38
   - Vista limpia / pantalla completa (sin controles)             S  → P2-39
-  - og:image (diferido en P2-14c)                                M
+  - og:image (diferido en P2-14c)                                M  → P2-47
 
 E) CALIDAD TÉCNICA
-  - TypeScript estricto (hoy JSDoc + strict:false)               L → P2-56
-    (P2-56 activa strict:true; la migración de los archivos a .ts sigue
-     abierta)
+  - TypeScript estricto (hoy JSDoc + strict:false)               L → P2-56/P2-58
+    (P2-56 activa strict:true; P2-58 migra producción a .ts/.tsx. Los tests
+     siguen en JS para no reescribir el harness)
   - Playwright + snapshots visuales (contraste real)             M → P2-55
   - Code splitting (bundle ~222 KB JS; html-to-image ya va en chunk aparte) S → P2-57
     (P2-57 difiere el snippet y separa React; el JS propio de la app queda
-     en ~46.6 KB)  - i18n                                                         L
+     en ~46.6 KB)
+  - i18n                                                         L  → P2-54
 
 TOP 5 ELEGIDOS (esta tanda, en este orden) — IMPLEMENTADOS 2026-11-18:
   1. P2-21 contraste WCAG en vivo — convierte el bug de P2-20 en una clase
@@ -1868,4 +1892,33 @@ TOP 5 ELEGIDOS (esta tanda, en este orden) — IMPLEMENTADOS 2026-11-18:
   4. P2-24 compartir por URL — crecimiento sin backend.
   5. P2-25 escala del título — el 80% de "estilos por elemento" con el 20%
      del esfuerzo.
+================================================================================
+
+--------------------------------------------------------------------------------
+8. POSIBLES FEATURES FUTURAS (fuera de alcance, pendientes de aprobación)
+--------------------------------------------------------------------------------
+
+Ninguna de estas ideas está implementada ni comprometida. Quedan anotadas para
+que una decisión explícita las apruebe o descarte; no forman parte del alcance
+de la versión 0.1.0.
+
+  - Galería pública de temas: requiere backend, moderación y cuentas. Los temas
+    propios actuales son solo locales (P2-29).
+  - Contador de palabras / tiempo de lectura: no aporta al objetivo de estilar
+    texto y agrega UI.
+  - Export a Tailwind: el producto promete CSS plano y portable; un export
+    utilitario duplicaría la fuente de verdad.
+  - Modo claro/oscuro de la app: el fondo del editor ya es configurable para el
+    bloque; invertir el shell es una decisión de producto aparte.
+  - PWA / offline: el valor actual está en la generación de código, no en el
+    uso sin red; cachear versiones complica el despliegue.
+  - Selector px/rem del tamaño: hoy se usa rem fijo (P2-37) para no depender
+    del contexto de pegado; agregar px reintroduce esa ambigüedad.
+  - text-align: justify: poco fiable sin guiones y con palabras largas.
+  - hyphens: auto + lang: depende del diccionario del navegador y del idioma
+    del contenido; puede romper la promesa de "se ve igual en todos lados".
+  - Neón (text-shadow con resplandor fuerte): ya existe el preset resplandor;
+    una variante neón no agrega una propiedad nueva.
+  - Migrar los tests a .ts/.tsx: la migración de producción se hizo en P2-58;
+    los tests siguen en JS para no reescribir el harness.
 ================================================================================

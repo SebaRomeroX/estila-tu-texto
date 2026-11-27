@@ -31,7 +31,7 @@ let preview
 /** @type {ReturnType<typeof render>} */
 let app
 
-// igual que en main.jsx: la app vive dentro del provider. El snippet se carga
+// igual que en main.tsx: la app vive dentro del provider. El snippet se carga
 // en un chunk aparte, así que hay que esperar a que Suspense lo resuelva.
 async function renderApp() {
   app = render(
