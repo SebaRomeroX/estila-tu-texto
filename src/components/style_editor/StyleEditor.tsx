@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import {
   InputsColorParams,
   InputsNumberParams,
@@ -65,6 +65,8 @@ export const StyleEditor = () => {
   // cambiando con el estilo actual. Al escribir, su valor manda.
   const [nombreNuevo, setNombreNuevo] = useState<string | null>(null)
   const [mensaje, setMensaje] = useState('')
+  const [temasAbiertos, setTemasAbiertos] = useState(false)
+  const botonMisTemas = useRef<HTMLButtonElement>(null)
   const numeroTema = presetsPropios.length + 1
   const valorNombre = nombreNuevo ?? nombreSugerido(estilos, numeroTema)
   // el último tema guardado (o los defaults) es la frontera: guardar solo
@@ -75,13 +77,35 @@ export const StyleEditor = () => {
 
   useEffect(() => {
     function recargarPresets() {
-      setPresetsPropios(cargarPresets())
+      const nuevos = cargarPresets()
+      setPresetsPropios(nuevos)
+      if (nuevos.length === 0) setTemasAbiertos(false)
     }
 
     window.addEventListener(EVENTO_DATOS_BORRADOS, recargarPresets)
     return () =>
       window.removeEventListener(EVENTO_DATOS_BORRADOS, recargarPresets)
   }, [])
+
+  // el diálogo se cierra con Escape y devuelve el foco al botón que lo abrió
+  useEffect(() => {
+    if (!temasAbiertos) return
+
+    function alPresionar(e: KeyboardEvent) {
+      if (e.key !== 'Escape') return
+
+      setTemasAbiertos(false)
+      botonMisTemas.current?.focus()
+    }
+
+    window.addEventListener('keydown', alPresionar)
+    return () => window.removeEventListener('keydown', alPresionar)
+  }, [temasAbiertos])
+
+  function cerrarTemas() {
+    setTemasAbiertos(false)
+    botonMisTemas.current?.focus()
+  }
 
   function guardarTema(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -99,6 +123,7 @@ export const StyleEditor = () => {
     const nuevos = quitarPreset(presetsPropios, nombre)
     guardarPresets(nuevos)
     setPresetsPropios(nuevos)
+    if (nuevos.length === 0) setTemasAbiertos(false)
     setMensaje(t('Tema «{nombre}» eliminado', { nombre }))
   }
 
@@ -125,6 +150,17 @@ export const StyleEditor = () => {
             ))}
           </select>
         </label>
+        {presetsPropios.length > 0 && (
+          <button
+            ref={botonMisTemas}
+            type='button'
+            aria-haspopup='dialog'
+            onClick={() => setTemasAbiertos(true)}
+          >
+            {t('Mis temas')}{' '}
+            <span className='mis-temas-cuenta'>({presetsPropios.length})</span>
+          </button>
+        )}
         <button
           type='button'
           className='temas-reset'
@@ -182,38 +218,6 @@ export const StyleEditor = () => {
           </span>
         </form>
       </div>
-
-      {presetsPropios.length > 0 && (
-        <div className='temas'>
-          <span className='temas-label'>{t('Mis temas:')}</span>
-          {presetsPropios.map((preset) => (
-            <span key={preset.nombre} className='tema-propio'>
-              <button
-                type='button'
-                aria-label={t('Aplicar tema propio {nombre}', {
-                  nombre: preset.nombre,
-                })}
-                aria-pressed={
-                  activo === null && esMismoEstilo(estilos, preset.estilos)
-                }
-                onClick={() => aplicarEstilos(preset.estilos)}
-              >
-                {preset.nombre}
-              </button>
-              <button
-                type='button'
-                className='tema-propio-borrar'
-                aria-label={t('Eliminar tema propio {nombre}', {
-                  nombre: preset.nombre,
-                })}
-                onClick={() => eliminarTema(preset.nombre)}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
 
       <SelectorFuente />
       <AvisoFuente />
@@ -328,6 +332,66 @@ export const StyleEditor = () => {
         )}
         <InputSelect elemento={InputsSelectsParams.columnas} />
       </div>
+
+      {temasAbiertos && presetsPropios.length > 0 && (
+        <div
+          className='dialogo-fondo'
+          role='presentation'
+          onClick={cerrarTemas}
+        >
+          <div
+            className='dialogo'
+            role='dialog'
+            aria-modal='true'
+            aria-labelledby='titulo-mis-temas'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='dialogo-header'>
+              <h3 id='titulo-mis-temas'>{t('Mis temas')}</h3>
+              <button
+                type='button'
+                className='dialogo-cerrar'
+                aria-label={t('Cerrar')}
+                onClick={cerrarTemas}
+                autoFocus
+              >
+                ×
+              </button>
+            </div>
+            <div className='dialogo-temas'>
+              {presetsPropios.map((preset) => (
+                <span key={preset.nombre} className='tema-propio'>
+                  <button
+                    type='button'
+                    aria-label={t('Aplicar tema propio {nombre}', {
+                      nombre: preset.nombre,
+                    })}
+                    aria-pressed={
+                      activo === null && esMismoEstilo(estilos, preset.estilos)
+                    }
+                    onClick={() => {
+                      aplicarEstilos(preset.estilos)
+                      cerrarTemas()
+                    }}
+                  >
+                    {preset.nombre}
+                  </button>
+                  <button
+                    type='button'
+                    className='tema-propio-borrar'
+                    aria-label={t('Eliminar tema propio {nombre}', {
+                      nombre: preset.nombre,
+                    })}
+                    onClick={() => eliminarTema(preset.nombre)}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

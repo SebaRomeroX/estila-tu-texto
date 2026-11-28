@@ -97,6 +97,10 @@ body {
   margin-left: auto;
 }
 
+.mis-temas-cuenta {
+  opacity: 0.7;
+}
+
 /* tema propio: aplicar + borrar pegados, pero como dos botones separados */
 .tema-propio {
   display: inline-flex;
@@ -114,6 +118,66 @@ body {
 
 .tema-propio-borrar:hover {
   color: #ff9b9b;
+}
+
+/* mis temas: diálogo para no alargar el editor cuando hay muchos */
+.dialogo-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.dialogo {
+  width: min(42em, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 1.2em;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.8em;
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  box-shadow: 0 1em 3em rgba(0, 0, 0, 0.5);
+}
+
+.dialogo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.dialogo-header h3 {
+  font-size: 1.1em;
+}
+
+.dialogo-cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2em;
+  padding: 0.2em 0.5em;
+  line-height: 1;
+}
+
+.dialogo-temas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.dialogo-temas .tema-propio {
+  max-width: 100%;
+}
+
+.dialogo-temas .tema-propio > button:first-child {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 /* ------------------------- DESHACER / REHACER ------------------------- */
@@ -364,7 +428,8 @@ body {
 .visualizador-header button,
 .temas button,
 .guardar-tema button,
-.deshacer-rehacer button {
+.deshacer-rehacer button,
+.dialogo button {
   background-color: var(--color-superficie);
   color: var(--color-texto);
   border: 1px solid var(--color-borde);
@@ -376,7 +441,8 @@ body {
 .visualizador-header button:hover,
 .temas button:hover,
 .guardar-tema button:hover,
-.deshacer-rehacer button:hover {
+.deshacer-rehacer button:hover,
+.dialogo button:hover {
   cursor: pointer;
   background-color: var(--color-superficie-hover);
 }
@@ -384,7 +450,8 @@ body {
 .visualizador-header button:active,
 .temas button:active,
 .guardar-tema button:active,
-.deshacer-rehacer button:active {
+.deshacer-rehacer button:active,
+.dialogo button:active {
   background-color: var(--color-superficie-active);
 }
 
@@ -392,6 +459,8 @@ body {
    pero inertes */
 .deshacer-rehacer button:disabled,
 .deshacer-rehacer button:disabled:hover,
+.dialogo button:disabled,
+.dialogo button:disabled:hover,
 .visualizador-header button:disabled,
 .visualizador-header button:disabled:hover {
   opacity: 0.5;
@@ -401,7 +470,8 @@ body {
 
 /* tema aplicado: estado visible además del aria-pressed (no depende solo
    del color del texto) */
-.temas button[aria-pressed='true'] {
+.temas button[aria-pressed='true'],
+.dialogo button[aria-pressed='true'] {
   background-color: var(--color-superficie-active);
   border-color: var(--color-foco);
   font-weight: 600;

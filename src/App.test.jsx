@@ -1384,12 +1384,17 @@ describe('temas propios', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Guardar tema' }))
   }
 
+  function abrirMisTemas() {
+    fireEvent.click(screen.getByRole('button', { name: /mis temas/i }))
+  }
+
   it('guarda el tema actual con nombre y lo persiste', () => {
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
     guardarTema('Mi tema')
 
+    abrirMisTemas()
     expect(
       screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
     ).toBeInTheDocument()
@@ -1416,6 +1421,7 @@ describe('temas propios', () => {
       target: { value: '#654321' },
     })
 
+    abrirMisTemas()
     expect(
       screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
     ).toHaveAttribute('aria-pressed', 'false')
@@ -1425,6 +1431,9 @@ describe('temas propios', () => {
     )
 
     expect(preview.style.color).toBe('rgb(18, 52, 86)')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+    abrirMisTemas()
     expect(
       screen.getByRole('button', { name: 'Aplicar tema propio Mi tema' }),
     ).toHaveAttribute('aria-pressed', 'true')
@@ -1436,10 +1445,12 @@ describe('temas propios', () => {
     })
     guardarTema('Mi tema')
 
+    abrirMisTemas()
     fireEvent.click(
       screen.getByRole('button', { name: 'Eliminar tema propio Mi tema' }),
     )
 
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Aplicar tema propio Mi tema' }),
     ).not.toBeInTheDocument()
@@ -1456,6 +1467,7 @@ describe('temas propios', () => {
     app.unmount()
     await renderApp()
 
+    abrirMisTemas()
     expect(
       screen.getByRole('button', { name: 'Aplicar tema propio Persistente' }),
     ).toBeInTheDocument()
@@ -1491,6 +1503,38 @@ describe('temas propios', () => {
     })
 
     expect(campo).toHaveValue('Oscuro')
+  })
+
+  it('abre mis temas en un diálogo y lo cierra con Escape', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    guardarTema('Mi tema')
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+    abrirMisTemas()
+    expect(
+      screen.getByRole('dialog', { name: 'Mis temas' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Cerrar' })).toHaveFocus()
+
+    fireEvent.keyDown(window, { key: 'Escape' })
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /mis temas/i })).toHaveFocus()
+  })
+
+  it('cierra el diálogo al hacer click fuera de la tarjeta', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    guardarTema('Mi tema')
+    abrirMisTemas()
+
+    fireEvent.click(screen.getByRole('presentation'))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('no permite guardar hasta que haya un cambio de estilos', () => {
@@ -1531,6 +1575,7 @@ describe('temas propios', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: 'Guardar tema' }))
 
+    abrirMisTemas()
     expect(
       screen.getByRole('button', {
         name: 'Aplicar tema propio 1. #123456 / #020202 · system-ui · 1.2em',
