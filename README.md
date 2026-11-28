@@ -45,7 +45,7 @@ _Tema Editorial con degradado de texto, tal como se ve en el editor._
 - ✅ **Espacio entre palabras y sangría de primera línea**
 - ✅ **Versalitas y corte de línea** (normal, balanceado, pretty)
 - ✅ **Alineación del texto**
-- ✅ **Temas predefinidos** (Clásico, Editorial, Consola, Impacto), **temas propios guardados en este navegador** y restablecer estilos
+- ✅ **Temas predefinidos** (Clásico, Editorial, Consola, Impacto) en un selector, **temas propios guardados en este navegador** y restablecer estilos
 - ✅ Las propiedades tipográficas esenciales, sin CSS a mano
 
 ### ⚡ **Experiencia en Tiempo Real**
@@ -74,7 +74,7 @@ _Tema Editorial con degradado de texto, tal como se ve en el editor._
 - **Título a tu medida:** escala del título (100-200%) sin tocar los párrafos
 - **Título independiente:** fuente, peso y color propios para el título, sin cambiar los párrafos
 - **Subtítulo independiente:** fuente, peso, color y tamaño propios para el subtítulo, sin tocar el resto del texto
-- **Fuentes que no mienten:** selector visual (cada fuente se ve en sí misma), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
+- **Fuentes que no mienten:** selector agrupado por categoría (cargadas / del sistema / genéricas), Roboto y Open Sans self-hosteadas (sin pedidos a terceros) + aviso si una fuente del sistema no está instalada
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
 - **Descargar imagen PNG:** la vista previa tal como se ve (fondo o transparencia incluidos) en 2x, ideal para redes
 - **Vista limpia:** pantalla completa con solo tu texto estilado, sin controles, para leer o mostrar

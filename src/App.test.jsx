@@ -53,6 +53,18 @@ async function renderApp() {
   pre = /** @type {HTMLPreElement} */ (container.querySelector('pre'))
 }
 
+function elegirFuente(valor) {
+  fireEvent.change(screen.getByLabelText('Fuente'), {
+    target: { value: valor },
+  })
+}
+
+function elegirTema(valor) {
+  fireEvent.change(screen.getByLabelText('Temas:'), {
+    target: { value: valor },
+  })
+}
+
 beforeEach(async () => {
   vi.clearAllMocks()
   // idioma y datos guardados de un test no deben filtrarse al siguiente
@@ -95,20 +107,20 @@ describe('preview y snippet compartidos', () => {
   })
 
   it('cambiar la fuente actualiza el preview Y el snippet', () => {
-    fireEvent.click(screen.getByRole('button', { name: /^Arial/ }))
+    elegirFuente('Arial, Helvetica, sans-serif')
 
     expect(preview.style.fontFamily).toBe('Arial, Helvetica, sans-serif')
     expect(pre).toHaveTextContent('font-family: Arial, Helvetica, sans-serif;')
-    expect(screen.getByRole('button', { name: /^Arial/ })).toHaveAttribute(
-      'aria-pressed',
-      'true',
+    expect(screen.getByLabelText('Fuente')).toHaveValue(
+      'Arial, Helvetica, sans-serif',
     )
   })
 
   it('muestra las fuentes agrupadas y cada una con su tipografía', () => {
-    const grupos = screen
-      .getAllByRole('heading', { level: 4 })
-      .map((titulo) => titulo.textContent)
+    const selector = screen.getByLabelText('Fuente')
+    const grupos = Array.from(selector.querySelectorAll('optgroup')).map(
+      (grupo) => grupo.label,
+    )
 
     expect(grupos).toEqual([
       'Cargadas (siempre iguales)',
@@ -116,19 +128,16 @@ describe('preview y snippet compartidos', () => {
       'Genéricas (siempre disponibles)',
     ])
 
-    const roboto = screen.getByRole('button', { name: /^Roboto/ })
+    const roboto = within(selector).getByRole('option', { name: /^Roboto/ })
     expect(roboto.style.fontFamily).toBe('Roboto, sans-serif')
     expect(roboto).toHaveTextContent('cargada')
 
-    // la fuente por defecto aparece marcada
-    expect(screen.getByRole('button', { name: /^System UI/ })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
+    // la fuente por defecto aparece seleccionada
+    expect(selector).toHaveValue('system-ui')
   })
 
   it('una fuente web llega al preview y el snippet trae la hoja para replicarla', () => {
-    fireEvent.click(screen.getByRole('button', { name: /^Roboto/ }))
+    elegirFuente('Roboto, sans-serif')
 
     expect(preview.style.fontFamily).toBe('Roboto, sans-serif')
     expect(pre).toHaveTextContent('font-family: Roboto, sans-serif;')
@@ -143,7 +152,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => false) },
     })
 
-    fireEvent.click(screen.getByRole('button', { name: /^Georgia/ }))
+    elegirFuente('Georgia, serif')
 
     expect(screen.getByText(/«Georgia» no está instalada/i)).toBeInTheDocument()
   })
@@ -154,7 +163,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => true) },
     })
 
-    fireEvent.click(screen.getByRole('button', { name: /^Georgia/ }))
+    elegirFuente('Georgia, serif')
 
     expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
@@ -165,7 +174,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => false) },
     })
 
-    fireEvent.click(screen.getByRole('button', { name: /^Open Sans/ }))
+    elegirFuente('Open Sans, sans-serif')
 
     expect(screen.queryByText(/no está instalada/i)).not.toBeInTheDocument()
   })
@@ -176,7 +185,7 @@ describe('preview y snippet compartidos', () => {
       value: { check: vi.fn(() => false) },
     })
 
-    fireEvent.click(screen.getByRole('button', { name: /^Georgia/ }))
+    elegirFuente('Georgia, serif')
     fireEvent.change(screen.getByLabelText('Fuente título'), {
       target: { value: 'Garamond, serif' },
     })
@@ -334,7 +343,7 @@ describe('contraste WCAG', () => {
   })
 
   it('sigue al tema aplicado', () => {
-    fireEvent.click(screen.getByRole('button', { name: /tema Editorial/i }))
+    elegirTema('editorial')
 
     // #222 sobre #F7F3EC: 14.38:1
     const indicador = screen.getByText(/contraste texto\/fondo/i).closest('p')
@@ -856,7 +865,7 @@ describe('fondo transparente', () => {
 
 describe('temas predefinidos', () => {
   it('aplicar un tema cambia el preview Y el snippet', () => {
-    fireEvent.click(screen.getByRole('button', { name: /tema Consola/i }))
+    elegirTema('consola')
 
     expect(preview.style.color).toBe('rgb(121, 224, 139)') // #79E08B
     // CSSOM normaliza las familias con espacios: "Courier New"
@@ -869,8 +878,8 @@ describe('temas predefinidos', () => {
 
   it('el tema Clásico repite exactamente los valores por defecto', () => {
     // cualquier tema y volver al clásico deja el estado idéntico al inicial
-    fireEvent.click(screen.getByRole('button', { name: /tema Impacto/i }))
-    fireEvent.click(screen.getByRole('button', { name: /tema Clásico/i }))
+    elegirTema('impacto')
+    elegirTema('clasico')
 
     expect(preview.style.color).toBe('rgb(240, 248, 255)') // #F0F8FF
     expect(preview.style.textAlign).toBe('left')
@@ -891,43 +900,37 @@ describe('temas predefinidos', () => {
     expect(pre).toHaveTextContent('color: #F0F8FF;')
   })
 
-  it('marca con aria-pressed el tema aplicado', () => {
-    const clasico = screen.getByRole('button', { name: /tema Clásico/i })
-    const consola = screen.getByRole('button', { name: /tema Consola/i })
+  it('marca en el select el tema aplicado', () => {
+    const temas = screen.getByLabelText('Temas:')
 
     // la app arranca con los defaults = tema Clásico
-    expect(clasico).toHaveAttribute('aria-pressed', 'true')
+    expect(temas).toHaveValue('clasico')
 
-    fireEvent.click(consola)
+    elegirTema('consola')
 
-    expect(consola).toHaveAttribute('aria-pressed', 'true')
-    expect(clasico).toHaveAttribute('aria-pressed', 'false')
+    expect(temas).toHaveValue('consola')
   })
 
-  it('al editar a mano ningún tema queda marcado', () => {
+  it('al editar a mano el select pasa a Personalizado', () => {
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
 
-    const botones = screen.getAllByRole('button', { name: /aplicar tema/i })
-    for (const boton of botones) {
-      expect(boton).toHaveAttribute('aria-pressed', 'false')
-    }
+    expect(screen.getByLabelText('Temas:')).toHaveValue('')
+    expect(screen.getByRole('option', { name: 'Personalizado' })).toBeDisabled()
   })
 
   it('restablecer estilos vuelve a marcar Clásico', () => {
-    fireEvent.click(screen.getByRole('button', { name: /tema Impacto/i }))
+    elegirTema('impacto')
     fireEvent.click(
       screen.getByRole('button', { name: /restablecer estilos/i }),
     )
 
-    expect(
-      screen.getByRole('button', { name: /tema Clásico/i }),
-    ).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByLabelText('Temas:')).toHaveValue('clasico')
   })
 
   it('con un tema claro el encabezado del preview usa su color de texto', () => {
-    fireEvent.click(screen.getByRole('button', { name: /tema Editorial/i }))
+    elegirTema('editorial')
 
     expect(screen.getByRole('heading', { name: /vista previa/i })).toHaveStyle({
       color: 'rgb(34, 34, 34)',
@@ -990,7 +993,7 @@ describe('deshacer, rehacer e historial', () => {
   })
 
   it('aplicar un tema también entra al historial', () => {
-    fireEvent.click(screen.getByRole('button', { name: /tema Editorial/i }))
+    elegirTema('editorial')
     expect(preview.style.fontFamily).toBe('Georgia, serif')
 
     fireEvent.click(screen.getByRole('button', { name: 'Deshacer' }))
@@ -1507,6 +1510,25 @@ describe('idioma de la interfaz', () => {
     expect(screen.getByText('Settings')).toBeInTheDocument()
     expect(screen.getByLabelText('Text color')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Undo' })).toBeInTheDocument()
+
+    const fuentes = screen.getByLabelText('Font')
+    const grupos = Array.from(fuentes.querySelectorAll('optgroup')).map(
+      (grupo) => grupo.label,
+    )
+    expect(grupos).toEqual([
+      'Loaded (always the same)',
+      'System (depending on your device)',
+      'Generic (always available)',
+    ])
+    expect(
+      within(fuentes).getByRole('option', { name: 'Serif (generic)' }),
+    ).toBeInTheDocument()
+    expect(
+      within(screen.getByLabelText('Title font')).getByRole('option', {
+        name: 'same as body',
+      }),
+    ).toBeInTheDocument()
+
     expect(document.documentElement.lang).toBe('en')
     expect(localStorage.getItem(CLAVE_IDIOMA)).toBe('en')
 

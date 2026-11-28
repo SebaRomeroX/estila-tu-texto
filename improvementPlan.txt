@@ -930,6 +930,23 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (312/312 sentencias, 201/201 ramas, 78/78 funciones) · build OK ·
       test:e2e 9/9 · axe 0.
 
+[x] P2-59 Temas y fuentes en selects, con categorías traducidas  ✔ 2026-11-28
+  Verificado (2026-11-28):
+    - Los temas predefinidos pasan de botones a un <select>; muestra
+      "Personalizado" cuando el usuario editó a mano. "Restablecer estilos"
+      sigue como botón y los temas propios conservan aplicar/borrar.
+    - El selector visual de fuentes pasa a <select> con <optgroup> por
+      categoría (cargadas, del sistema, genéricas). Cada opción indica
+      "cargada" o "no instalada" cuando corresponde.
+    - Se traducen las categorías de fuentes y los nombres genéricos al
+      inglés: "Del sistema (según tu equipo)" ya no queda en español.
+      También se traducen "igual al cuerpo" y "predeterminada (negrita)".
+    - Tests actualizados a los nuevos selects (incluida la comprobación de
+      categorías en inglés); la baseline visual se regeneró por un
+      desplazamiento de 1 px ajeno al contenido del preview.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · 255 unitarios ·
+      coverage 100% · build OK · test:e2e 9/9 · axe 0.
+
 [x] P2-20 El encabezado del preview pierde contraste con temas claros  ✔ 2026-11-18
   Verificado (2026-11-18):
     - Bug: la <section> del preview pintaba background: estilos.background,
@@ -1785,8 +1802,12 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   producción a .ts/.tsx con tsconfig estricto, cierra el punto 1 de "qué
   separa del 9-10" y fija la versión 0.1.0. Los tests permanecen en JS.
 
+  Actualización 2026-11-28 (post-plan): P2-59 pasa los temas y las fuentes a
+  selects. El de fuentes conserva las categorías como <optgroup> y ahora las
+  traduce al inglés, junto con los nombres genéricos.
+
   Próximo paso natural (fuera de este plan): push de los commits de P2-19 a
-  P2-58 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
+  P2-59 (los de P2-17, P2-18 y la nota final ya están en origin/main) para que
   CI y Netlify publiquen el editor, el fix de contraste, la tanda de estilos,
   las webfonts, el selector visual, la descarga, los temas propios, los nuevos
   controles tipográficos, el copiado por separado, el historial, la letra
@@ -1796,8 +1817,9 @@ NOTA: 5/10 → 8/10  (meta del plan: 8/10 → CUMPLIDA)
   con estilo propio, el degradado de texto, las dos columnas, los tests de
   navegador, la presentación social, la opacidad, el borde y radio, la sombra
   configurable, el contorno, la animación de entrada, la tarjeta glass, el
-  idioma, la regresión visual, el typecheck estricto, el code splitting y la
-  migración a TypeScript.
+  idioma, la regresión visual, el typecheck estricto, el code splitting, la
+  migración a TypeScript, los temas/fuentes como select y la traducción de las
+  categorías de fuentes.
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -1857,7 +1879,8 @@ D) FUNCIONES DE PRODUCTO
      pública/compartida queda fuera de alcance y pendiente de aprobación,
      porque requiere backend, moderación y cuentas)
   - Undo/redo + historial                                        M  → P2-32
-  - Selector de fuente visual (con preview)                      S  → P2-27
+  - Selector de fuente visual (con preview)                      S  → P2-27/P2-59
+    (P2-59 lo pasa a un select agrupado por categoría)
   - Cargar webfonts o marcar "si está instalada"                 M  → P2-26
     (Roboto, Open Sans, Garamond... no se cargan: el preview miente
      en equipos que no las tienen)

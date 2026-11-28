@@ -72,7 +72,7 @@ test('capturas de regresión visual del preview', async ({ page }) => {
   await expect(preview).toHaveScreenshot('preview-default.png')
 
   // tema claro + degradado: cubre variables, fondo y relleno del texto
-  await page.getByRole('button', { name: /tema Editorial/i }).click()
+  await page.getByLabel('Temas:').selectOption('editorial')
   await page.getByLabel('Degradado de texto').selectOption('degradado')
   await expect(preview).toHaveScreenshot('preview-editorial-degradado.png')
 })

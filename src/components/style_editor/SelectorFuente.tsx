@@ -7,64 +7,49 @@ import { FUENTES, fuenteDisponible } from '../../lib/fuentes'
 const GRUPOS = [...new Set(FUENTES.map((fuente) => fuente.grupo))]
 
 /**
- * Selector visual: cada fuente se muestra con su propia tipografía, así se
- * elige por lo que se ve y no por el nombre. Reemplaza al <select>, que
- * obligaba a probar a ciegas. Los grupos son los mismos del catálogo.
+ * Selector de fuente: un <select> con un <optgroup> por categoría del catálogo
+ * (cargadas, del sistema y genéricas). Cada opción avisa si es web o si el
+ * sistema no la tiene instalada.
  */
 export const SelectorFuente = () => {
   const { estilos, actualizarEstilos } = useContext(EstilosContext)
   const { t } = useContext(IdiomaContext)
 
   return (
-    <div className='selector-fuente'>
-      <h3 className='selector-fuente-label'>{t('Fuente')}</h3>
-      {GRUPOS.map((grupo) => (
-        <div key={grupo} className='selector-fuente-grupo'>
-          <h4 className='selector-fuente-grupo-titulo'>{t(grupo)}</h4>
-          <div className='selector-fuente-opciones'>
+    <label className='selector-fuente'>
+      <span className='selector-fuente-label'>{t('Fuente')}</span>
+      <select
+        value={estilos.family}
+        onChange={(e) => actualizarEstilos('family', e.target.value)}
+      >
+        {GRUPOS.map((grupo) => (
+          <optgroup key={grupo} label={t(grupo)}>
             {FUENTES.filter((fuente) => fuente.grupo === grupo).map(
               (fuente) => {
-                const activa = fuente.contenido === estilos.family
                 // las web se self-hostean y las genéricas siempre existen
                 const noInstalada =
                   !fuente.web && !fuenteDisponible(fuente.contenido)
+                const estado = fuente.web
+                  ? ` · ${t('cargada')}`
+                  : noInstalada
+                    ? ` · ${t('no instalada')}`
+                    : ''
 
                 return (
-                  <button
+                  <option
                     key={fuente.contenido}
-                    type='button'
-                    aria-pressed={activa}
-                    onClick={() =>
-                      actualizarEstilos('family', fuente.contenido)
-                    }
+                    value={fuente.contenido}
                     style={{ fontFamily: fuente.contenido }}
                   >
-                    {activa && (
-                      <span
-                        className='selector-fuente-check'
-                        aria-hidden='true'
-                      >
-                        ✓
-                      </span>
-                    )}
-                    <span>{fuente.nombre}</span>
-                    {fuente.web && (
-                      <span className='selector-fuente-badge'>
-                        {t('cargada')}
-                      </span>
-                    )}
-                    {noInstalada && (
-                      <span className='selector-fuente-badge'>
-                        {t('no instalada')}
-                      </span>
-                    )}
-                  </button>
+                    {t(fuente.nombre)}
+                    {estado}
+                  </option>
                 )
               },
             )}
-          </div>
-        </div>
-      ))}
-    </div>
+          </optgroup>
+        ))}
+      </select>
+    </label>
   )
 }

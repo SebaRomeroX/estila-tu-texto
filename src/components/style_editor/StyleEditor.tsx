@@ -92,18 +92,25 @@ export const StyleEditor = () => {
     <section className='seccion'>
       <h2 className='titulo'>{t('Configuracion')}</h2>
       <div className='temas'>
-        <span className='temas-label'>{t('Temas:')}</span>
-        {PRESETS.map(({ id, nombre, estilos }) => (
-          <button
-            key={id}
-            type='button'
-            aria-label={t('Aplicar tema {nombre}', { nombre: t(nombre) })}
-            aria-pressed={id === activo}
-            onClick={() => aplicarEstilos(estilos)}
+        <label className='temas-selector'>
+          <span>{t('Temas:')}</span>
+          <select
+            value={activo ?? ''}
+            onChange={(e) => {
+              const preset = PRESETS.find(({ id }) => id === e.target.value)
+              if (preset) aplicarEstilos(preset.estilos)
+            }}
           >
-            {t(nombre)}
-          </button>
-        ))}
+            <option value='' disabled>
+              {t('Personalizado')}
+            </option>
+            {PRESETS.map(({ id, nombre }) => (
+              <option key={id} value={id}>
+                {t(nombre)}
+              </option>
+            ))}
+          </select>
+        </label>
         <button
           type='button'
           className='temas-reset'
