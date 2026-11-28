@@ -938,6 +938,8 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - El selector visual de fuentes pasa a <select> con <optgroup> por
       categoría (cargadas, del sistema, genéricas). Cada opción indica
       "cargada" o "no instalada" cuando corresponde.
+    - Los dos selects reutilizan el estilo de los controles existentes
+      (superficie, borde, radio y altura) en vez del look nativo del navegador.
     - Se traducen las categorías de fuentes y los nombres genéricos al
       inglés: "Del sistema (según tu equipo)" ya no queda en español.
       También se traducen "igual al cuerpo" y "predeterminada (negrita)".

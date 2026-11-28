@@ -67,13 +67,21 @@ test('capturas de regresión visual del preview', async ({ page }) => {
   await abrirApp(page)
   const preview = page.locator('article.visualizador').first()
 
+  // el clip de la captura se redondea según la posición vertical del elemento:
+  // llevarlo al borde superior evita que un cambio de altura del editor
+  // desplace el preview 1 px y rompa el snapshot sin cambiar su contenido
+  const alinearPreview = () =>
+    preview.evaluate((elemento) => elemento.scrollIntoView({ block: 'start' }))
+
   // sin cambios: el snapshot por defecto protege tipografía, colores y
   // espaciado del bloque base
+  await alinearPreview()
   await expect(preview).toHaveScreenshot('preview-default.png')
 
   // tema claro + degradado: cubre variables, fondo y relleno del texto
   await page.getByLabel('Temas:').selectOption('editorial')
   await page.getByLabel('Degradado de texto').selectOption('degradado')
+  await alinearPreview()
   await expect(preview).toHaveScreenshot('preview-editorial-degradado.png')
 })
 

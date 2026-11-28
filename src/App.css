@@ -173,7 +173,7 @@ body {
 }
 
 .selector-fuente select {
-  max-width: 32em;
+  max-width: 24em;
 }
 
 /* ------------------------- INPUTS ------------------------- */
@@ -253,7 +253,9 @@ body {
 .inputs-configuracion select,
 .guardar-tema input,
 .historial select,
-.plantilla-selector select {
+.plantilla-selector select,
+.temas-selector select,
+.selector-fuente select {
   color: var(--color-texto);
   background-color: var(--color-superficie);
   font-size: 1em;
