@@ -1431,6 +1431,9 @@ describe('temas propios', () => {
   })
 
   it('elimina un tema propio del estado y del storage', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
     guardarTema('Mi tema')
 
     fireEvent.click(
@@ -1445,6 +1448,9 @@ describe('temas propios', () => {
   })
 
   it('los temas propios sobreviven a un remount', async () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
     guardarTema('Persistente')
 
     app.unmount()
@@ -1487,34 +1493,60 @@ describe('temas propios', () => {
     expect(campo).toHaveValue('Oscuro')
   })
 
+  it('no permite guardar hasta que haya un cambio de estilos', () => {
+    const boton = screen.getByRole('button', { name: 'Guardar tema' })
+
+    expect(boton).toBeDisabled()
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+    expect(boton).toBeEnabled()
+
+    fireEvent.click(boton)
+    expect(boton).toBeDisabled()
+  })
+
   it('numera los temas guardados aunque tengan nombre propio', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#111111' },
+    })
     guardarTema('Oscuro')
     expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
-      '2. #F0F8FF / #020202 · system-ui · 1.2em',
+      '2. #111111 / #020202 · system-ui · 1.2em',
     )
 
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#222222' },
+    })
     guardarTema('Claro')
     expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
-      '3. #F0F8FF / #020202 · system-ui · 1.2em',
+      '3. #222222 / #020202 · system-ui · 1.2em',
     )
   })
 
   it('guarda con el nombre sugerido sin escribirlo', () => {
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
     fireEvent.click(screen.getByRole('button', { name: 'Guardar tema' }))
 
     expect(
       screen.getByRole('button', {
-        name: 'Aplicar tema propio 1. #F0F8FF / #020202 · system-ui · 1.2em',
+        name: 'Aplicar tema propio 1. #123456 / #020202 · system-ui · 1.2em',
       }),
     ).toBeInTheDocument()
     expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
-      '2. #F0F8FF / #020202 · system-ui · 1.2em',
+      '2. #123456 / #020202 · system-ui · 1.2em',
     )
   })
 
   it('no deja guardar sin nombre', () => {
     const boton = screen.getByRole('button', { name: 'Guardar tema' })
 
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
     expect(boton).toBeEnabled()
 
     fireEvent.change(screen.getByLabelText('Guardar tema actual'), {
@@ -1526,6 +1558,9 @@ describe('temas propios', () => {
 
   it('"Borrar datos guardados" también elimina los temas propios', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true)
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
     guardarTema('Se va')
 
     fireEvent.click(

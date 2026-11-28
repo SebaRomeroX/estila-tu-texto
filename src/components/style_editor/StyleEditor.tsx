@@ -67,6 +67,11 @@ export const StyleEditor = () => {
   const [mensaje, setMensaje] = useState('')
   const numeroTema = presetsPropios.length + 1
   const valorNombre = nombreNuevo ?? nombreSugerido(estilos, numeroTema)
+  // el último tema guardado (o los defaults) es la frontera: guardar solo
+  // tiene sentido cuando el estilo actual ya no coincide con él
+  const referencia = presetsPropios[presetsPropios.length - 1]?.estilos
+  const hayCambios = !esMismoEstilo(estilos, referencia ?? ESTILOS_POR_DEFECTO)
+  const puedeGuardar = hayCambios && valorNombre.trim() !== ''
 
   useEffect(() => {
     function recargarPresets() {
@@ -155,7 +160,7 @@ export const StyleEditor = () => {
             className='guardar-tema-boton'
             aria-label={t('Guardar tema')}
             title={t('Guardar tema')}
-            disabled={!valorNombre.trim()}
+            disabled={!puedeGuardar}
           >
             <svg
               viewBox='0 0 24 24'

@@ -943,9 +943,11 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
     - El campo de nombre ocupa el ancho disponible, selecciona todo el
       texto al hacer click y el guardado comparte fila con Deshacer/Rehacer.
       El botón de guardar es un icono con nombre accesible.
-    - Tests nuevos para el nombre sugerido, el nombre propio, la numeración
-      y la selección completa al click; se quitó el test del selector.
-    - Verificación: format OK · typecheck 0 · lint 0/0 · 259 unitarios ·
+    - Guardar queda deshabilitado hasta que el estilo actual difiera del
+      último tema guardado (o de los defaults si todavía no hay ninguno).
+    - Tests nuevos para el nombre sugerido, el nombre propio, la numeración,
+      la selección completa al click y la frontera de guardado.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · 260 unitarios ·
       coverage 100% · build OK · test:e2e 9/9 · axe 0.
 
 [x] P2-59 Temas y fuentes en selects, con categorías traducidas  ✔ 2026-11-28
