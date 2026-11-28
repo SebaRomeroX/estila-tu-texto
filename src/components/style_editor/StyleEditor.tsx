@@ -31,24 +31,29 @@ import type { Estilos } from '../../types'
 import type { FormEvent } from 'react'
 
 /**
- * Resumen corto de un estado para el selector de historial.
+ * Resumen corto de un estado, usado como nombre sugerido al guardar un tema.
  */
 function resumenEstilos(estilos: Estilos): string {
   const fuente = estilos.family.split(',')[0].trim()
   return `${estilos.color} / ${estilos.background} · ${fuente} · ${estilos.size}em`
 }
 
+/**
+ * Nombre por defecto de un tema: el número del tema que se va a guardar y el
+ * resumen del estilo actual. El usuario puede reemplazarlo por el suyo.
+ */
+function nombreSugerido(estilos: Estilos, numero: number): string {
+  return `${numero}. ${resumenEstilos(estilos)}`
+}
+
 export const StyleEditor = () => {
   const {
     estilos,
     aplicarEstilos,
-    historial,
-    indiceHistorial,
     puedeDeshacer,
     puedeRehacer,
     deshacer,
     rehacer,
-    irAHistorial,
   } = useContext(EstilosContext)
   const { t } = useContext(IdiomaContext)
   const activo = presetActivo(estilos)
@@ -56,8 +61,12 @@ export const StyleEditor = () => {
   // temas propios: estado local + localStorage. "Borrar datos guardados" los
   // elimina del storage y avisa por evento para que esta lista se recargue.
   const [presetsPropios, setPresetsPropios] = useState(cargarPresets)
-  const [nombreNuevo, setNombreNuevo] = useState('')
+  // null = el usuario no tocó el nombre: se muestra el sugerido, que sigue
+  // cambiando con el estilo actual. Al escribir, su valor manda.
+  const [nombreNuevo, setNombreNuevo] = useState<string | null>(null)
   const [mensaje, setMensaje] = useState('')
+  const numeroTema = presetsPropios.length + 1
+  const valorNombre = nombreNuevo ?? nombreSugerido(estilos, numeroTema)
 
   useEffect(() => {
     function recargarPresets() {
@@ -71,13 +80,13 @@ export const StyleEditor = () => {
 
   function guardarTema(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const nombre = nombreNuevo.trim()
+    const nombre = valorNombre.trim()
     if (!nombre) return
 
     const nuevos = agregarPreset(presetsPropios, nombre, estilos)
     guardarPresets(nuevos)
     setPresetsPropios(nuevos)
-    setNombreNuevo('')
+    setNombreNuevo(null)
     setMensaje(t('Tema «{nombre}» guardado', { nombre }))
   }
 
@@ -120,27 +129,13 @@ export const StyleEditor = () => {
         </button>
       </div>
 
-      <div className='historial'>
+      <div className='deshacer-rehacer'>
         <button type='button' onClick={deshacer} disabled={!puedeDeshacer}>
           <span aria-hidden='true'>↶</span> {t('Deshacer')}
         </button>
         <button type='button' onClick={rehacer} disabled={!puedeRehacer}>
           <span aria-hidden='true'>↷</span> {t('Rehacer')}
         </button>
-        <label className='historial-selector'>
-          <span>{t('Historial')}</span>
-          <select
-            value={indiceHistorial}
-            onChange={(e) => irAHistorial(Number(e.target.value))}
-          >
-            {historial.map((estado, indice) => (
-              <option key={indice} value={indice}>
-                {indice + 1}. {resumenEstilos(estado)}
-                {indice === indiceHistorial ? ` ${t('(actual)')}` : ''}
-              </option>
-            ))}
-          </select>
-        </label>
       </div>
 
       {presetsPropios.length > 0 && (
@@ -180,13 +175,13 @@ export const StyleEditor = () => {
           <span>{t('Guardar tema actual')}</span>
           <input
             type='text'
-            value={nombreNuevo}
-            maxLength={40}
+            value={valorNombre}
+            maxLength={64}
             placeholder={t('Mi tema')}
             onChange={(e) => setNombreNuevo(e.target.value)}
           />
         </label>
-        <button type='submit' disabled={!nombreNuevo.trim()}>
+        <button type='submit' disabled={!valorNombre.trim()}>
           {t('Guardar tema')}
         </button>
         <span className='sr-only' role='status' aria-live='polite'>

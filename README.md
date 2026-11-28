@@ -78,8 +78,8 @@ _Tema Editorial con degradado de texto, tal como se ve en el editor._
 - **Descargar .html:** archivo autónomo con tu texto y estilos, listo para abrir sin la app
 - **Descargar imagen PNG:** la vista previa tal como se ve (fondo o transparencia incluidos) en 2x, ideal para redes
 - **Vista limpia:** pantalla completa con solo tu texto estilado, sin controles, para leer o mostrar
-- **Temas propios:** guarda la combinación actual con un nombre y reaplícala cuando quieras (se queda en este navegador)
-- **Deshacer y rehacer:** historial de la sesión con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control
+- **Temas propios:** el nombre se sugiere solo (número + resumen del estilo actual), podés reemplazarlo y reaplicar el tema cuando quieras (se queda en este navegador)
+- **Deshacer y rehacer:** volvé atrás o adelante con `Ctrl/Cmd+Z` y `Ctrl/Cmd+Shift+Z`, sin llenarse de pasos al arrastrar un control
 - **Letra capitular:** la primera letra del primer párrafo con tamaño editorial, en el preview y en el snippet
 - **Plantillas de texto:** ensayo, blog, cuento y carta para arrancar sin escribir; avisa antes de reemplazar tu texto
 - **Sombra de texto:** presets suave y resplandor, o una sombra personalizada con X, Y, difuminado y color

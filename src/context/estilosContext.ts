@@ -9,13 +9,10 @@ const CONTEXTO_POR_DEFECTO: ContextoEstilos = {
   estilos: ESTILOS_POR_DEFECTO,
   actualizarEstilos: () => {},
   aplicarEstilos: () => {},
-  historial: [ESTILOS_POR_DEFECTO],
-  indiceHistorial: 0,
   puedeDeshacer: false,
   puedeRehacer: false,
   deshacer: () => {},
   rehacer: () => {},
-  irAHistorial: () => {},
   limpiarHistorial: () => {},
 }
 

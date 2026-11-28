@@ -127,20 +127,6 @@ export function EstilosProvider({ children }: ParametrosEstilosProvider) {
     })
   }, [])
 
-  function irAHistorial(indice: number) {
-    setHistorial((prev) => {
-      if (
-        indice < 0 ||
-        indice >= prev.entradas.length ||
-        indice === prev.indice
-      ) {
-        return prev
-      }
-
-      return { ...prev, indice, coalescencia: { campo: null, momento: 0 } }
-    })
-  }
-
   function limpiarHistorial() {
     setHistorial((prev) => ({
       entradas: [prev.entradas[prev.indice]],
@@ -184,13 +170,10 @@ export function EstilosProvider({ children }: ParametrosEstilosProvider) {
         estilos,
         actualizarEstilos,
         aplicarEstilos,
-        historial: historial.entradas,
-        indiceHistorial: historial.indice,
         puedeDeshacer: historial.indice > 0,
         puedeRehacer: historial.indice < historial.entradas.length - 1,
         deshacer,
         rehacer,
-        irAHistorial,
         limpiarHistorial,
       }}
     >

@@ -79,15 +79,10 @@ export interface ContextoEstilos {
   estilos: Estilos
   actualizarEstilos: (campo: CampoEstilo, valor: string) => void
   aplicarEstilos: (nuevos: Estilos) => void
-  /** estados de la sesión (incluye el actual) */
-  historial: Estilos[]
-  /** posición del estado actual */
-  indiceHistorial: number
   puedeDeshacer: boolean
   puedeRehacer: boolean
   deshacer: () => void
   rehacer: () => void
-  irAHistorial: (indice: number) => void
   /** deja solo el estado actual */
   limpiarHistorial: () => void
 }

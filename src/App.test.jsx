@@ -938,7 +938,7 @@ describe('temas predefinidos', () => {
   })
 })
 
-describe('deshacer, rehacer e historial', () => {
+describe('deshacer y rehacer', () => {
   it('deshace y rehace un cambio de estilo', () => {
     const deshacer = screen.getByRole('button', { name: 'Deshacer' })
     const rehacer = screen.getByRole('button', { name: 'Rehacer' })
@@ -973,26 +973,7 @@ describe('deshacer, rehacer e historial', () => {
     expect(preview.style.color).toBe('rgb(240, 248, 255)')
   })
 
-  it('el historial lista los estados y permite volver a uno anterior', () => {
-    fireEvent.change(screen.getByLabelText('Color letra'), {
-      target: { value: '#123456' },
-    })
-    fireEvent.change(screen.getByLabelText('Tamaño (rem)'), {
-      target: { value: '1.5' },
-    })
-
-    const historial = screen.getByLabelText('Historial')
-    expect(historial).toHaveValue('2')
-    expect(within(historial).getAllByRole('option')).toHaveLength(3)
-
-    fireEvent.change(historial, { target: { value: '0' } })
-
-    expect(preview.style.color).toBe('rgb(240, 248, 255)')
-    expect(preview.style.fontSize).toBe('1.2rem')
-    expect(screen.getByRole('button', { name: 'Rehacer' })).toBeEnabled()
-  })
-
-  it('aplicar un tema también entra al historial', () => {
+  it('aplicar un tema también se puede deshacer', () => {
     elegirTema('editorial')
     expect(preview.style.fontFamily).toBe('Georgia, serif')
 
@@ -1015,20 +996,19 @@ describe('deshacer, rehacer e historial', () => {
     expect(preview.style.color).toBe('rgb(18, 52, 86)')
   })
 
-  it('"Borrar datos guardados" limpia el historial', () => {
+  it('"Borrar datos guardados" reinicia deshacer y rehacer', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     fireEvent.change(screen.getByLabelText('Color letra'), {
       target: { value: '#123456' },
     })
+    fireEvent.click(screen.getByRole('button', { name: 'Deshacer' }))
 
     fireEvent.click(
       screen.getByRole('button', { name: /borrar datos guardados/i }),
     )
 
     expect(screen.getByRole('button', { name: 'Deshacer' })).toBeDisabled()
-    expect(
-      within(screen.getByLabelText('Historial')).getAllByRole('option'),
-    ).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Rehacer' })).toBeDisabled()
   })
 })
 
@@ -1419,8 +1399,10 @@ describe('temas propios', () => {
     expect(guardados).toHaveLength(1)
     expect(guardados[0].nombre).toBe('Mi tema')
     expect(guardados[0].estilos.color).toBe('#123456')
-    // el formulario se limpia y anuncia el guardado para lectores de pantalla
-    expect(screen.getByLabelText('Guardar tema actual')).toHaveValue('')
+    // el formulario pasa al siguiente nombre sugerido y anuncia el guardado
+    expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
+      '2. #123456 / #020202 · system-ui · 1.2em',
+    )
     expect(screen.getByText('Tema «Mi tema» guardado')).toBeInTheDocument()
   })
 
@@ -1473,10 +1455,58 @@ describe('temas propios', () => {
     ).toBeInTheDocument()
   })
 
+  it('propone un nombre con el resumen y el número del tema', () => {
+    const campo = screen.getByLabelText('Guardar tema actual')
+
+    expect(campo).toHaveValue('1. #F0F8FF / #020202 · system-ui · 1.2em')
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    expect(campo).toHaveValue('1. #123456 / #020202 · system-ui · 1.2em')
+  })
+
+  it('el nombre propio reemplaza la sugerencia y no se pisa al editar', () => {
+    const campo = screen.getByLabelText('Guardar tema actual')
+    fireEvent.change(campo, { target: { value: 'Oscuro' } })
+
+    fireEvent.change(screen.getByLabelText('Color letra'), {
+      target: { value: '#123456' },
+    })
+
+    expect(campo).toHaveValue('Oscuro')
+  })
+
+  it('numera los temas guardados aunque tengan nombre propio', () => {
+    guardarTema('Oscuro')
+    expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
+      '2. #F0F8FF / #020202 · system-ui · 1.2em',
+    )
+
+    guardarTema('Claro')
+    expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
+      '3. #F0F8FF / #020202 · system-ui · 1.2em',
+    )
+  })
+
+  it('guarda con el nombre sugerido sin escribirlo', () => {
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar tema' }))
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Aplicar tema propio 1. #F0F8FF / #020202 · system-ui · 1.2em',
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Guardar tema actual')).toHaveValue(
+      '2. #F0F8FF / #020202 · system-ui · 1.2em',
+    )
+  })
+
   it('no deja guardar sin nombre', () => {
     const boton = screen.getByRole('button', { name: 'Guardar tema' })
 
-    expect(boton).toBeDisabled()
+    expect(boton).toBeEnabled()
 
     fireEvent.change(screen.getByLabelText('Guardar tema actual'), {
       target: { value: '   ' },

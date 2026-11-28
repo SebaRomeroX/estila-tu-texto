@@ -116,25 +116,15 @@ body {
   color: #ff9b9b;
 }
 
-/* ------------------------- HISTORIAL ------------------------- */
+/* ------------------------- DESHACER / REHACER ------------------------- */
 
-.historial {
+.deshacer-rehacer {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 0.5em;
   padding: 0 2em 1em;
   font-size: 0.95em;
-}
-
-.historial label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4em;
-}
-
-.historial select {
-  max-width: 28em;
 }
 
 /* guardar el tema actual */
@@ -252,7 +242,6 @@ body {
 .inputs-configuracion input,
 .inputs-configuracion select,
 .guardar-tema input,
-.historial select,
 .plantilla-selector select,
 .temas-selector select,
 .selector-fuente select {
@@ -352,7 +341,7 @@ body {
 .visualizador-header button,
 .temas button,
 .guardar-tema button,
-.historial button {
+.deshacer-rehacer button {
   background-color: var(--color-superficie);
   color: var(--color-texto);
   border: 1px solid var(--color-borde);
@@ -364,7 +353,7 @@ body {
 .visualizador-header button:hover,
 .temas button:hover,
 .guardar-tema button:hover,
-.historial button:hover {
+.deshacer-rehacer button:hover {
   cursor: pointer;
   background-color: var(--color-superficie-hover);
 }
@@ -372,14 +361,14 @@ body {
 .visualizador-header button:active,
 .temas button:active,
 .guardar-tema button:active,
-.historial button:active {
+.deshacer-rehacer button:active {
   background-color: var(--color-superficie-active);
 }
 
 /* deshacer/rehacer y descargar imagen sin acción disponible: siguen visibles,
    pero inertes */
-.historial button:disabled,
-.historial button:disabled:hover,
+.deshacer-rehacer button:disabled,
+.deshacer-rehacer button:disabled:hover,
 .visualizador-header button:disabled,
 .visualizador-header button:disabled:hover {
   opacity: 0.5;
@@ -747,7 +736,7 @@ body {
     padding: 0 0 1em;
   }
 
-  .historial {
+  .deshacer-rehacer {
     padding: 0 0 1em;
   }
 

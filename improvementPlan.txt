@@ -930,6 +930,21 @@ Meta: 8/10 tras ejecutar P0 + P1. 9/10 si se completa P2.
       (312/312 sentencias, 201/201 ramas, 78/78 funciones) · build OK ·
       test:e2e 9/9 · axe 0.
 
+[x] P2-60 Nombre sugerido al guardar temas y fuera el selector de historial  ✔ 2026-11-28
+  Verificado (2026-11-28):
+    - Al cambiar un estilo, el campo "Guardar tema actual" se completa con
+      un nombre sugerido: número del tema + resumen (#texto / #fondo ·
+      fuente · tamaño). El usuario puede reemplazarlo por el suyo.
+    - El número es la cantidad de temas guardados + 1, así que sigue
+      correlativo aunque los temas tengan nombre propio: tras tres temas,
+      el siguiente sugerido arranca con "4.".
+    - Se elimina el <select> de historial; Deshacer/Rehacer y los atajos
+      siguen funcionando sobre el historial interno.
+    - Tests nuevos para el nombre sugerido, el nombre propio y la
+      numeración; se quitó el test del selector eliminado.
+    - Verificación: format OK · typecheck 0 · lint 0/0 · 258 unitarios ·
+      coverage 100% · build OK · test:e2e 9/9 · axe 0.
+
 [x] P2-59 Temas y fuentes en selects, con categorías traducidas  ✔ 2026-11-28
   Verificado (2026-11-28):
     - Los temas predefinidos pasan de botones a un <select>; muestra
