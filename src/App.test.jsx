@@ -1455,6 +1455,15 @@ describe('temas propios', () => {
     ).toBeInTheDocument()
   })
 
+  it('al hacer click en el nombre se selecciona entero para reemplazarlo', () => {
+    const campo = screen.getByLabelText('Guardar tema actual')
+
+    fireEvent.click(campo)
+
+    expect(campo.selectionStart).toBe(0)
+    expect(campo.selectionEnd).toBe(campo.value.length)
+  })
+
   it('propone un nombre con el resumen y el número del tema', () => {
     const campo = screen.getByLabelText('Guardar tema actual')
 

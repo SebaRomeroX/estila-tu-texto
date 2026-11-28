@@ -136,6 +136,46 @@ export const StyleEditor = () => {
         <button type='button' onClick={rehacer} disabled={!puedeRehacer}>
           <span aria-hidden='true'>↷</span> {t('Rehacer')}
         </button>
+
+        <form className='guardar-tema' onSubmit={guardarTema}>
+          <label>
+            <span>{t('Guardar tema actual')}</span>
+            <input
+              type='text'
+              value={valorNombre}
+              maxLength={64}
+              placeholder={t('Mi tema')}
+              onChange={(e) => setNombreNuevo(e.target.value)}
+              onFocus={(e) => e.currentTarget.select()}
+              onClick={(e) => e.currentTarget.select()}
+            />
+          </label>
+          <button
+            type='submit'
+            className='guardar-tema-boton'
+            aria-label={t('Guardar tema')}
+            title={t('Guardar tema')}
+            disabled={!valorNombre.trim()}
+          >
+            <svg
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='1.8'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              aria-hidden='true'
+              focusable='false'
+            >
+              <path d='M5 3h11l3 3v15H5z' />
+              <path d='M8 3v6h8V3' />
+              <path d='M8 15h8v6H8z' />
+            </svg>
+          </button>
+          <span className='sr-only' role='status' aria-live='polite'>
+            {mensaje}
+          </span>
+        </form>
       </div>
 
       {presetsPropios.length > 0 && (
@@ -169,25 +209,6 @@ export const StyleEditor = () => {
           ))}
         </div>
       )}
-
-      <form className='guardar-tema' onSubmit={guardarTema}>
-        <label>
-          <span>{t('Guardar tema actual')}</span>
-          <input
-            type='text'
-            value={valorNombre}
-            maxLength={64}
-            placeholder={t('Mi tema')}
-            onChange={(e) => setNombreNuevo(e.target.value)}
-          />
-        </label>
-        <button type='submit' disabled={!valorNombre.trim()}>
-          {t('Guardar tema')}
-        </button>
-        <span className='sr-only' role='status' aria-live='polite'>
-          {mensaje}
-        </span>
-      </form>
 
       <SelectorFuente />
       <AvisoFuente />
